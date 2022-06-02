@@ -1,0 +1,335 @@
+---
+title: "Statistics and Quantitative Methods (S1)"
+subtitle: "Week 1"
+author: "Dr Stefano Coretta"
+institute: "University of Edinburgh"
+date: "2022/09/01"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css:
+      - xaringan-themer.css
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: "16:9"
+      beforeInit: "../assets/macros.js"
+---
+
+class: center, middle
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+library(tidyverse)
+theme_set(theme_dark())
+library(xaringanExtra)
+use_xaringan_extra(c("panelset", "tachyons", "freezeframe"))
+```
+
+```{r xaringan-themer, include=FALSE, warning=FALSE}
+library(xaringanthemer)
+style_mono_light(
+  base_color = "#23395b",
+  text_font_google = google_font("Lato", "400", "700", "400i", "700i"),
+  header_font_google = google_font("Montserrat", "400", "700", "400i", "700i"),
+  code_font_google = google_font("Source Code Pro", "400", "700")
+)
+```
+
+background-image: url(https://saffroninteractive.com/wp-content/uploads/2014/09/Knowledge-1024x576.png)
+background-size: cover
+
+???
+
+What is knowledge?
+
+What does "knowledge" mean to you?
+
+---
+
+class: inverse
+background-image: url(../img/word-cloud.png)
+background-size: cover
+
+???
+
+Results from Slido poll.
+
+Where does knowledge come from?
+
+---
+
+layout: true
+
+# Sources of knowledge
+
+---
+
+.center[
+![:scale 55%](../img/sources-knowledge.png)
+]
+
+???
+
+One way of classifying sources of knowledge:
+
+- Authority
+
+- Intuition
+
+- Reason (logic)
+
+- Observation.
+
+---
+
+.center[
+![:scale 55%](../img/sources-knowledge-empirical.png)
+]
+
+???
+
+Observations generate **empirical data**.
+
+*Empirical* just means 'based on experience', where *experience* here means 'observation'.
+
+How can we use observations/empirical data?
+
+NOTE: Do not mix up empirical methods with experimental methods. Experiments are a kind of empirical method.
+
+EXTRA: Check out the etymology of the word *empiric(al)* here: <https://en.wiktionary.org/wiki/empiric#English>
+
+---
+
+layout: false
+
+# Research methods
+
+.center[
+![:scale 60%](../img/res-methods.png)
+]
+
+---
+
+layout: true
+
+# Research process
+
+---
+
+.center[
+![:scale 60%](../img/res-process.png)
+]
+
+---
+
+.center[
+![:scale 60%](../img/res-process-data-ana.png)
+]
+
+---
+
+layout: true
+
+# Data analysis
+
+---
+
+.center[
+![:scale 80%](../img/data-quant-qual.png)
+]
+
+---
+
+.center[
+![:scale 80%](../img/data-quant.png)
+]
+
+---
+
+layout: false
+class: inverse right middle
+
+
+.f2[The numbers have no way of speaking for themselves. We speak for them. We imbue them with meaning.]
+
+— Nate Silver, *The Signal and the Noise*
+
+---
+
+# Empirical method 
+
+.center[
+![:scale 40%](../img/bro.png)
+]
+
+???
+
+We have a question about something.
+
+Let's imagine that this something is the population of British Sign Language signers.
+
+We want to know whether the cultural background of the BSL signers is linked to different pragmatic uses of the sign for BROTHER.
+
+But we can't survey the entire population of BSL signers.
+
+NOTE: *Population* can be a set of anything, not just a specific group of people. For example, the words in a dictionary can be a "population"; or the antipassive constructions of Austronesian languages; or ...
+
+---
+
+# Inference cycle
+
+.center[
+![:scale 75%](../img/inference.png)
+]
+
+???
+
+We take a **sample** from the population.
+
+This is our empirical data (the product of observation).
+
+How do we go from data/observation to answering our question?
+
+We can use **inference**.
+
+**Inference** is the process of understanding something about a population based on the sample (aka the data) taken from that population.
+
+---
+
+class: middle center inverse
+
+# Inference is not infallible
+
+???
+
+However, inference based on data does not guarantee that the answers to our questions are right/true.
+
+In fact, any observation we make comes with a degree of **uncertainty and variability**.
+
+EXTRA: Check out this article: <https://www.scientificamerican.com/article/if-you-say-science-is-right-youre-wrong/>
+
+EXTRA: Find out about Popper's view of falsification and fallibilism.
+
+---
+
+class: inverse
+
+# Uncertainty and variability
+
+.center[
+![](../img/pliny.jpg)
+]
+
+???
+
+So we have to deal with:
+
+- Uncertainty in any one observation of a phenomenon.
+
+- Variability among different observations of the same phenomenon.
+
+---
+
+class: center middle inverse
+
+# ENTER<br>STATISTICS
+
+???
+
+Statistics helps us quantifying uncertainty and variability.
+
+---
+
+  .pull-left[
+
+<br>
+
+<br>
+
+.f1[What is statistics?]
+]
+
+.pull-right[
+
+
+![:scale 90%](../img/charles-deluvio-Mv9hjnEUHR4-unsplash.jpg)
+]
+
+???
+
+Slido poll.
+
+EXTRA: Check out the etymology of *statistics* here: <https://en.wiktionary.org/wiki/statistics#Etymology_1>.
+
+Photo by <a href="https://unsplash.com/@charlesdeluvio?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Charles Deluvio</a> on <a href="https://unsplash.com/s/photos/dog?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>
+
+---
+
+# What is statistics?
+
+- Statistics is the **science** concerned with developing and studying methods for collecting, analyzing, interpreting and presenting empirical data. (From [UCI Department of Statistics](https://www.stat.uci.edu/what-is-statistics/))
+
+--
+
+- Statistics is the **technology** of extracting information, illumination and understanding from data, often in the face of uncertainty. (From the [British Academy](https://www.thebritishacademy.ac.uk/blog/what-is-statistics/))
+
+--
+
+- Statistics is a **mathematical and conceptual** discipline that focuses on the relation between data and hypotheses. (From the [Standford Encyclopedia of Philosophy](https://plato.stanford.edu/entries/statistics/))
+
+--
+
+- Statistics as the **art** of applying the science of scientific methods. (From [ORI Results](https://www.oriresults.com/articles/blog-posts/the-art-of-statistics/), [Nature](https://www.nature.com/articles/d41586-019-00898-0))
+
+---
+
+# What is statistics?
+
+> **Statistic is both a science and an art**.
+>
+> It is a **science** in that its methods are basically systematic and have general application and an **art** in that their successful application depends, to a considerable degree, on the skill and special experience of the statistician, and on his knowledge of the field of application.
+
+—L. H. C. Tippett
+
+---
+
+class: middle
+
+.pull-left[
+.f1[But... "all that glisters is not gold"]
+]
+
+.pull-right[
+![](../img/gollum-statistician.png)
+]
+
+
+
+---
+
+# Case study: Many Analysts, One Data Set
+
+.pull-left[
+.center[
+![:scale 60%](../img/red-card.jpg)
+]
+]
+
+.pull-right[
+- .f3[29 independent analysis teams.]
+
+- **Is there a link between player skin tone and number of red cards in soccer?**
+
+- 69% of the teams reported an effect, and 31% did not.
+
+- 21 unique types of statistical analysis.
+
+<br>
+
+> The observed results from analyzing a complex data set can be highly contingent on **justifiable**, but **subjective**, analytic decisions.
+
+—Silberzahn et al 2018
+
+]
