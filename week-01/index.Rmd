@@ -214,8 +214,6 @@ EXTRA: Find out about Popper's view of falsification and fallibilism.
 
 ---
 
-class: inverse
-
 # Uncertainty and variability
 
 .center[
@@ -226,7 +224,7 @@ class: inverse
 
 So we have to deal with:
 
-- Uncertainty in any one observation of a phenomenon.
+- Uncertainty in any observation of a phenomenon.
 
 - Variability among different observations of the same phenomenon.
 
@@ -234,7 +232,7 @@ So we have to deal with:
 
 class: center middle inverse
 
-# ENTER<br>STATISTICS
+# .orange[Statistics] as a tool to deal with .orange[uncertainty] and .orange[variability]
 
 ???
 
@@ -242,7 +240,7 @@ Statistics helps us quantifying uncertainty and variability.
 
 ---
 
-  .pull-left[
+.pull-left[
 
 <br>
 
@@ -285,11 +283,11 @@ Photo by <a href="https://unsplash.com/@charlesdeluvio?utm_source=unsplash&utm_m
 
 ---
 
-# What is statistics?
+class: inverse right middle
 
-> **Statistic is both a science and an art**.
->
-> It is a **science** in that its methods are basically systematic and have general application and an **art** in that their successful application depends, to a considerable degree, on the skill and special experience of the statistician, and on his knowledge of the field of application.
+.f2[*Statistic is both a science and an art*.]
+
+.f4[It is a *science* in that its methods are basically systematic and have general application and an *art* in that their successful application depends, to a considerable degree, on the skill and special experience of the statistician, and on his knowledge of the field of application.]
 
 —L. H. C. Tippett
 
@@ -298,7 +296,7 @@ Photo by <a href="https://unsplash.com/@charlesdeluvio?utm_source=unsplash&utm_m
 class: middle
 
 .pull-left[
-.f1[But... "all that glisters is not gold"]
+.f1[But...<br>*all that glisters is not gold*]
 ]
 
 .pull-right[
@@ -330,6 +328,6 @@ class: middle
 
 > The observed results from analyzing a complex data set can be highly contingent on **justifiable**, but **subjective**, analytic decisions.
 
-—Silberzahn et al 2018
+.right[—Silberzahn et al 2018]
 
 ]
