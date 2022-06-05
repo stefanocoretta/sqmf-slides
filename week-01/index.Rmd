@@ -37,6 +37,18 @@ style_mono_light(
 )
 ```
 
+.center[
+![](../img/Alice_par_John_Tenniel_25.png)
+]
+
+???
+
+If I had a world of my own, everything would be nonsense. Nothing would be what it is, because everything would be what it isn't. And contrary wise, what is, it wouldn't be. And what it wouldn't be, it would. You see?
+
+For, you see, so many out-of-the-way things had happened lately, that Alice had begun to think that very few things indeed were really impossible.
+
+---
+
 background-image: url(https://saffroninteractive.com/wp-content/uploads/2014/09/Knowledge-1024x576.png)
 background-size: cover
 
@@ -227,6 +239,16 @@ So we have to deal with:
 - Uncertainty in any observation of a phenomenon.
 
 - Variability among different observations of the same phenomenon.
+
+---
+
+.center[
+![](../img/uncertainty.png)
+]
+
+???
+
+Guess what it is...
 
 ---
 
