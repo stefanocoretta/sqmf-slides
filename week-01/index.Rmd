@@ -17,8 +17,6 @@ output:
       beforeInit: "../assets/macros.js"
 ---
 
-class: center, middle
-
 ```{r setup, include=FALSE}
 options(htmltools.dir.version = FALSE)
 library(tidyverse)
@@ -37,15 +35,42 @@ style_mono_light(
 )
 ```
 
-.center[
+# Before we begin...
+
+.pull-left[
+.f3[Complete the SATS-36 questionnaire.]
+]
+
+.pull-right[
+![](../img/emily-morter-8xAA0f9yQnE-unsplash.jpg)
+]
+
+
+???
+
+Photo by Emily Morter on Unsplash
+
+---
+
+class: middle
+
+.pull-left[
 ![](../img/Alice_par_John_Tenniel_25.png)
+]
+
+.pull-right[
+.f3[For, you see, so many out-of-the-way things had happened lately, that Alice had begun to think that very few things indeed were really impossible.]
+
+.right[—Lewis C. Carol, Alice's Adventures in Wonderland ]
 ]
 
 ???
 
-If I had a world of my own, everything would be nonsense. Nothing would be what it is, because everything would be what it isn't. And contrary wise, what is, it wouldn't be. And what it wouldn't be, it would. You see?
+"If I had a world of my own, everything would be nonsense. Nothing would be what it is, because everything would be what it isn't. And contrary wise, what is, it wouldn't be. And what it wouldn't be, it would. You see?"
 
-For, you see, so many out-of-the-way things had happened lately, that Alice had begun to think that very few things indeed were really impossible.
+.right[—Alice, from Disney's *Alice in Wonderland*]
+
+
 
 ---
 
@@ -170,13 +195,15 @@ class: inverse right middle
 
 ---
 
-# Empirical method 
+# Inference process
 
 .center[
 ![:scale 40%](../img/bro.png)
 ]
 
 ???
+
+Imbuing numbers with meaning is a good characterisation of the "inference process".
 
 We have a question about something.
 
@@ -190,7 +217,7 @@ NOTE: *Population* can be a set of anything, not just a specific group of people
 
 ---
 
-# Inference cycle
+# Inference process
 
 .center[
 ![:scale 75%](../img/inference.png)
@@ -242,9 +269,9 @@ So we have to deal with:
 
 ---
 
-.center[
+class: center, middle, inverse
+
 ![](../img/uncertainty.png)
-]
 
 ???
 
@@ -254,21 +281,18 @@ Guess what it is...
 
 class: center middle inverse
 
-# .orange[Statistics] as a tool to deal with .orange[uncertainty] and .orange[variability]
+# *Statistics* as a tool to deal with *uncertainty* and *variability*
 
 ???
 
-Statistics helps us quantifying uncertainty and variability.
+Statistics helps us quantifying uncertainty and controlling for variability.
 
 ---
 
+class: middle
+
 .pull-left[
-
-<br>
-
-<br>
-
-.f1[What is statistics?]
+# What is statistics?
 ]
 
 .pull-right[
@@ -318,7 +342,7 @@ class: inverse right middle
 class: middle
 
 .pull-left[
-.f1[But...<br>*all that glisters is not gold*]
+# But...<br>*all that glisters is not gold*
 ]
 
 .pull-right[
@@ -329,7 +353,7 @@ class: middle
 
 ---
 
-# Case study: Many Analysts, One Data Set
+# Many Analysts, One Data Set
 
 .pull-left[
 .center[
@@ -338,13 +362,13 @@ class: middle
 ]
 
 .pull-right[
-- .f3[29 independent analysis teams.]
+.f3[**Is there a link between player skin tone and number of red cards in soccer?**]
 
-- **Is there a link between player skin tone and number of red cards in soccer?**
+- **29 independent analysis teams**.
 
 - 69% of the teams reported an effect, and 31% did not.
 
-- 21 unique types of statistical analysis.
+- **21 unique** types of statistical analysis.
 
 <br>
 
