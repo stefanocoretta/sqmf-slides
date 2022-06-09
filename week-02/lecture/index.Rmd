@@ -1,0 +1,60 @@
+---
+title: "Statistics and Quantitative Methods (S1)"
+subtitle: "Week 2"
+author: "Dr Stefano Coretta"
+institute: "University of Edinburgh"
+date: "2022/09/01"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css:
+      - xaringan-themer.css
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: "16:9"
+      beforeInit: "../../assets/macros.js"
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+library(tidyverse)
+theme_set(theme_dark())
+library(xaringanExtra)
+use_xaringan_extra(c("panelset", "tachyons", "freezeframe"))
+```
+
+```{r xaringan-themer, include=FALSE, warning=FALSE}
+library(xaringanthemer)
+style_mono_light(
+  base_color = "#23395b",
+  text_font_google = google_font("Lato", "400", "700", "400i", "700i"),
+  header_font_google = google_font("Montserrat", "400", "700", "400i", "700i"),
+  code_font_google = google_font("Source Code Pro", "400", "700")
+)
+```
+
+# Data visualisation
+
+.center[
+![](../../img/data-quant.png)
+]
+
+---
+
+# Good data visualisation
+
+Alberto Cairo has identified four common features of a good data visualisation:
+
+1. It contains reliable information.
+
+2. The design has been chosen so that relevant patterns become noticeable.
+
+3. It is presented in an attractive manner, but appearance should not get in the way of honesty, clarity and depth.
+
+4. When appropriate, it is organized in a way that enables some exploration.
+
+???
+
+Spiegelhalter, David. The Art of Statistics (Pelican Books) (pp. 64-66). Penguin Books Ltd. Kindle Edition. 
