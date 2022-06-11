@@ -1,0 +1,518 @@
+---
+title: "Statistics and Quantitative Methods (S1)"
+subtitle: "Week 5"
+author: "Dr Stefano Coretta"
+institute: "University of Edinburgh"
+date: "2022/09/01"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css:
+      - xaringan-themer.css
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: "16:9"
+      beforeInit: "../../assets/macros.js"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, dpi = 300, out.height = "500px", fig.align = "center")
+knitr::opts_knit$set(root.dir = here::here())
+options(htmltools.dir.version = FALSE)
+library(tidyverse)
+theme_set(theme_dark())
+library(xaringanExtra)
+use_xaringan_extra(c("panelset", "tachyons", "freezeframe"))
+library(ggeffects)
+options(show.signif.stars = FALSE)
+library(broom.mixed)
+```
+
+```{r xaringan-themer, include=FALSE, warning=FALSE}
+library(xaringanthemer)
+style_mono_light(
+  base_color = "#23395b",
+  text_font_google = google_font("Lato", "400", "700", "400i", "700i"),
+  header_font_google = google_font("Montserrat", "400", "700", "400i", "700i"),
+  code_font_google = google_font("Source Code Pro", "400", "700")
+)
+```
+
+# Summary
+
+* The simplest .orange[**linear model**] is a straight line.
+
+$$y = \beta_0 + \beta_1 x$$
+
+* We want to estimate the $\beta_n$ .orange[**coefficients**].
+
+$$y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_4 x_1 x_2 + \beta_3 x_3$$
+
+* Categorical predictors are .orange[dummy coded].
+
+* .orange[**Interactions**] model differences of the effects of the predictors on the outcome across groups/conditions.
+
+---
+
+class: center middle
+
+![:scale 40%](../img/charlesdeluvio-D44HIk-qsvI-unsplash.jpg)
+
+???
+
+Photo by <a href="https://unsplash.com/@charlesdeluvio?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">charlesdeluvio</a> on <a href="https://unsplash.com/s/photos/sad-puppy?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>
+  
+---
+
+class: center middle
+
+![:scale 90%](../img/joe-caione-qO-PIF84Vxg-unsplash.jpg)
+
+???
+
+Photo by <a href="https://unsplash.com/@joeyc?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Joe Caione</a> on <a href="https://unsplash.com/s/photos/happy-puppy?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>
+
+---
+
+# Exercise 1
+
+```{r art-rate}
+polite <- read_csv("04-fit-models/polite.csv") %>%
+  mutate(
+    attitude = factor(attitude, levels = c("inf", "pol")),
+    musicstudent = factor(musicstudent, levels = c("no", "yes"))
+  )
+
+art_lm_1 <- lm(articulation_rate ~ attitude * musicstudent, data = polite)
+
+summary(art_lm_1)
+```
+
+---
+
+# Exercise 1
+
+```{r art-rate-plot}
+ggpredict(art_lm_1, terms = c("attitude", "musicstudent")) %>%
+  plot() +
+  theme(text = element_text(size = 20))
+```
+
+---
+
+# Exercise 2
+
+```{r f0}
+f0_lm_1 <- lm(f0mn ~ attitude * years_in_ger, data = polite)
+
+summary(f0_lm_1)
+```
+
+---
+
+# Exercise 2
+
+```{r f0-plot}
+ggpredict(f0_lm_1, terms = c("attitude", "years_in_ger [1,3,6,9]")) %>%
+  plot() +
+  theme(text = element_text(size = 20))
+```
+
+---
+
+# Exercise 3
+
+```{r ct}
+gestures <- read_csv("04-fit-models/gestures.csv") %>%
+  mutate(
+    background = factor(background, levels = c("English", "Chinese", "Bengali"))
+  )
+
+ct_lm_1 <- lm(ct ~ count * gesture * background, data = gestures)
+
+summary(ct_lm_1)
+```
+
+---
+
+# Exercise 3
+
+```{r ct-plot}
+ggpredict(ct_lm_1, terms = c("count", "gesture", "background")) %>%
+  plot() +
+  theme(text = element_text(size = 20))
+```
+
+---
+
+# Do you notice something weird?
+
+```{r ct-plot-2}
+ggpredict(ct_lm_1, terms = c("count", "gesture", "background")) %>%
+  plot() +
+  theme(text = element_text(size = 20))
+```
+
+---
+
+class: center middle inverse
+
+# Probability distributions
+
+---
+
+# Continuous vs discrete
+
+.center[
+![:scale 90%](../img/discr-cont-probs.png)
+]
+
+---
+
+class: center middle
+
+.f1.link.dim.br3.ph3.pv2.mb2.dib.white.bg-purple[
+[.white[Probability distributions app]](https://seeing-theory.brown.edu/probability-distributions/index.html#section2)
+]
+
+---
+
+# Gaussian distribution (aka normal distribution)
+
+```{r norm, echo=TRUE}
+x_norm <- rnorm(10, mean = 0, sd = 1)
+x_norm
+```
+
+---
+
+# Gaussian distribution (aka normal distribution)
+
+```{r norm-plot, echo=TRUE}
+plot(density(x_norm))
+```
+
+---
+
+# Bernoulli distribution (special case of Binomial)
+
+```{r bern, echo=TRUE}
+x_bern <- rbernoulli(20, p = 0.75)
+x_bern
+
+table(x_bern)
+```
+
+---
+
+class: center middle inverse
+
+# Think about the probability distribution of the outcome variable
+
+---
+
+# Continuous outcome variable
+
+* The variable can take on *any positive and negative real number, including 0*: **Gaussian** (aka normal) distribution.
+
+    * There are very few truly Gaussian variables, although in some cases one can speak of "approximate" or "assumed" normality.
+
+    * This family is fitted by default in `lm()`, `lme4::lmer()` and `brms::brm()`.
+
+--
+
+* The variable can take on *any positive number only*: **Log-normal** distribution.
+
+    * Duration of segments, words, pauses, etc, are known to be log-normally distributed.
+
+    * Measurements taken in Hz (like f0, formants, centre of gravity, ...) could be considered to be log-normal.
+
+    * There other families that could potentially be used depending on the nature of the variable: exponential-Gaussian (reaction times), gamma, ...
+
+---
+
+# Continuous outcome variable
+
+* The variable can take on *any number between 0 and 1, but not 0 nor 1*: **Beta** distribution.
+
+    * Proportions fall into this category (for example proportion of voicing within closure), although 0 and 1 are not allowed in the beta distribution.
+
+--
+
+* The variable can take on *any number between 0 and 1, including 0 or 0 and 1*: **Zero-inflated** or **Zero/one-inflated beta** (ZOIB) distribution.
+
+    * If the proportion data includes many 0s and 1s, then this is the ideal distribution to use. ZOIB distributions are somewhat more difficult to fit than a simple beta distribution, so a common practice is to transform the data so that it doesn't include 0s nor 1s (this can be achieved using different techniques, some better than others).
+
+---
+
+# Discrete outcome variable
+
+* The variable is *counts*: **Poisson** distribution.
+
+    * Counts of words, segments, gestures, f0 peaks, ...
+    
+--
+
+* The variable is *dichotomous*, i.e. it can take one of two levels: **Bernoulli** distribution.
+
+    * Categorical outcome variables like yes/no, correct/incorrect, voiced/voiceless, follow this distribution.
+
+    * This family is fitted by default when you run `glm(family = binomial)`, aka "logistic regression" or "binomial regression".
+
+--
+
+* The variable is a *scale*: **ordinal** linear model.
+
+    * Likert scales and ratings, language attitude questionnaires.
+
+    * Ordinal linear models, a.k.a. ordinal logistic regression, can be fitted with the [ordinal](https://cran.r-project.org/web/packages/ordinal/index.html) and the [brms](https://paul-buerkner.github.io/brms/) package.
+
+---
+
+# Dichotomous outcome: Bernoulli distribution
+
+- Shallow Morphological Processing.
+
+- English L1 and L2 speakers (L2 speakers are native speakers of Cantonese).
+
+- Lexical decision task (Word vs Non-Word).
+
+- Target: *unkindness* ([[un]-[kind]]-ness).
+
+- Primes: *prolong* (Unrelated), *unkind* (Constituent), *kindness* (Non-Constituent).
+
+---
+
+# Dichotomous outcome: Bernoulli distribution
+
+```{r shallow-lm-1}
+shallow <- read_csv("04-fit-models/shallow-morph.csv") %>%
+  filter(Critical_Filler == "Critical") %>%
+  mutate(
+    Relation_type = factor(Relation_type, levels = c("Unrelated", "Constituent", "NonConstituent"))
+  )
+
+shallow_lm_1 <- glm(ACC ~ Relation_type, data = shallow, family = binomial())
+
+summary(shallow_lm_1)
+```
+
+---
+
+# Do you notice something weird?
+
+```{r shallo-lm-1-2}
+summary(shallow_lm_1)
+```
+
+---
+
+# Log-odds
+
+```{r log-exp, echo=TRUE}
+# What is the log of 1?
+log(1)
+
+# What is the exponential function at 0?
+exp(0)
+```
+
+--
+
+<br>
+
+Now try different numbers with `log()` and `exp()`.
+
+---
+
+# From log-odds to odds
+
+```{r log-odds}
+tibble(
+  log_odds = seq(-2, 2, by = 0.001),
+  odds = exp(log_odds)
+) %>%
+  ggplot(aes(log_odds, odds)) +
+  geom_vline(xintercept = 0, alpha = 0.5) +
+  geom_hline(yintercept = 1, linetype = "dashed") +
+  geom_hline(yintercept = 0, size = 1, colour = "#8856a7") +
+  geom_line(size = 2) +
+  geom_point(x = 0, y = 1, size = 4) +
+  scale_y_continuous(breaks = seq(0, 6, by = 1), minor_breaks = NULL) +
+  labs(
+    title = "Correspondence between log-odds and odds",
+    subtitle = "odds = exp(log-odds)",
+    x = "log-odds",
+    y = "odds"
+  )
+```
+
+---
+
+# From log-odds to odds: Examples
+
+- 10 mo infants perform on average 10 iconic gestures per day. At 11 mo, the number of gestures increases by a factor of 1.6. At 12 mo, there is a further increase by a factor of 1.2.
+
+--
+
+  - Calculate the average number of gestures per day at 12 months based on the 10 month average (10 gestures).
+
+--
+
+- The average number of errors L2 learners make decreases by a factor of 0.2 every year and a half.
+
+--
+
+  - Calculate the average number of errors after 6 years, assuming 265 errors at year 1.
+
+---
+
+# From log-odds to probabilities
+
+```{r plogis}
+# What is the exponential function at 0 log-odds?
+# In other words, what are the odds at 0 log-odds?
+exp(0)
+
+# What is the probability at 0 log-odds?
+plogis(0)
+
+# What is the probability at 1 log-odds?
+plogis(1)
+```
+
+--
+
+<br>
+
+Now try different numbers with `plogis()`.
+
+---
+
+# From log-odds to probabilities
+
+```{r p-log-odds}
+dots <- tibble(
+  p = seq(0.1, 0.9, by = 0.1),
+  log_odds = qlogis(p)
+)
+
+tibble(
+  p = seq(0, 1, by = 0.001),
+  log_odds = qlogis(p)
+) %>%
+  ggplot(aes(log_odds, p)) +
+  geom_hline(yintercept = 0.5, linetype = "dashed") +
+  geom_hline(yintercept = 0, colour = "#8856a7", size = 1) +
+  geom_hline(yintercept = 1, colour = "#8856a7", size = 1) +
+  geom_vline(xintercept = 0, alpha = 0.5) +
+  geom_line(size = 2) +
+  geom_point(data = dots, size = 4) +
+  scale_x_continuous(breaks = seq(-6, 6, by = 2), minor_breaks = NULL) +
+  scale_y_continuous(breaks = seq(0, 1, by = 0.1), minor_breaks = NULL) +
+  labs(
+    title = "Correspondence between log-odds and probabilities",
+    x = "log-odds",
+    y = "probability"
+  )
+```
+
+---
+
+# Dichotomous outcome: Bernoulli distribution
+
+```{r shallow-lm-1-3}
+summary(shallow_lm_1)
+```
+
+---
+
+# Dichotomous outcome: Bernoulli distribution
+
+```{r shallow-lm-1-plot}
+ggpredict(shallow_lm_1, terms = "Relation_type") %>%
+  plot()
+```
+
+
+---
+
+# Dichotomous outcome: Bernoulli distribution
+
+```{r shallow-lm-2}
+shallow_lm_2 <- glm(ACC ~ Relation_type * Group, data = shallow, family = binomial())
+
+summary(shallow_lm_2)
+```
+
+
+---
+
+# Dichotomous outcome: Bernoulli distribution
+
+```{r shallow-lm-2-plot}
+ggpredict(shallow_lm_2, terms = c("Group", "Relation_type")) %>%
+  plot()
+```
+
+
+---
+
+# Counts: Poisson distribution
+
+```{r ct-2}
+ct_lm_2 <- glm(ct ~ count, data = gestures, family = poisson())
+
+summary(ct_lm_2)
+```
+
+---
+
+# Counts: Poisson distribution
+
+```{r ct-2-plot}
+ggpredict(ct_lm_2, terms = c("count [0:40 by=0.1]")) %>%
+  plot()
+```
+
+
+---
+
+# Counts: Poisson distribution
+
+```{r ct-3}
+ct_lm_3 <- glm(ct ~ count * background, data = gestures, family = poisson())
+
+summary(ct_lm_3)
+```
+
+---
+
+# Counts: Poisson distribution
+
+```{r ct-lm-3-coefs, echo=TRUE}
+tidy(ct_lm_3, exponentiate = FALSE)
+```
+
+---
+
+# Counts: Poisson distribution
+
+```{r ct-lm-3-coefs-exp, echo=TRUE}
+tidy(ct_lm_3, exponentiate = TRUE)
+```
+
+
+---
+
+# Counts: Poisson distribution
+
+```{r ct-3-plot}
+ggpredict(ct_lm_3, terms = c("count [0:30 by=0.1]", "background")) %>%
+  plot()
+```
+
+
+

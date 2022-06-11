@@ -361,20 +361,21 @@
     },
     "dbplyr": {
       "Package": "dbplyr",
-      "Version": "2.1.1",
+      "Version": "2.2.0",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "1f37fa4ab2f5f7eded42f78b9a887182",
+      "Hash": "a6e4cc7b658d043806bc559ef42a1d2a",
       "Requirements": [
         "DBI",
         "R6",
         "assertthat",
         "blob",
+        "cli",
         "dplyr",
-        "ellipsis",
         "glue",
         "lifecycle",
         "magrittr",
+        "pillar",
         "purrr",
         "rlang",
         "tibble",
@@ -736,6 +737,16 @@
         "tibble",
         "tidyselect",
         "vctrs"
+      ]
+    },
+    "here": {
+      "Package": "here",
+      "Version": "1.0.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "24b224366f9c2e7534d2344d10d59211",
+      "Requirements": [
+        "rprojroot"
       ]
     },
     "highr": {
@@ -1110,10 +1121,10 @@
     },
     "processx": {
       "Package": "processx",
-      "Version": "3.5.3",
+      "Version": "3.6.0",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "8bbae1a548d0d3fdf6647bdd9d35bf6d",
+      "Hash": "4acae60adac4791e8c8833d8494f270d",
       "Requirements": [
         "R6",
         "ps"
@@ -1270,10 +1281,10 @@
     },
     "renv": {
       "Package": "renv",
-      "Version": "0.15.4",
+      "Version": "0.15.5",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "c1078316e1d4f70275fc1ea60c0bc431",
+      "Hash": "6a38294e7d12f5d8e656b08c5bd8ae34",
       "Requirements": []
     },
     "reprex": {
@@ -1849,15 +1860,10 @@
     },
     "xaringanExtra": {
       "Package": "xaringanExtra",
-      "Version": "0.5.5",
-      "Source": "GitHub",
-      "RemoteType": "github",
-      "RemoteHost": "api.github.com",
-      "RemoteUsername": "gadenbuie",
-      "RemoteRepo": "xaringanExtra",
-      "RemoteRef": "main",
-      "RemoteSha": "ce8be698e0f12f754dd29b3214b5f8f2b65f35f8",
-      "Hash": "61f0d55b20a18a60238c32c505272996",
+      "Version": "0.6.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "fc4355438a15a1d0c9afcd3463bf9ffc",
       "Requirements": [
         "htmltools",
         "jsonlite",
