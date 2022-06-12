@@ -23,6 +23,12 @@ library(tidyverse)
 theme_set(theme_dark())
 library(xaringanExtra)
 use_xaringan_extra(c("panelset", "tachyons", "freezeframe"))
+library(glottologR)
+data("aes")
+aes <- aes %>%
+  mutate(
+    AES = factor(AES, levels = c("not_endangered", "threatened", "shifting", "moribund", "nearly_extinct", "extinct"))
+  )
 ```
 
 ```{r xaringan-themer, include=FALSE, warning=FALSE}
@@ -58,3 +64,50 @@ Alberto Cairo has identified four common features of a good data visualisation:
 ???
 
 Spiegelhalter, David. The Art of Statistics (Pelican Books) (pp. 64-66). Penguin Books Ltd. Kindle Edition. 
+
+---
+
+```{r}
+aes %>%
+  drop_na(AES) %>%
+  ggplot(aes(AES, fill = AES)) +
+  geom_bar() +
+  scale_fill_brewer(type = "seq", palette = "BuPu")
+```
+
+---
+
+```{r}
+aes %>%
+  drop_na(AES) %>%
+  mutate(
+    endangered = ifelse(AES == "not_endangered", "no", "yes")
+  ) %>%
+  ggplot(aes(endangered, fill = AES)) +
+  geom_bar() +
+  scale_fill_brewer(type = "seq", palette = "BuPu")
+```
+
+---
+
+```{r fig.asp=1}
+n_per_row <- 100
+
+aes %>%
+  arrange(AES) %>%
+  mutate(
+    x = rep(1:n_per_row, length.out = length(AES)),
+    y = rep(1:(ceiling(length(AES) / n_per_row)), each = n_per_row)[1:length(AES)]
+  ) %>%
+  ggplot(aes(x, -y, colour = AES)) +
+  geom_point(size = 3) +
+  scale_color_brewer(type = "seq", palette = "BuPu") +
+  theme_dark() +
+  theme(
+    panel.grid = element_blank(),
+    axis.title = element_blank(),
+    axis.text = element_blank(),
+    legend.position = "bottom"
+  )
+```
+
