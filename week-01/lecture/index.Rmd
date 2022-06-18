@@ -377,3 +377,28 @@ class: middle
 .right[—Silberzahn et al 2018]
 
 ]
+
+---
+
+class: bottom
+
+background-image: url(../../img/francesco-gallarotti-ruQHpukrN7c-unsplash.jpg)
+background-size: cover
+
+# THE "NEW STATISTICS"
+
+???
+
+Photo by <a href="https://unsplash.com/@gallarotti?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Francesco Gallarotti</a> on <a href="https://unsplash.com/s/photos/new?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>
+
+---
+
+# A "New Statistics"
+
+@cumming2014
+
+- Estimation based on effect sizes
+
+- Confidence Intervals
+
+- Meta-analyses
