@@ -18,17 +18,21 @@ output:
 ---
 
 ```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, dpi = 300, fig.width = 7, fig.height = 5, out.height = "500px", fig.align = "center")
+knitr::opts_knit$set(root.dir = here::here())
 options(htmltools.dir.version = FALSE)
 library(tidyverse)
+library(ggmosaic)
 theme_set(theme_dark())
 library(xaringanExtra)
 use_xaringan_extra(c("panelset", "tachyons", "freezeframe"))
 library(glottologR)
-data("aes")
-aes <- aes %>%
+data("glot_aes")
+glot_aes <- glot_aes %>%
   mutate(
     AES = factor(AES, levels = c("not_endangered", "threatened", "shifting", "moribund", "nearly_extinct", "extinct"))
   )
+f12 <- read_csv("https://raw.githubusercontent.com/stefanocoretta/coretta2018itapol/master/data-raw/aggregated/formants-series.csv")
 ```
 
 ```{r xaringan-themer, include=FALSE, warning=FALSE}
@@ -67,9 +71,10 @@ Spiegelhalter, David. The Art of Statistics (Pelican Books) (pp. 64-66). Penguin
 
 ---
 
+# Bar chart
+
 ```{r}
-aes %>%
-  drop_na(AES) %>%
+glot_aes %>%
   ggplot(aes(AES, fill = AES)) +
   geom_bar() +
   scale_fill_brewer(type = "seq", palette = "BuPu")
@@ -77,9 +82,21 @@ aes %>%
 
 ---
 
+# Bar chart
+
+```{r echo=TRUE, eval=FALSE}
+glot_aes %>%
+  ggplot(aes(AES, fill = AES)) +
+  geom_bar() +
+  scale_fill_brewer(type = "seq", palette = "BuPu")
+```
+
+---
+
+# Stacked bar chart
+
 ```{r}
-aes %>%
-  drop_na(AES) %>%
+glot_aes %>%
   mutate(
     endangered = ifelse(AES == "not_endangered", "no", "yes")
   ) %>%
@@ -87,20 +104,32 @@ aes %>%
   geom_bar() +
   scale_fill_brewer(type = "seq", palette = "BuPu")
 ```
+---
+
+# Stacked bar chart
+
+```{r}
+glot_aes %>%
+  ggplot(aes(Macroarea, fill = AES)) +
+  geom_bar() +
+  scale_fill_brewer(type = "seq", palette = "BuPu")
+```
 
 ---
+
+# Dot matrix chart
 
 ```{r fig.asp=1}
 n_per_row <- 100
 
-aes %>%
+glot_aes %>%
   arrange(AES) %>%
   mutate(
     x = rep(1:n_per_row, length.out = length(AES)),
     y = rep(1:(ceiling(length(AES) / n_per_row)), each = n_per_row)[1:length(AES)]
   ) %>%
   ggplot(aes(x, -y, colour = AES)) +
-  geom_point(size = 3) +
+  geom_point(size = 1) +
   scale_color_brewer(type = "seq", palette = "BuPu") +
   theme_dark() +
   theme(
@@ -111,3 +140,61 @@ aes %>%
   )
 ```
 
+---
+
+# Stacked proportion (filled) bar chart
+
+```{r}
+glot_aes %>%
+  ggplot(aes(Macroarea, fill = AES)) +
+  geom_bar(position = "fill") +
+  scale_fill_brewer(type = "seq", palette = "BuPu")
+```
+
+---
+
+# Mosaic plot
+
+```{r warning=FALSE}
+glot_aes %>%
+  ggplot() +
+  geom_mosaic(aes(product(Macroarea), fill = AES)) +
+  scale_fill_brewer(type = "seq", palette = "BuPu")
+```
+
+---
+
+# Line plot
+
+```{r}
+f12 %>%
+  filter(vowel == "o", c2 %in% c("t", "k")) %>%
+  ggplot(aes(time, group = file)) +
+  geom_line(aes(y = f1), alpha = 0.1, colour = "darkgreen") +
+  geom_line(aes(y = f2), alpha = 0.1, colour = "orange") +
+  facet_grid(. ~ c2)
+```
+
+---
+
+```{r}
+f12 %>%
+  filter(vowel == "o", c2 %in% c("t", "k")) %>%
+  ggplot(aes(time, group = file)) +
+  geom_point(aes(y = f1), alpha = 0.1, colour = "darkgreen") +
+  geom_point(aes(y = f2), alpha = 0.1, colour = "orange") +
+  facet_grid(. ~ c2)
+```
+
+---
+
+```{r}
+f12 %>%
+  filter(vowel == "o", c2 %in% c("t", "k")) %>%
+  ggplot(aes(time, group = file)) +
+  geom_line(aes(y = f1), alpha = 0.1, colour = "darkgreen") +
+  geom_line(aes(y = f2), alpha = 0.1, colour = "orange") +
+  geom_point(aes(y = f1), alpha = 0.1, colour = "darkgreen") +
+  geom_point(aes(y = f2), alpha = 0.1, colour = "orange") +
+  facet_grid(. ~ c2)
+```
