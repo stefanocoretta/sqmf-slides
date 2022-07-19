@@ -2177,6 +2177,20 @@
       "Hash": "c23666fdb7789c8a45e65340bb334607",
       "Requirements": []
     },
+    "sqmf": {
+      "Package": "sqmf",
+      "Version": "0.0.0.9000",
+      "Source": "GitHub",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteUsername": "stefanocoretta",
+      "RemoteRepo": "sqmf",
+      "RemoteRef": "main",
+      "RemoteSha": "5692d661c0e36d4a67e49a28388e666120a82f72",
+      "Remotes": "stefanocoretta/glottologR",
+      "Hash": "b54fd81fbaa3e9e8b7e3131b77b50c9a",
+      "Requirements": []
+    },
     "stringi": {
       "Package": "stringi",
       "Version": "1.7.8",
