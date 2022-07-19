@@ -32,7 +32,8 @@ glot_aes <- glot_aes %>%
   mutate(
     AES = factor(AES, levels = c("not_endangered", "threatened", "shifting", "moribund", "nearly_extinct", "extinct"))
   )
-f12 <- read_csv("https://raw.githubusercontent.com/stefanocoretta/coretta2018itapol/master/data-raw/aggregated/formants-series.csv")
+library(sqmf)
+data("polite")
 ```
 
 ```{r xaringan-themer, include=FALSE, warning=FALSE}
@@ -80,16 +81,6 @@ glot_aes %>%
   scale_fill_brewer(type = "seq", palette = "BuPu")
 ```
 
----
-
-# Bar chart
-
-```{r echo=TRUE, eval=FALSE}
-glot_aes %>%
-  ggplot(aes(AES, fill = AES)) +
-  geom_bar() +
-  scale_fill_brewer(type = "seq", palette = "BuPu")
-```
 
 ---
 
@@ -104,6 +95,7 @@ glot_aes %>%
   geom_bar() +
   scale_fill_brewer(type = "seq", palette = "BuPu")
 ```
+
 ---
 
 # Stacked bar chart
@@ -112,6 +104,17 @@ glot_aes %>%
 glot_aes %>%
   ggplot(aes(Macroarea, fill = AES)) +
   geom_bar() +
+  scale_fill_brewer(type = "seq", palette = "BuPu")
+```
+
+---
+
+# Stacked proportion (filled) bar chart
+
+```{r}
+glot_aes %>%
+  ggplot(aes(Macroarea, fill = AES)) +
+  geom_bar(position = "fill") +
   scale_fill_brewer(type = "seq", palette = "BuPu")
 ```
 
@@ -140,16 +143,7 @@ glot_aes %>%
   )
 ```
 
----
 
-# Stacked proportion (filled) bar chart
-
-```{r}
-glot_aes %>%
-  ggplot(aes(Macroarea, fill = AES)) +
-  geom_bar(position = "fill") +
-  scale_fill_brewer(type = "seq", palette = "BuPu")
-```
 
 ---
 
@@ -164,10 +158,12 @@ glot_aes %>%
 
 ---
 
+layout: true
+
 # Line plot
 
 ```{r}
-f12 %>%
+f_ita_pol %>%
   filter(vowel == "o", c2 %in% c("t", "k")) %>%
   ggplot(aes(time, group = file)) +
   geom_line(aes(y = f1), alpha = 0.1, colour = "darkgreen") +
@@ -178,7 +174,7 @@ f12 %>%
 ---
 
 ```{r}
-f12 %>%
+f_ita_pol %>%
   filter(vowel == "o", c2 %in% c("t", "k")) %>%
   ggplot(aes(time, group = file)) +
   geom_point(aes(y = f1), alpha = 0.1, colour = "darkgreen") +
@@ -189,7 +185,7 @@ f12 %>%
 ---
 
 ```{r}
-f12 %>%
+f_ita_pol %>%
   filter(vowel == "o", c2 %in% c("t", "k")) %>%
   ggplot(aes(time, group = file)) +
   geom_line(aes(y = f1), alpha = 0.1, colour = "darkgreen") +
@@ -197,4 +193,52 @@ f12 %>%
   geom_point(aes(y = f1), alpha = 0.1, colour = "darkgreen") +
   geom_point(aes(y = f2), alpha = 0.1, colour = "orange") +
   facet_grid(. ~ c2)
+```
+
+---
+
+layout: false
+
+# Strip chart
+
+```{r}
+polite %>%
+  ggplot(aes(attitude, f0mn, colour = gender)) +
+  geom_jitter(width = 0.1, size = 2) +
+  facet_grid(~ gender)
+```
+
+---
+
+# Strip chart
+
+```{r}
+polite %>%
+  ggplot(aes(attitude, HNRmn, colour = gender)) +
+  geom_jitter(width = 0.1, size = 2) +
+  facet_grid(~ gender)
+```
+
+---
+
+# Density plot
+
+```{r}
+polite %>%
+  ggplot(aes(f0mn, fill = attitude, colour = attitude)) +
+  geom_density(alpha = 0.5) +
+  geom_rug(alpha = 0.5) +
+  facet_grid(~ gender)
+```
+
+---
+
+# Density plot
+
+```{r}
+polite %>%
+  ggplot(aes(HNRmn, fill = attitude, colour = attitude)) +
+  geom_density(alpha = 0.5) +
+  geom_rug(alpha = 0.5) +
+  facet_grid(~ gender)
 ```
