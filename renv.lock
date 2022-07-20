@@ -2113,10 +2113,10 @@
     },
     "shiny": {
       "Package": "shiny",
-      "Version": "1.7.1",
+      "Version": "1.7.2",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "00344c227c7bd0ab5d78052c5d736c44",
+      "Hash": "4f7970a3edb0a153ac6b376785a1944a",
       "Requirements": [
         "R6",
         "bslib",
@@ -2182,13 +2182,13 @@
       "Version": "0.0.0.9000",
       "Source": "GitHub",
       "RemoteType": "github",
-      "RemoteHost": "api.github.com",
       "RemoteUsername": "stefanocoretta",
       "RemoteRepo": "sqmf",
       "RemoteRef": "main",
-      "RemoteSha": "5692d661c0e36d4a67e49a28388e666120a82f72",
+      "RemoteSha": "33aa97168822ec6dcbd646c21a5a7a9882c8a346",
+      "RemoteHost": "api.github.com",
       "Remotes": "stefanocoretta/glottologR",
-      "Hash": "b54fd81fbaa3e9e8b7e3131b77b50c9a",
+      "Hash": "7bfec857e3a2b1a63c5459e303104f3a",
       "Requirements": []
     },
     "stringi": {
