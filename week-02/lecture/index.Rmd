@@ -34,6 +34,8 @@ glot_aes <- glot_aes %>%
   )
 library(sqmf)
 data("polite")
+data("mald_1_1")
+data("gestures")
 ```
 
 ```{r xaringan-themer, include=FALSE, warning=FALSE}
@@ -84,7 +86,11 @@ glot_aes %>%
 
 ---
 
+layout: true
+
 # Stacked bar chart
+
+---
 
 ```{r}
 glot_aes %>%
@@ -98,8 +104,6 @@ glot_aes %>%
 
 ---
 
-# Stacked bar chart
-
 ```{r}
 glot_aes %>%
   ggplot(aes(Macroarea, fill = AES)) +
@@ -108,6 +112,8 @@ glot_aes %>%
 ```
 
 ---
+
+layout: false
 
 # Stacked proportion (filled) bar chart
 
@@ -162,6 +168,8 @@ layout: true
 
 # Line plot
 
+---
+
 ```{r}
 f_ita_pol %>%
   filter(vowel == "o", c2 %in% c("t", "k")) %>%
@@ -193,13 +201,83 @@ f_ita_pol %>%
   geom_point(aes(y = f1), alpha = 0.1, colour = "darkgreen") +
   geom_point(aes(y = f2), alpha = 0.1, colour = "orange") +
   facet_grid(. ~ c2)
+```
+
+---
+
+```{r}
+gestures %>%
+  ggplot(aes(as.factor(months), count)) +
+  geom_line(aes(group = id), alpha = 0.5) +
+  geom_point()
+```
+
+
+---
+
+```{r}
+gestures %>%
+  ggplot(aes(as.factor(months), count)) +
+  geom_line(aes(group = id), alpha = 0.5) +
+  geom_point() +
+  facet_grid(~ gesture)
+```
+
+---
+
+```{r}
+gestures %>%
+  ggplot(aes(as.factor(months), count)) +
+  geom_line(aes(group = id), alpha = 0.5) +
+  geom_point() +
+  facet_grid(background ~ gesture)
 ```
 
 ---
 
 layout: false
+layout: true
+
+# Connected dots plot
+
+---
+
+```{r}
+gestures %>%
+  filter(gesture != "ho_gv", count < 30) %>%
+  group_by(dyad, months, gesture) %>%
+  summarise(
+    count_tot = sum(count)
+  ) %>%
+  ggplot(aes(gesture, count_tot)) +
+  geom_line(aes(group = dyad)) +
+  geom_point() +
+  facet_grid(~ months)
+```
+
+---
+
+```{r}
+gestures %>%
+  filter(gesture != "ho_gv", count < 30) %>%
+  group_by(dyad, background, months, gesture) %>%
+  summarise(
+    count_tot = sum(count)
+  ) %>%
+  ggplot(aes(gesture, count_tot)) +
+  geom_line(aes(group = dyad)) +
+  geom_point() +
+  facet_grid(background ~ months)
+```
+
+---
+
+layout: false
+layout: true
 
 # Strip chart
+
+---
 
 ```{r}
 polite %>%
@@ -210,8 +288,6 @@ polite %>%
 
 ---
 
-# Strip chart
-
 ```{r}
 polite %>%
   ggplot(aes(attitude, HNRmn, colour = gender)) +
@@ -221,7 +297,30 @@ polite %>%
 
 ---
 
+layout: false
+layout: true
+
 # Density plot
+
+---
+
+```{r}
+polite %>%
+  ggplot(aes(f0mn)) +
+  geom_density() +
+  geom_rug(alpha = 0.5)
+```
+
+---
+
+```{r}
+polite %>%
+  ggplot(aes(f0mn, fill = gender, colour = gender)) +
+  geom_density(alpha = 0.5) +
+  geom_rug(alpha = 0.5)
+```
+
+---
 
 ```{r}
 polite %>%
@@ -233,8 +332,6 @@ polite %>%
 
 ---
 
-# Density plot
-
 ```{r}
 polite %>%
   ggplot(aes(HNRmn, fill = attitude, colour = attitude)) +
@@ -242,3 +339,93 @@ polite %>%
   geom_rug(alpha = 0.5) +
   facet_grid(~ gender)
 ```
+
+---
+
+layout: false
+layout: true
+
+# Violin plot
+
+---
+
+```{r}
+polite %>%
+  ggplot(aes(attitude, HNRmn, fill = attitude, colour = attitude)) +
+  geom_violin(alpha = 0.5) +
+  facet_grid(~ gender)
+```
+
+---
+
+```{r}
+polite %>%
+  ggplot(aes(attitude, HNRmn, fill = attitude, colour = attitude)) +
+  geom_violin(alpha = 0.5) +
+  geom_point() +
+  facet_grid(~ gender)
+```
+
+---
+
+```{r}
+polite %>%
+  ggplot(aes(attitude, HNRmn, fill = attitude, colour = attitude)) +
+  geom_violin(alpha = 0.5) +
+  geom_jitter(width = 0.1) +
+  facet_grid(~ gender)
+```
+
+---
+
+```{r}
+polite %>%
+  ggplot(aes(attitude, HNRmn, colour = attitude)) +
+  geom_violin(alpha = 0.5) +
+  geom_jitter(width = 0.05) +
+  geom_boxplot(width = 0.1) +
+  facet_grid(~ gender)
+```
+
+---
+
+layout: false
+layout: true
+
+# Scatter plot
+
+---
+
+```{r}
+polite %>%
+  ggplot(aes(f0mn, H1H2)) +
+  geom_point(alpha = 0.5)
+```
+
+---
+
+```{r}
+polite %>%
+  ggplot(aes(f0mn, H1H2)) +
+  geom_point(alpha = 0.5) +
+  facet_grid(~ gender)
+```
+
+---
+
+```{r}
+polite %>%
+  ggplot(aes(f0mn, H1H2, colour = attitude)) +
+  geom_point(alpha = 0.5) +
+  facet_grid(~ gender)
+```
+
+---
+
+```{r}
+mald_1_1 %>%
+  filter(RT_log > 6) %>%
+  ggplot(aes(PhonLev, RT/1000)) +
+  geom_point(alpha = 0.5)
+```
+
