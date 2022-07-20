@@ -2185,10 +2185,10 @@
       "RemoteUsername": "stefanocoretta",
       "RemoteRepo": "sqmf",
       "RemoteRef": "main",
-      "RemoteSha": "33aa97168822ec6dcbd646c21a5a7a9882c8a346",
+      "RemoteSha": "6ebe90f66a88196be76836314ceaf557eba72a3f",
       "RemoteHost": "api.github.com",
       "Remotes": "stefanocoretta/glottologR",
-      "Hash": "7bfec857e3a2b1a63c5459e303104f3a",
+      "Hash": "b80e36b681912d370c1dbb4ecaf5beca",
       "Requirements": []
     },
     "stringi": {
