@@ -408,7 +408,26 @@ polite %>%
 polite %>%
   ggplot(aes(f0mn, H1H2)) +
   geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm")
+```
+
+---
+
+```{r}
+polite %>%
+  ggplot(aes(f0mn, H1H2)) +
+  geom_point(alpha = 0.5) +
   facet_grid(~ gender)
+```
+
+---
+
+```{r}
+polite %>%
+  ggplot(aes(f0mn, H1H2)) +
+  geom_point(alpha = 0.5) +
+  facet_grid(~ gender) +
+  geom_smooth(method = "lm")
 ```
 
 ---
@@ -427,5 +446,11 @@ mald_1_1 %>%
   filter(RT_log > 6) %>%
   ggplot(aes(PhonLev, RT/1000)) +
   geom_point(alpha = 0.5)
+```
+
+---
+
+```{r}
+
 ```
 
