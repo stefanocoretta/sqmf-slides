@@ -1313,29 +1313,6 @@
       "Hash": "e7023edcf59fd695d92eb01a7f37f991",
       "Requirements": []
     },
-    "lexa": {
-      "Package": "lexa",
-      "Version": "0.0.2.9000",
-      "Source": "GitHub",
-      "RemoteType": "github",
-      "RemoteHost": "api.github.com",
-      "RemoteRepo": "lexa",
-      "RemoteUsername": "stefanocoretta",
-      "RemoteRef": "devel",
-      "RemoteSha": "99ab7a56a7c2d629bbc8a234c44d5a424706c5c1",
-      "Hash": "f32805e85748533371b0a946d448e53c",
-      "Requirements": [
-        "cli",
-        "crayon",
-        "glue",
-        "htmltools",
-        "purrr",
-        "readr",
-        "rmarkdown",
-        "stringr",
-        "yaml"
-      ]
-    },
     "lifecycle": {
       "Package": "lifecycle",
       "Version": "1.0.1",
