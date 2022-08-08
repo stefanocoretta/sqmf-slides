@@ -48,6 +48,11 @@ style_mono_light(
 )
 ```
 
+```{r}
+f
+```
+
+
 # Data visualisation
 
 .center[
@@ -450,10 +455,24 @@ mald_1_1 %>%
 
 ---
 
+```{r}
+
+```
+
+
+---
+
 layout: false
+
+class: center middle reverse
+
+# DO'S AND DON'TS
+
+---
+
 layout: true
 
-# Do's and don'ts
+# DO
 
 ---
 
@@ -481,10 +500,14 @@ mald_1_1 %>%
     prop = n / sum(n)
   ) %>%
   ggplot(aes(IsWord, prop, colour = ACC)) +
-  geom_jitter(width = 0.2)
+  geom_jitter(position = position_jitterdodge(dodge.width = 1))
 ```
 
 ---
+
+layout: false
+
+# DON'T
 
 ```{r}
 mald_1_1 %>%
@@ -500,9 +523,28 @@ mald_1_1 %>%
   ) %>%
   ggplot(aes(IsWord, mean_prop, fill = ACC)) +
   geom_bar(stat = "identity", position = "dodge") +
-  geom_errorbar(aes(ymin = mean_prop - sd_prop, ymax = mean_prop + sd_prop), position = position_dodge(width = 0.9), width = 0.2) +
-  labs(
-    title = "Please don't do this!"
-  )
+  geom_errorbar(aes(ymin = mean_prop - sd_prop, ymax = mean_prop + sd_prop), position = position_dodge(width = 0.9), width = 0.2)
 ```
 
+---
+
+# DO
+
+```{r}
+polite %>%
+  ggplot(aes(attitude, HNRmn, fill = attitude, colour = attitude)) +
+  geom_violin(alpha = 0.5) +
+  geom_jitter(width = 0.1) +
+  facet_grid(~ gender)
+```
+
+---
+
+# DON'T
+
+```{r}
+polite %>%
+  ggplot(aes(attitude, HNRmn, fill = attitude, colour = attitude)) +
+  geom_boxplot(alpha = 0.5) +
+  facet_grid(~ gender)
+```
