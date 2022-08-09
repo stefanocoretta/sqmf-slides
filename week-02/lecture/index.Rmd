@@ -48,10 +48,6 @@ style_mono_light(
 )
 ```
 
-```{r}
-f
-```
-
 
 # Data visualisation
 

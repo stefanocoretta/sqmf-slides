@@ -22,9 +22,11 @@ knitr::opts_chunk$set(echo = FALSE, message = FALSE, dpi = 300, out.height = "50
 knitr::opts_knit$set(root.dir = here::here())
 options(htmltools.dir.version = FALSE)
 library(tidyverse)
-theme_set(theme_dark())
+theme_set(theme_light())
 library(xaringanExtra)
 use_xaringan_extra(c("panelset", "tachyons", "freezeframe"))
+options(show.signif.stars = FALSE)
+set.seed(80788)
 ```
 
 ```{r xaringan-themer, include=FALSE, warning=FALSE}
@@ -51,8 +53,11 @@ background-size: contain
 
 ---
 
+layout: true
+
 # Given the .green[formula], find the .orange[points]
 
+---
 
 ## You have:
 
@@ -66,8 +71,6 @@ background-size: contain
 
 
 ---
-
-# Given the .green[formula], find the .orange[points]
 
 ```{r homework}
 x <- c(2, 4, 5, 8, 10, 23, 36)
@@ -83,8 +86,6 @@ ggplot(line, aes(x, y)) +
 
 ---
 
-# Given the .green[formula], find the .orange[points]
-
 ```{r line}
 ggplot(line, aes(x, y)) +
   geom_point(size = 5, colour = "gray") +
@@ -93,8 +94,6 @@ ggplot(line, aes(x, y)) +
 ```
 
 ---
-
-# Given the .orange[points], find the .green[formula]
 
 ## You have:
 
@@ -108,7 +107,11 @@ ggplot(line, aes(x, y)) +
 
 ---
 
+layout: false
+
 # Given the .orange[points], find the .green[formula]
+
+---
 
 ```{r sample}
 ggplot(line, aes(x, y)) +
@@ -160,7 +163,11 @@ class: center middle inverse
 
 ---
 
+layout: true
+
 # Linear model: the basics
+
+---
 
 ```{r lm-plot}
 ggplot(line, aes(x, y)) +
@@ -175,8 +182,6 @@ ggplot(line, aes(x, y)) +
 
 ---
 
-# Linear model: the basics
-
 ```{r lm-plot-2}
 ggplot(line, aes(x, y)) +
   geom_point(size = 5, ) +
@@ -190,17 +195,11 @@ ggplot(line, aes(x, y)) +
 
 ---
 
-# Linear model: the basics
-
-
 .f1[
 $$y = ? + ? x$$
 ]
 
 ---
-
-# Linear model: the basics
-
 
 .f1[
 $$y = \beta_0 + \beta_1x$$
@@ -224,13 +223,19 @@ We know $x$ and $y$ and we need to .green[estimate] $\beta_0$ and $\beta_1$.
 
 ---
 
+layout: false
+
 class: center middle inverse
 
 # Slido quiz 2
 
 ---
 
+layout: true
+
 # Linear model: the basics
+
+---
 
 ```{r sample-2}
 x <- sample(1:100, 50)
@@ -245,16 +250,12 @@ ggplot(line, aes(x, y)) +
 
 ---
 
-# Linear model: the basics
-
-```{r lm, echo=TRUE}
+```{r line-lm, echo=TRUE}
 line_lm <- lm(y ~ x, data = line)
 summary(line_lm)
 ```
 
 ---
-
-# Linear model: the basics
 
 ```{r line-model}
 ggplot(line, aes(x, y)) +
@@ -265,6 +266,65 @@ ggplot(line, aes(x, y)) +
 
 ---
 
-standard error
+layout: false
 
-checks
+# Standard error
+
+```{r se}
+ggplot(line, aes(x, y)) +
+  geom_point(size = 5, alpha = 0.1) +
+  geom_abline(intercept = rnorm(100, 2, 2.66), slope = rnorm(100, 3, 0.05), size = 0.5, alpha = 0.05) +
+  labs(title = bquote(italic(y) == "2" + "3" * italic(x)))
+```
+
+
+---
+
+layout: true
+
+# Checking residuals
+
+---
+
+```{r fig.asp=1}
+plot(line_lm, which = 2)
+```
+
+---
+
+```{r}
+x_c <- sample(1:100, 50)
+y_c <- 2 + (3 * x_c) + (0.5 * x_c^2) + rnorm(length(x_c), 0, 100)
+
+curve <- tibble(x_c, y_c)
+
+curve %>%
+  ggplot(aes(x_c, y_c)) +
+  geom_point() +
+  geom_smooth(method = "lm")
+```
+
+---
+
+```{r fig.asp=1}
+curve_lm <- lm(y_c ~ x_c, data = curve)
+
+plot(curve_lm, which = 2)
+```
+
+
+---
+
+layout: false
+
+```{r sample-3}
+x <- rnorm(200, 2, 0.5)
+z <- rnorm(200, -3.5, 1)
+y <- 12 + (3 * x) + (1.5 * z) + rnorm(length(x), 0, 4)
+
+sample_3 <- tibble(x, z, y)
+
+ggplot(sample_3, aes(y)) +
+  geom_density(fill = "darkgreen", alpha = 0.5) +
+  geom_rug()
+```
