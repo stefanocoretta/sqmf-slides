@@ -1530,10 +1530,10 @@
     },
     "nlme": {
       "Package": "nlme",
-      "Version": "3.1-158",
+      "Version": "3.1-159",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "9469aeaeddf4f48a7ac70877d0b7ba36",
+      "Hash": "4a0b3a68f846cb999ff0e8e519524fbb",
       "Requirements": [
         "lattice"
       ]
@@ -1693,6 +1693,14 @@
         "rprojroot",
         "withr"
       ]
+    },
+    "plot.matrix": {
+      "Package": "plot.matrix",
+      "Version": "1.6.2",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "a0c0de3410d9956aafc07cdd5147057f",
+      "Requirements": []
     },
     "plotly": {
       "Package": "plotly",
@@ -2352,16 +2360,16 @@
     },
     "sqmf": {
       "Package": "sqmf",
-      "Version": "0.0.0.9000",
+      "Version": "0.0.0.9000-1",
       "Source": "GitHub",
       "RemoteType": "github",
       "RemoteUsername": "stefanocoretta",
       "RemoteRepo": "sqmf",
       "RemoteRef": "main",
-      "RemoteSha": "ecbf3bee321cbde1b8c84b2ebfc672b408c244c0",
+      "RemoteSha": "a375cb1108a668107eb25572f77ddc138ff76028",
       "RemoteHost": "api.github.com",
       "Remotes": "stefanocoretta/glottologR",
-      "Hash": "4deaaa1c9df4751756a55060a0474bd8",
+      "Hash": "978c6b4a40b72d40f01e6f31c1a72a16",
       "Requirements": []
     },
     "stringi": {
@@ -2386,10 +2394,10 @@
     },
     "survival": {
       "Package": "survival",
-      "Version": "3.3-1",
+      "Version": "3.4-0",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "f6189c70451d3d68e0d571235576e833",
+      "Hash": "04411ae66ab4659230c067c32966fc20",
       "Requirements": [
         "Matrix"
       ]
