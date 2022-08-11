@@ -22,15 +22,18 @@ knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, dpi = 300,
 knitr::opts_knit$set(root.dir = here::here())
 options(htmltools.dir.version = FALSE)
 library(tidyverse)
-library(magrittr)
 theme_set(theme_light())
+library(magrittr)
+library(ggeffects)
 library(xaringanExtra)
 use_xaringan_extra(c("panelset", "tachyons", "freezeframe"))
+
 library(sqmf)
 data("dur_ita_pol")
 dur_ita_pol %<>% drop_na(f1, v1_duration)
 data("polite")
 data("mald_1_1")
+
 mald_1_1 <- mald_1_1 %>%
   mutate(
     Lev_cat = case_when(
@@ -40,6 +43,7 @@ mald_1_1 <- mald_1_1 %>%
     ),
     Lev_cat = factor(Lev_cat, levels = c("low", "mid", "high"))
   )
+
 set.seed(8788)
 ```
 
@@ -259,7 +263,49 @@ cat_3 <- lm(RT ~ Lev_cat, data = mald_1_1)
 summary(cat_3)
 ```
 
+---
 
+```{r}
+ggpredict(cat_3, terms = "Lev_cat") %>% plot()
+```
+
+---
+
+```{r}
+ggpredict(cat_3, terms = "Lev_cat")
+```
+
+---
+
+```{r}
+cat_4 <- lm(RT ~ IsWord + Lev_cat, data = mald_1_1)
+
+summary(cat_4)
+```
+
+---
+
+```{r}
+ggpredict(cat_4)
+```
+
+---
+
+```{r}
+ggpredict(cat_4, terms = c("IsWord", "Lev_cat"))
+```
+
+---
+
+```{r}
+ggpredict(cat_4, terms = c("IsWord", "Lev_cat")) %>% plot()
+```
+
+---
+
+```{r}
+ggpredict(cat_4, terms = c("Lev_cat", "IsWord")) %>% plot()
+```
 
 ---
 
