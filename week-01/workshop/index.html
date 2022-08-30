@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Statistics and Quantitative Methods (S1)</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Dr Stefano Coretta" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/tachyons/tachyons.min.css" rel="stylesheet" />
+    <link href="libs/panelset/panelset.css" rel="stylesheet" />
+    <script src="libs/panelset/panelset.js"></script>
+    <script src="libs/freezeframe/freezeframe.min.js"></script>
+    <script src="libs/xaringanExtra-freezeframe/freezeframe-init.js"></script>
+    <script id="xaringanExtra-freezeframe-options" type="application/json">{"selector":"img[src$=\"gif\"]","trigger":"click","overlay":false,"responsive":true,"warnings":true}</script>
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Statistics and Quantitative Methods (S1)
+]
+.subtitle[
+## Week 1 — Workshop
+]
+.author[
+### Dr Stefano Coretta
+]
+.institute[
+### University of Edinburgh
+]
+.date[
+### 2022/09/20
+]
+
+---
+
+
+
+
+
+
+
+class: middle center
+
+![](../../img/what-r-for.png)
+
+---
+
+class: middle center
+
+![:scale 80%](../../img/inclusive-community.png)
+
+---
+
+# R vs RStudio
+
+![](../../img/R_vs_RStudio_1.png)
+
+---
+
+# R vs RStudio
+
+.pull-left[
+.f2[R]
+
+- R is a **programming language**.
+
+- We use programming languages to **interact** with computers.
+
+- You **run commands** written in a console and the related task is executed.
+]
+
+--
+
+.pull-right[
+.f2[RStudio]
+
+- RStudio is an Integrated Development Environment or **IDE**.
+
+- It helps you using R more efficiently.
+
+- It has a graphical interface.
+]
+
+---
+
+# R vs RStudio
+
+![](../../img/R_vs_RStudio_1.png)
+
+---
+
+# R as a calculator
+
+Write the following in the `Console`, then press `ENTER`.
+
+
+```r
+1 + 2
+```
+
+```
+## [1] 3
+```
+
+--
+
+You did it! You run your first line of code!
+
+---
+
+# R as a calculator
+
+Try some more operations...
+
+
+```r
+67 - 13
+```
+
+```
+## [1] 54
+```
+
+```r
+2 * 4
+```
+
+```
+## [1] 8
+```
+
+```r
+268 / 43
+```
+
+```
+## [1] 6.232558
+```
+
+---
+
+# R as a calculator
+
+You can chain operations...
+
+
+```r
+6 + 4 - 1 + 2
+```
+
+```
+## [1] 11
+```
+
+```r
+4 * 2 + 3 * 2
+```
+
+```
+## [1] 14
+```
+
+---
+
+# R as a calculator
+
+But watch out for your brackets!
+
+
+```r
+4 * 2 + 3 * 2
+```
+
+```
+## [1] 14
+```
+
+```r
+(4 * 2) + (3 * 2)
+```
+
+```
+## [1] 14
+```
+
+```r
+4 * (2 + 3) * 2
+```
+
+```
+## [1] 40
+```
+
+---
+
+# Forget-me-not: variables
+
+Store a variable in the computer memory for later use.
+
+
+```r
+my_num &lt;- 156
+```
+
+--
+
+You can just call it back when you need it!
+
+
+```r
+my_num
+```
+
+```
+## [1] 156
+```
+
+---
+
+# Oh my vars!
+
+
+```r
+income &lt;- 1200
+expenses &lt;- 500
+income - expenses
+```
+
+```
+## [1] 700
+```
+
+--
+
+You can go all the way with variables!
+
+
+```r
+savings &lt;- income - expenses
+```
+
+And check the value...
+
+
+```r
+savings
+```
+
+```
+## [1] 700
+```
+
+---
+
+# Variables are... variable
+
+
+```r
+yo &lt;- 5
+yo + 3
+```
+
+```
+## [1] 8
+```
+
+```r
+yo &lt;- 3
+yo + 3
+```
+
+```
+## [1] 6
+```
+
+---
+
+# Variables can hold more than one item
+
+
+```r
+one_i &lt;- 6
+two_i &lt;- c(6, 8)
+five_i &lt;- c(6, 8, 42)
+```
+
+--
+
+Note the following are the same:
+
+
+```r
+one_i &lt;- 6
+one_ii &lt;- c(6)
+```
+
+
+---
+
+# R can't function without... functions
+
+**Functions** are operations performed on one or more *arguments*.
+
+
+```r
+sum(3, 5)
+```
+
+```
+## [1] 8
+```
+
+--
+
+And arguments can be vectors!
+
+
+```r
+my_nums &lt;- c(3, 5, 7)
+sum(my_nums)
+```
+
+```
+## [1] 15
+```
+
+```r
+mean(my_nums)
+```
+
+```
+## [1] 5
+```
+
+---
+
+# Not just numbers
+
+Variables can store **strings**.
+
+
+```r
+name &lt;- "Stefano"
+surname &lt;- "Coretta"
+name
+```
+
+```
+## [1] "Stefano"
+```
+
+---
+
+# Not just numbers
+
+And strings can be used as arguments in functions.
+
+
+```r
+cat("My name is", name, surname)
+```
+
+```
+## My name is Stefano Coretta
+```
+
+--
+
+And you can of course reuse the same variable name to override the variable value.
+
+
+```r
+name &lt;- "Raj"
+cat("My name is", name)
+```
+
+```
+## My name is Raj
+```
+
+---
+
+# The null and the infinite
+
+
+```r
+forgot &lt;- NA
+nothing &lt;- NULL
+everything &lt;- Inf
+```
+
+
+---
+
+# Summary
+
+
+- R as a calculator
+
+  - Arithmetic operations.
+
+- Variable:
+  
+  - Numeric.
+  - String.
+
+- Function:
+  
+  - Function name (`sum()`, `mean()`, `cat()`).
+  - Arguments.
+
+---
+
+class: middle center inverse
+
+.f1[TUTORIAL]
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script src="../../assets/macros.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
