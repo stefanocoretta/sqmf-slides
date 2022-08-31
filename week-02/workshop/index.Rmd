@@ -1,0 +1,392 @@
+---
+title: "Statistics and Quantitative Methods (S1)"
+subtitle: "Week 2 — Workshop"
+author: "Dr Stefano Coretta"
+institute: "University of Edinburgh"
+date: "2022/09/20"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css:
+      - xaringan-themer.css
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: "16:9"
+      beforeInit: "../../assets/macros.js"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, dpi = 300, fig.width = 7, fig.height = 5, out.height = "500px", fig.align = "center")
+knitr::opts_knit$set(root.dir = here::here())
+options(htmltools.dir.version = FALSE)
+library(tidyverse)
+theme_set(theme_light())
+library(xaringanExtra)
+use_xaringan_extra(c("panelset", "tachyons", "freezeframe"))
+library(ggmosaic)
+library(ggrepel)
+
+library(glottologR)
+data("glot_aes")
+glot_aes <- glot_aes %>%
+  mutate(
+    AES = factor(AES, levels = c("not_endangered", "threatened", "shifting", "moribund", "nearly_extinct", "extinct"))
+  )
+
+library(sqmf)
+data("polite")
+data("mald_1_1")
+data("gestures")
+```
+
+```{r xaringan-themer, include=FALSE, warning=FALSE}
+library(xaringanthemer)
+style_mono_light(
+  base_color = "#23395b",
+  text_font_google = google_font("Lato", "400", "700", "400i", "700i"),
+  header_font_google = google_font("Montserrat", "400", "700", "400i", "700i"),
+  code_font_google = google_font("Source Code Pro", "400", "700")
+)
+```
+
+
+# Visualise data
+
+![](../../img/data-viz.png)
+
+---
+
+# Graphic systems
+
+- Base R.
+
+- lattice.
+
+- ggplot2.
+
+- more...
+
+---
+
+# Base R plotting function
+
+```{r scatter, eval=FALSE}
+x <- 1:10
+y <- x^3
+plot(x, y)
+```
+
+---
+
+# Base R plotting function
+
+
+```{r scatter-plot, echo=FALSE}
+x <- 1:10
+y <- x^3
+plot(x, y)
+```
+
+---
+
+# Base R plotting function
+
+```{r line, eval=FALSE}
+x <- seq(1, 10, by = 0.01)
+y <- x^3
+plot(x, y, type = "l", col = "purple", lwd = 3, lty = "dashed")
+```
+
+---
+
+# Base R plotting function
+
+```{r line-plot, echo=FALSE}
+x <- seq(1, 10, by = 0.01)
+y <- x^3
+plot(x, y, type = "l", col = "purple", lwd = 3, lty = "dashed")
+```
+
+---
+
+# Packages to the rescue
+
+<br>
+
+- The R **library** contains the packages you have installed.
+
+  - Base R.
+
+  - Extra packages.
+
+- Install extra packages with `install.packages()`.
+
+--
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt5[
+
+Run this in the console:
+
+```r
+install.packages("fortunes")
+```
+
+]
+
+---
+
+# Packages to the rescue
+
+To use a package installed in the library, you `attach` the package with `library()`.
+
+--
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt5[
+
+Run this in the console:
+
+```{r fortunes}
+library(fortunes)
+```
+
+]
+
+---
+
+# Packages to the rescue
+
+Now you can use the functions provided by the attached package
+
+--
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt5[
+
+Run this in the console:
+
+```{r fortune}
+fortune()
+```
+
+]
+
+---
+
+layout: true
+
+# Language endangerment 
+
+---
+
+```{r aes, eval=FALSE}
+ggplot(
+  data = glot_aes,
+  mapping = aes(x = AES)
+) +
+  geom_bar()
+```
+
+--
+
+- `ggplot()` function.
+
+- Arguments:
+  - `data` to specify which data to plot
+  - `mapping` to specify mapping between columns in the data and "aesthetics"
+  
+- `geom_bar()` to add a bar geometry.
+
+---
+
+```{r aes-plot, echo=FALSE}
+ggplot(
+  data = glot_aes,
+  mapping = aes(x = AES)
+) +
+  geom_bar()
+```
+
+---
+
+.pull-left[
+
+```{r aes-plot-1, fig.show="hide"}
+ggplot(
+  data = glot_aes,
+  mapping = aes(x = AES)
+)
+```
+
+]
+
+.pull-right[
+
+![](`r knitr::fig_chunk('aes-plot-1', 'png')`)
+
+]
+
+---
+
+.pull-left[
+
+```{r aes-plot-2, fig.show='hide'}
+ggplot(
+  data = glot_aes,
+  mapping = aes(x = AES)
+) +
+  geom_bar()
+```
+
+]
+
+.pull-right[
+
+![](`r knitr::fig_chunk('aes-plot-2', 'png')`)
+
+]
+
+---
+
+.pull-left[
+
+```{r aes-plot-3, fig.show='hide'}
+ggplot(
+  data = glot_aes,
+  mapping = aes(x = AES, fill = AES)
+) +
+  geom_bar()
+```
+
+]
+
+.pull-right[
+
+![](`r knitr::fig_chunk('aes-plot-3', 'png')`)
+
+]
+
+---
+
+.pull-left[
+
+```{r aes-plot-4, fig.show='hide'}
+ggplot(
+  data = glot_aes,
+  mapping = aes(x = Macroarea)
+) +
+  geom_bar()
+```
+
+]
+
+.pull-right[
+
+![](`r knitr::fig_chunk('aes-plot-4', 'png')`)
+
+]
+
+---
+
+.pull-left[
+
+```{r aes-plot-5, fig.show='hide'}
+ggplot(
+  data = glot_aes,
+  mapping = aes(x = Macroarea, fill = AES)
+) +
+  geom_bar()
+```
+
+]
+
+.pull-right[
+
+![](`r knitr::fig_chunk('aes-plot-5', 'png')`)
+
+]
+
+---
+
+.pull-left[
+
+```{r aes-plot-6, fig.show='hide'}
+ggplot(
+  data = glot_aes,
+  mapping = aes(x = Macroarea, fill = AES)
+) +
+  geom_bar(position = "dodge")
+```
+
+]
+
+.pull-right[
+
+![](`r knitr::fig_chunk('aes-plot-6', 'png')`)
+
+]
+
+---
+
+layout: false
+layout: true
+
+# Politeness and f0
+
+---
+
+.pull-left[
+```{r pol-plot-1, fig.show='hide'}
+ggplot(
+  data = polite,
+  mapping = aes(x = attitude, y = f0mn)
+) +
+  geom_point()
+```
+]
+
+.pull-right[
+![](`r knitr::fig_chunk('pol-plot-1', 'png')`)
+]
+
+---
+
+.pull-left[
+```{r pol-plot-2, fig.show='hide'}
+ggplot(
+  data = polite,
+  mapping = aes(x = attitude, y = f0mn)
+) +
+  geom_jitter() #<<
+```
+]
+
+.pull-right[
+![](`r knitr::fig_chunk('pol-plot-2', 'png')`)
+]
+
+---
+
+.pull-left[
+```{r pol-plot-3, fig.show='hide'}
+ggplot(
+  data = polite,
+  mapping = aes(x = attitude, y = f0mn)
+) +
+  geom_jitter(width = 0.2) #<<
+```
+]
+
+.pull-right[
+![](`r knitr::fig_chunk('pol-plot-3', 'png')`)
+]
+
+---
+
+layout: false
+
+---
+
+class: middle center inverse
+
+.f1[TUTORIAL]
