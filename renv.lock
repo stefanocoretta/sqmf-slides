@@ -1353,13 +1353,13 @@
       "Version": "0.0.0.9001",
       "Source": "GitHub",
       "RemoteType": "github",
+      "RemoteHost": "api.github.com",
       "RemoteUsername": "stefanocoretta",
       "RemoteRepo": "sqmf",
       "RemoteRef": "main",
-      "RemoteSha": "e66ce99675a482d97383b32b50cf04fc77972dd0",
-      "RemoteHost": "api.github.com",
+      "RemoteSha": "d75b5396c6d8d01992f3eae790d6fcea5702ed8d",
       "Remotes": "stefanocoretta/glottologR",
-      "Hash": "24588d8f5b2202a9afd503b09a1d121a",
+      "Hash": "ae1e9291e86e0a1ca9b53cfb194d9cff",
       "Requirements": []
     },
     "stringi": {
