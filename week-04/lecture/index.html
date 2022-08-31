@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Statistics and Quantitative Methods (S1)</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Dr Stefano Coretta" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/tachyons/tachyons.min.css" rel="stylesheet" />
+    <link href="libs/panelset/panelset.css" rel="stylesheet" />
+    <script src="libs/panelset/panelset.js"></script>
+    <script src="libs/freezeframe/freezeframe.min.js"></script>
+    <script src="libs/xaringanExtra-freezeframe/freezeframe-init.js"></script>
+    <script id="xaringanExtra-freezeframe-options" type="application/json">{"selector":"img[src$=\"gif\"]","trigger":"click","overlay":false,"responsive":true,"warnings":true}</script>
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Statistics and Quantitative Methods (S1)
+]
+.subtitle[
+## Week 4
+]
+.author[
+### Dr Stefano Coretta
+]
+.institute[
+### University of Edinburgh
+]
+.date[
+### 2022/09/01
+]
+
+---
+
+
+
+
+
+
+layout: true
+
+# Linear model: the basics
+
+---
+
+&lt;img src="index_files/figure-html/line-model-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+```
+## 
+## Call:
+## lm(formula = v1_duration ~ f1, data = dur_ita_pol)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -66.05 -25.16  -6.76  21.46 122.18 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept) 70.33909    3.02569   23.25   &lt;2e-16
+## f1           0.05915    0.00504   11.74   &lt;2e-16
+## 
+## Residual standard error: 32.92 on 1332 degrees of freedom
+## Multiple R-squared:  0.09373,	Adjusted R-squared:  0.09305 
+## F-statistic: 137.8 on 1 and 1332 DF,  p-value: &lt; 2.2e-16
+```
+
+---
+
+layout: false
+
+# Summary of last week
+
+- ...
+
+- So far we used **continuous** predictors.
+
+  - ...
+
+---
+
+class: center middle inverse
+
+# What if we have **categorical** predictors?
+
+Like group, condition, gender, ...
+
+---
+
+# Categorical predictors
+
+&lt;img src="index_files/figure-html/categorical-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Categorical predictors
+
+
+.f1[
+`$$\text{RT} = \beta_0 + \beta_1\text{IsWord}$$`
+]
+
+&lt;br&gt;
+
+--
+
+.f2[
+`$$\beta_0 = \text{intercept}$$`
+`$$\beta_1 = \text{coefficient for IsWord}$$`
+]
+
+--
+
+&lt;br&gt;
+
+We know `RT` and `IsWord` (`TRUE` or `FALSE`) and we need to .green[estimate] `\(\beta_0\)` and `\(\beta_1\)`.
+
+---
+
+class: bottom
+background-image: url(../img/hannah-grace-fk4tiMlDFF0-unsplash.jpg)
+background-size: cover
+
+# .white[But *IsWord* is not numeric!!!]
+
+???
+
+Photo by &lt;a href="https://unsplash.com/@oddityandgrace?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText"&gt;hannah grace&lt;/a&gt; on &lt;a href="https://unsplash.com/s/photos/surprised-puppy?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText"&gt;Unsplash&lt;/a&gt;
+
+
+---
+
+# Dummy coding
+
+.f3[
+|     | IsWord    |
+| --- | -------: |
+| TRUE  | 0        |
+| FALSE | 1        |
+]
+
+&lt;br&gt;
+
+`$$\text{RT} = \beta_0 + \beta_1\text{IsWord}$$`
+
+&lt;br&gt;
+
+--
+
+`$$\text{RT}(IsWord = TRUE) = \beta_0 + \beta_1 \cdot 0 = \beta_0$$`
+
+&lt;br&gt;
+
+--
+
+`$$\text{RT}(IsWord = FALSE) = \beta_0 + \beta_1 \cdot 1 =  \beta_0 + \beta_1$$`
+
+---
+
+# Categorical predictors
+
+
+```r
+isword_lm &lt;- lm(RT ~ IsWord, data = mald_1_1)
+summary(isword_lm)
+```
+
+```
+## 
+## Call:
+## lm(formula = RT ~ IsWord, data = mald_1_1)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -919.07 -195.07  -69.34  104.66 2033.93 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept)  953.074      6.211  153.44   &lt;2e-16
+## IsWordFALSE  116.261      8.839   13.15   &lt;2e-16
+## 
+## Residual standard error: 312.5 on 4998 degrees of freedom
+## Multiple R-squared:  0.03346,	Adjusted R-squared:  0.03326 
+## F-statistic:   173 on 1 and 4998 DF,  p-value: &lt; 2.2e-16
+```
+
+
+---
+
+&lt;img src="index_files/figure-html/unnamed-chunk-2-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+# Dummy coding
+
+.f3[
+|      | Lev_cat  |
+| ---- | -------: |
+| low  | 0        |
+| mid  | 1        |
+| high | ???      |
+]
+
+---
+
+# Dummy coding
+
+.f3[
+|      | Lev_cat_mid  | Lev_cat_high |
+| ---- | -------: | -------: |
+| low  | 0        | 0        |
+| mid  | 1        | 0        |
+| high | 0        | 1        |
+]
+
+&lt;br&gt;
+
+`$$\text{RT} = \beta_0 + \beta_1\text{Lev_cat_mid} + \beta_2\text{Lev_cat_high}$$`
+
+--
+
+
+&lt;br&gt;
+
+We know `RT` and `Lev_cat` (`low`, `mid` or `high`) and we need to .green[estimate] `\(\beta_0\)`,  `\(\beta_1\)` and `\(\beta_2\)`.
+
+
+---
+
+
+--
+
+`$$\text{RT}(Lev_cat = low) = \beta_0 + \beta_1 \cdot 0 + \beta_2 \cdot 0 = \beta_0$$`
+
+&lt;br&gt;
+
+--
+
+`$$\text{RT}(Lev_cat = mid) = \beta_0 + \beta_1 \cdot 1 + \beta_2 \cdot 0 = \beta_0 + \beta_1$$`
+
+&lt;br&gt;
+
+--
+
+`$$\text{RT}(Lev_cat = high) = \beta_0 + \beta_1 \cdot 0 + \beta_2 \cdot 1 = \beta_0 + \beta_2$$`
+
+
+---
+
+
+```
+## 
+## Call:
+## lm(formula = RT ~ Lev_cat, data = mald_1_1)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -1027.31  -200.01   -78.07   108.69  1925.69 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept)  967.131      7.727 125.158  &lt; 2e-16
+## Lev_catmid    35.877     10.930   3.283  0.00104
+## Lev_cathigh   94.176     10.928   8.618  &lt; 2e-16
+## 
+## Residual standard error: 315.5 on 4997 degrees of freedom
+## Multiple R-squared:  0.01492,	Adjusted R-squared:  0.01452 
+## F-statistic: 37.83 on 2 and 4997 DF,  p-value: &lt; 2.2e-16
+```
+
+---
+
+&lt;img src="index_files/figure-html/unnamed-chunk-4-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+```
+## # Predicted values of RT
+## 
+## Lev_cat | Predicted |             95% CI
+## ----------------------------------------
+## low     |    967.13 | [ 951.99,  982.28]
+## mid     |   1003.01 | [ 987.86, 1018.16]
+## high    |   1061.31 | [1046.16, 1076.45]
+```
+
+---
+
+
+```
+## 
+## Call:
+## lm(formula = RT ~ IsWord + Lev_cat, data = mald_1_1)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -968.91 -195.10  -71.34  104.09 1984.09 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept)  913.114      8.666 105.368  &lt; 2e-16
+## IsWordFALSE  113.984      8.783  12.978  &lt; 2e-16
+## Lev_catmid    33.450     10.753   3.111  0.00188
+## Lev_cathigh   89.800     10.755   8.350  &lt; 2e-16
+## 
+## Residual standard error: 310.3 on 4996 degrees of freedom
+## Multiple R-squared:  0.04704,	Adjusted R-squared:  0.04647 
+## F-statistic: 82.21 on 3 and 4996 DF,  p-value: &lt; 2.2e-16
+```
+
+---
+
+
+```
+## $IsWord
+## # Predicted values of RT
+## 
+## IsWord | Predicted |             95% CI
+## ---------------------------------------
+## TRUE   |    913.11 | [ 896.13,  930.10]
+## FALSE  |   1027.10 | [1009.66, 1044.53]
+## 
+## Adjusted for:
+## * Lev_cat = low
+## 
+## $Lev_cat
+## # Predicted values of RT
+## 
+## Lev_cat | Predicted |            95% CI
+## ---------------------------------------
+## low     |    913.11 | [896.13,  930.10]
+## mid     |    946.56 | [929.40,  963.73]
+## high    |   1002.91 | [985.60, 1020.23]
+## 
+## Adjusted for:
+## * IsWord = TRUE
+## 
+## attr(,"class")
+## [1] "ggalleffects" "list"        
+## attr(,"model.name")
+## [1] "cat_4"
+```
+
+---
+
+
+```
+## # Predicted values of RT
+## 
+## # Lev_cat = low
+## 
+## IsWord | Predicted |             95% CI
+## ---------------------------------------
+## TRUE   |    913.11 | [ 896.13,  930.10]
+## FALSE  |   1027.10 | [1009.66, 1044.53]
+## 
+## # Lev_cat = mid
+## 
+## IsWord | Predicted |             95% CI
+## ---------------------------------------
+## TRUE   |    946.56 | [ 929.40,  963.73]
+## FALSE  |   1060.55 | [1043.30, 1077.80]
+## 
+## # Lev_cat = high
+## 
+## IsWord | Predicted |             95% CI
+## ---------------------------------------
+## TRUE   |   1002.91 | [ 985.60, 1020.23]
+## FALSE  |   1116.90 | [1099.80, 1134.00]
+```
+
+---
+
+&lt;img src="index_files/figure-html/unnamed-chunk-9-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+
+---
+
+&lt;img src="index_files/figure-html/unnamed-chunk-10-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Summary
+
+* The simplest .orange[**linear model**] is a straight line.
+
+`$$y = \beta_0 + \beta_1 x$$`
+
+* We want to estimate the `\(\beta_n\)` .orange[**coefficients**].
+
+`$$y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_4 x_1 x_2 + \beta_3 x_3$$`
+
+* Categorical predictors are .orange[dummy coded].
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script src="../../assets/macros.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
