@@ -23,6 +23,7 @@ knitr::opts_knit$set(root.dir = here::here())
 options(htmltools.dir.version = FALSE)
 library(tidyverse)
 theme_set(theme_light())
+library(magrittr)
 library(xaringanExtra)
 use_xaringan_extra(c("panelset", "tachyons", "freezeframe"))
 library(ggmosaic)
@@ -39,6 +40,7 @@ library(sqmf)
 data("polite")
 data("mald_1_1")
 data("gestures")
+gestures %<>% mutate(months = as.factor(months))
 ```
 
 ```{r xaringan-themer, include=FALSE, warning=FALSE}
@@ -383,9 +385,177 @@ ggplot(
 
 ---
 
-layout: false
+.pull-left[
+```{r pol-plot-4, fig.show='hide'}
+ggplot(
+  data = polite,
+  mapping = aes(x = attitude, y = f0mn)
+) +
+  geom_jitter(width = 0.2) +
+  facet_grid(~ gender) #<<
+```
+]
+
+.pull-right[
+![](`r knitr::fig_chunk('pol-plot-4', 'png')`)
+]
 
 ---
+
+.pull-left[
+```{r pol-plot-5, fig.show='hide'}
+ggplot(
+  data = polite,
+  mapping = aes(x = attitude, y = f0mn)
+) +
+  geom_jitter(width = 0.1) +
+  facet_grid(musicstudent ~ gender) #<<
+```
+]
+
+.pull-right[
+![](`r knitr::fig_chunk('pol-plot-5', 'png')`)
+]
+
+---
+
+layout: false
+layout: true
+
+# Infant gestures
+
+---
+
+.pull-left[
+```{r gest-plot-1, fig.show='hide'}
+gestures %>%
+  ggplot(aes(months, count, group = id)) +
+  geom_line(alpha = 0.5) +
+  geom_point()
+```
+]
+
+.pull-right[
+![](`r knitr::fig_chunk('gest-plot-1', 'png')`)
+]
+
+---
+
+.pull-left[
+```{r gest-plot-2, fig.show='hide'}
+gestures %>%
+  ggplot(aes(months, count)) +
+  geom_point()
+```
+]
+
+.pull-right[
+![](`r knitr::fig_chunk('gest-plot-2', 'png')`)
+]
+
+---
+
+.pull-left[
+```{r gest-plot-3, fig.show='hide'}
+gestures %>%
+  ggplot(aes(months, count)) +
+  geom_line(alpha = 0.2) +
+  geom_point()
+```
+]
+
+--
+
+.pull-right[
+![](`r knitr::fig_chunk('gest-plot-3', 'png')`)
+]
+
+---
+
+.pull-left[
+```{r gest-plot-4, fig.show='hide'}
+gestures %>%
+  ggplot(aes(months, count, group = id)) + #<<
+  geom_line(alpha = 0.2) +
+  geom_point()
+```
+]
+
+.pull-right[
+![](`r knitr::fig_chunk('gest-plot-4', 'png')`)
+]
+
+---
+
+layout: false
+layout: true
+
+# Lexical decision task
+
+---
+
+.pull-left[
+```{r mald-plot-1, fig.show='hide'}
+mald_1_1 %>%
+  ggplot(aes(RT)) +
+  geom_density() +
+  geom_rug()
+```
+]
+
+.pull-right[
+![](`r knitr::fig_chunk('mald-plot-1', 'png')`)
+]
+
+---
+
+.pull-left[
+```{r mald-plot-2, fig.show='hide'}
+mald_1_1 %>%
+  ggplot(aes(RT, colour = IsWord)) + #<<
+  geom_density() +
+  geom_rug()
+```
+]
+
+.pull-right[
+![](`r knitr::fig_chunk('mald-plot-2', 'png')`)
+]
+
+---
+
+.pull-left[
+```{r mald-plot-3, fig.show='hide'}
+mald_1_1 %>%
+  ggplot(aes(RT, fill = IsWord)) + #<<
+  geom_density(alpha = 0.2) +
+  geom_rug()
+```
+]
+
+.pull-right[
+![](`r knitr::fig_chunk('mald-plot-3', 'png')`)
+]
+
+---
+
+.pull-left[
+```{r mald-plot-4, fig.show='hide'}
+mald_1_1 %>%
+  ggplot(aes(RT, fill = ACC)) + #<<
+  geom_density(alpha = 0.2) +
+  geom_rug() +
+  facet_grid(~ IsWord)
+```
+]
+
+.pull-right[
+![](`r knitr::fig_chunk('mald-plot-4', 'png')`)
+]
+
+---
+
+layout: false
 
 class: middle center inverse
 

@@ -156,10 +156,11 @@ fortune()
 
 ```
 ## 
-## I want a budget.
-##    -- Peter Dalgaard (in a talk about Tcl/Tk, meaning to say 'I want a button
-##       widget')
-##       gR 2003, Aalborg (September 2003)
+## One of the beauties of S and R is the syntax closeness to mathematical
+## notation. Many of us know that Lisp has beauties that S can never have, but
+## that's really in different beauty-space.
+##    -- Martin Maechler
+##       R-devel (February 2009)
 ```
 
 ]
@@ -380,9 +381,187 @@ ggplot(
 
 ---
 
-layout: false
+.pull-left[
+
+```r
+ggplot(
+  data = polite,
+  mapping = aes(x = attitude, y = f0mn)
+) +
+  geom_jitter(width = 0.2) +
+* facet_grid(~ gender)
+```
+]
+
+.pull-right[
+![](index_files/figure-html/pol-plot-4-1.png)
+]
 
 ---
+
+.pull-left[
+
+```r
+ggplot(
+  data = polite,
+  mapping = aes(x = attitude, y = f0mn)
+) +
+  geom_jitter(width = 0.1) +
+* facet_grid(musicstudent ~ gender)
+```
+]
+
+.pull-right[
+![](index_files/figure-html/pol-plot-5-1.png)
+]
+
+---
+
+layout: false
+layout: true
+
+# Infant gestures
+
+---
+
+.pull-left[
+
+```r
+gestures %&gt;%
+  ggplot(aes(months, count, group = id)) +
+  geom_line(alpha = 0.5) +
+  geom_point()
+```
+]
+
+.pull-right[
+![](index_files/figure-html/gest-plot-1-1.png)
+]
+
+---
+
+.pull-left[
+
+```r
+gestures %&gt;%
+  ggplot(aes(months, count)) +
+  geom_point()
+```
+]
+
+.pull-right[
+![](index_files/figure-html/gest-plot-2-1.png)
+]
+
+---
+
+.pull-left[
+
+```r
+gestures %&gt;%
+  ggplot(aes(months, count)) +
+  geom_line(alpha = 0.2) +
+  geom_point()
+```
+]
+
+--
+
+.pull-right[
+![](index_files/figure-html/gest-plot-3-1.png)
+]
+
+---
+
+.pull-left[
+
+```r
+gestures %&gt;%
+* ggplot(aes(months, count, group = id)) +
+  geom_line(alpha = 0.2) +
+  geom_point()
+```
+]
+
+.pull-right[
+![](index_files/figure-html/gest-plot-4-1.png)
+]
+
+---
+
+layout: false
+layout: true
+
+# Lexical decision task
+
+---
+
+.pull-left[
+
+```r
+mald_1_1 %&gt;%
+  ggplot(aes(RT)) +
+  geom_density() +
+  geom_rug()
+```
+]
+
+.pull-right[
+![](index_files/figure-html/mald-plot-1-1.png)
+]
+
+---
+
+.pull-left[
+
+```r
+mald_1_1 %&gt;%
+* ggplot(aes(RT, colour = IsWord)) +
+  geom_density() +
+  geom_rug()
+```
+]
+
+.pull-right[
+![](index_files/figure-html/mald-plot-2-1.png)
+]
+
+---
+
+.pull-left[
+
+```r
+mald_1_1 %&gt;%
+* ggplot(aes(RT, fill = IsWord)) +
+  geom_density(alpha = 0.2) +
+  geom_rug()
+```
+]
+
+.pull-right[
+![](index_files/figure-html/mald-plot-3-1.png)
+]
+
+---
+
+.pull-left[
+
+```r
+mald_1_1 %&gt;%
+* ggplot(aes(RT, fill = ACC)) +
+  geom_density(alpha = 0.2) +
+  geom_rug() +
+  facet_grid(~ IsWord)
+```
+]
+
+.pull-right[
+![](index_files/figure-html/mald-plot-4-1.png)
+]
+
+---
+
+layout: false
 
 class: middle center inverse
 
