@@ -86,6 +86,50 @@ class: middle center
 
 ---
 
+layout: true
+
+# RStudio
+
+---
+
+.center[
+![:scale 60%](../../img/rstudio-1.png)
+]
+
+---
+
+.center[
+![:scale 60%](../../img/rstudio-2.png)
+]
+
+---
+
+.center[
+![:scale 60%](../../img/rstudio-3.png)
+]
+
+---
+
+.center[
+![:scale 60%](../../img/rstudio-4.png)
+]
+
+---
+
+.center[
+![:scale 60%](../../img/rstudio-5.png)
+]
+
+---
+
+.center[
+![:scale 60%](../../img/rstudio-6.png)
+]
+
+---
+
+layout: false
+
 # R as a calculator
 
 Write the following in the `Console`, then press `ENTER`.
@@ -286,6 +330,34 @@ everything <- Inf
   
   - Function name (`sum()`, `mean()`, `cat()`).
   - Arguments.
+
+---
+
+# Install the course materials
+
+Run the following in the `Console`:
+
+``` r
+install.packages("remotes")
+```
+
+<br>
+
+--
+
+If asked to select a mirror, select the first mirror.
+
+- Type `1` and press `ENTER`
+
+<br>
+
+--
+
+Then run the following in the `Console`.
+
+```r
+remotes::install_github("stefanocoretta/sqmf")
+```
 
 ---
 
