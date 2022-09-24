@@ -131,6 +131,14 @@ layout: true
 ![:scale 60%](../../img/rstudio-6.png)
 ]
 
+???
+
+1. Open the RStudio preferences (macOS: `RStudio &gt; Preferences...`, win: `Tools &gt; Global options...`).
+
+2. Un-tick `Restore .RData into workspace at startup`.
+
+3. Select `Never` in `Save workspace to .RData on exit`.
+
 ---
 
 layout: false
@@ -483,11 +491,27 @@ Then run the following in the `Console`.
 remotes::install_github("stefanocoretta/sqmf")
 ```
 
+--
+
+Close RStudio and reopen it (make sure you see in the top-right corner the name of the project you created).
+
+---
+
+# Run the tutorial
+
+Now you can run the first tutorial.
+
+.center[
+![](../../img/tutorials.png)
+]
+
 ---
 
 class: middle center inverse
 
 .f1[TUTORIAL]
+
+
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

@@ -449,6 +449,14 @@
         "withr"
       ]
     },
+    "fortunes": {
+      "Package": "fortunes",
+      "Version": "1.5-4",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "d031a520bc2c989180c772dbc6851088",
+      "Requirements": []
+    },
     "fs": {
       "Package": "fs",
       "Version": "1.5.2",
@@ -585,15 +593,15 @@
     },
     "glottologR": {
       "Package": "glottologR",
-      "Version": "0.4.0",
+      "Version": "0.4.1",
       "Source": "GitHub",
       "RemoteType": "github",
-      "RemoteHost": "api.github.com",
       "RemoteUsername": "stefanocoretta",
       "RemoteRepo": "glottologR",
-      "RemoteRef": "v0.4.0",
-      "RemoteSha": "f3dd49eefc2c1c32c2b336a4614a570ae146799c",
-      "Hash": "c9dd9ea127c46c0f4c6567f12850e4ae",
+      "RemoteRef": "main",
+      "RemoteSha": "6ad26a993c4235010d83f2c6253752a3b09c25f7",
+      "RemoteHost": "api.github.com",
+      "Hash": "0c221fdb2bba412e78d06982aef0d551",
       "Requirements": []
     },
     "glue": {
@@ -1359,7 +1367,7 @@
       "RemoteRef": "main",
       "RemoteSha": "a606ef43899600bae9a289e5fbac264aa21f2630",
       "Remotes": "stefanocoretta/glottologR",
-      "Hash": "e7a4403f19226697ba43f31ad17df87b",
+      "Hash": "11e9281a33935980699fe8203331c4f4",
       "Requirements": []
     },
     "stringi": {
