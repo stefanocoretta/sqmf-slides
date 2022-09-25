@@ -31,10 +31,6 @@ library(ggrepel)
 
 library(glottologR)
 data("glot_aes")
-glot_aes <- glot_aes %>%
-  mutate(
-    AES = factor(AES, levels = c("not_endangered", "threatened", "shifting", "moribund", "nearly_extinct", "extinct"))
-  )
 
 library(sqmf)
 data("polite")
@@ -54,9 +50,9 @@ style_mono_light(
 ```
 
 
-# Visualise data
+# Data visualisation
 
-![](../../img/data-viz.png)
+![](../../img/data-quant.png)
 
 ---
 
@@ -69,6 +65,34 @@ style_mono_light(
 - ggplot2.
 
 - more...
+
+---
+
+# But before we dive in... R SCRIPTS!
+
+1. **Create a folder** inside your RStudio project named `code`.
+
+  - You can do this from within RStudio, in the Files panel, or through the OS Finder/File explorer.
+
+2. **Create a new R Script**.
+
+3. Save the R script as `week_2.R` in `code/`.
+
+---
+
+# R script basics
+
+- Write each command into **its own line**.
+
+- Commands should be written in the **order they must be executed**. In other words, later lines of code depend on earlier lines of code, never the opposite.
+  
+- To **execute a command**, place the text cursor (or caret) anywhere in the line you want to execute and press `CMD/CTRL+ENTER`.
+
+- You can **add comments** in a scripts by starting a line with `#`.
+
+.center[
+![:scale 80%](../../img/r-script-basics-1.png)
+]
 
 ---
 
@@ -171,6 +195,23 @@ Run this in the console:
 fortune()
 ```
 
+]
+
+---
+
+# R script basics
+
+- Go ahead and add the code to attach the following packages in your R script:
+
+  - **tidyverse**
+      - This is a "meta-package", a packages of packages. Among these there is ggplot2.
+  - **glottologR**
+      - This is a data package, a package that provides users with data. This package contains data from Glottolog.
+
+- You can now attach the endangerment data with `data("glot_aes")`.
+
+.center[
+![:scale 80%](../../img/r-script-basics-2.png)
 ]
 
 ---
