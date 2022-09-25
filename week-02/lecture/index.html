@@ -53,19 +53,19 @@ class: center, middle, inverse, title-slide
 
 Alberto Cairo has identified four common features of a good data visualisation:
 
-1. It contains reliable information.
+1. It contains **reliable information**.
 
 --
 
-2. The design has been chosen so that relevant patterns become noticeable.
+2. The design has been chosen so that relevant **patterns become noticeable**.
 
 --
 
-3. It is presented in an attractive manner, but appearance should not get in the way of honesty, clarity and depth.
+3. It is presented in an **attractive** manner, but appearance should not get in the way of **honesty, clarity and depth**.
 
 --
 
-4. When appropriate, it is organized in a way that enables some exploration.
+4. When appropriate, it is organized in a way that **enables some exploration**.
 
 ???
 
@@ -136,6 +136,13 @@ Between any consecutive value, there cannot be any other possible value.
 - Ordered scales, like Likert scales and ratings, language attitude, ... 
 ]
 
+???
+
+The continuous/discrete dichotomy is horthogonal to the numeric/categorical dichotomy:
+
+- Counts are numeric but discrete.
+- Durations cannot be negative but are numeric and continuous.
+
 ---
 
 layout: false
@@ -170,6 +177,11 @@ Slido poll. &lt;https://app.sli.do/event/dh4i7sfLzWJJFyUWZJZzJt&gt;
 
 &lt;img src="index_files/figure-html/unnamed-chunk-1-1.png" height="500px" style="display: block; margin: auto;" /&gt;
 
+???
+
+Bar charts are great for counts (of anything).
+
+The *x*-axis includes the level of AES, while the *y*-axis shows the number of languages per AES level.
 
 ---
 
@@ -181,9 +193,19 @@ layout: true
 
 &lt;img src="index_files/figure-html/aes-stack-1-1.png" height="500px" style="display: block; margin: auto;" /&gt;
 
+???
+
+In this plot I separated endangered vs non-endangered languages.
+Within the endangered languages I further show the counts of different AES levels.
+
 ---
 
 &lt;img src="index_files/figure-html/aes-stack-2-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+
+???
+
+Here, the *x*-axis corresponds to the language macro-areas in the data.
+Within each bar, the counts for each of the AES levels is given.
 
 ---
 
@@ -192,6 +214,16 @@ layout: false
 # Stacked proportion (filled) bar chart
 
 &lt;img src="index_files/figure-html/aes-filled-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+
+???
+
+So far we have seen raw counts.
+What about proportions?
+
+You can show proportions by using a "filled" bar chart.
+Each bar is stretched so that covers the entire range from 0 to 1.
+
+Note that proportions are between 0 and 1, while percentages are between 0 and 100%.
 
 ---
 
@@ -364,13 +396,25 @@ layout: true
 
 &lt;img src="index_files/figure-html/mald-bar-1-1.png" height="500px" style="display: block; margin: auto;" /&gt;
 
+???
+
+Bar charts should be used for discrete numeric variables, not for continuous variables.
+
 ---
 
 &lt;img src="index_files/figure-html/mald-bar-2-1.png" height="500px" style="display: block; margin: auto;" /&gt;
 
+???
+
+If you want to show proportions, instead of raw counts, use proportion bar charts (aka filled bar chart).
+
 ---
 
 &lt;img src="index_files/figure-html/mald-bar-3-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+
+???
+
+To show proportions from multiple subjects/items, use strip charts.
 
 ---
 
@@ -380,17 +424,50 @@ layout: false
 
 &lt;img src="index_files/figure-html/mald-dont-1.png" height="500px" style="display: block; margin: auto;" /&gt;
 
+???
+
+Never ever ever use bar charts with error bars to show mean proportions. They are misleading:
+
+- The bars do not indicate a discrete numeric values: mean proportions are continuous variables.
+- Error bars mask the true variability of the data: show raw proportions instead.
+
+For more see: https://www.data-to-viz.com/caveat/error_bar.html, https://stats.stackexchange.com/questions/349422/does-it-make-sense-to-add-error-bars-in-a-bar-chart-of-frequencies/367889#367889
+
 ---
 
 # DO
 
 &lt;img src="index_files/figure-html/pol-do-1.png" height="500px" style="display: block; margin: auto;" /&gt;
 
+???
+
+For continuous variables, like acoustic measures or reaction times, use violins with overlaid strip charts. You can include very narrow box plots, but remember that box plots mask variability in the raw data.
+
 ---
 
 # DON'T
 
 &lt;img src="index_files/figure-html/pol-dont-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+
+???
+
+Can you see what difference it makes to use box plots only?
+
+---
+
+# Summary
+
+- Carefully think about which type of variable you are working with: **continuous or discrete**?
+
+- The type of variable allows you to select appropriate types of plots. Your **go-to plots** are:
+
+  - Bar charts (and variants).
+  - Strip charts.
+  - Line plots.
+  - Density plots.
+  - Violin plots.
+
+- Be mindful of the **DOs and DON'Ts** of plotting.
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

@@ -63,19 +63,19 @@ style_mono_light(
 
 Alberto Cairo has identified four common features of a good data visualisation:
 
-1. It contains reliable information.
+1. It contains **reliable information**.
 
 --
 
-2. The design has been chosen so that relevant patterns become noticeable.
+2. The design has been chosen so that relevant **patterns become noticeable**.
 
 --
 
-3. It is presented in an attractive manner, but appearance should not get in the way of honesty, clarity and depth.
+3. It is presented in an **attractive** manner, but appearance should not get in the way of **honesty, clarity and depth**.
 
 --
 
-4. When appropriate, it is organized in a way that enables some exploration.
+4. When appropriate, it is organized in a way that **enables some exploration**.
 
 ???
 
@@ -146,6 +146,13 @@ Between any consecutive value, there cannot be any other possible value.
 - Ordered scales, like Likert scales and ratings, language attitude, ... 
 ]
 
+???
+
+The continuous/discrete dichotomy is horthogonal to the numeric/categorical dichotomy:
+
+- Counts are numeric but discrete.
+- Durations cannot be negative but are numeric and continuous.
+
 ---
 
 layout: false
@@ -185,6 +192,11 @@ glot_aes %>%
   scale_fill_brewer(type = "seq", palette = "BuPu")
 ```
 
+???
+
+Bar charts are great for counts (of anything).
+
+The *x*-axis includes the level of AES, while the *y*-axis shows the number of languages per AES level.
 
 ---
 
@@ -204,6 +216,11 @@ glot_aes %>%
   scale_fill_brewer(type = "seq", palette = "BuPu")
 ```
 
+???
+
+In this plot I separated endangered vs non-endangered languages.
+Within the endangered languages I further show the counts of different AES levels.
+
 ---
 
 ```{r aes-stack-2}
@@ -212,6 +229,11 @@ glot_aes %>%
   geom_bar() +
   scale_fill_brewer(type = "seq", palette = "BuPu")
 ```
+
+???
+
+Here, the *x*-axis corresponds to the language macro-areas in the data.
+Within each bar, the counts for each of the AES levels is given.
 
 ---
 
@@ -225,6 +247,16 @@ glot_aes %>%
   geom_bar(position = "fill") +
   scale_fill_brewer(type = "seq", palette = "BuPu")
 ```
+
+???
+
+So far we have seen raw counts.
+What about proportions?
+
+You can show proportions by using a "filled" bar chart.
+Each bar is stretched so that covers the entire range from 0 to 1.
+
+Note that proportions are between 0 and 1, while percentages are between 0 and 100%.
 
 ---
 
@@ -241,8 +273,7 @@ glot_aes %>%
   ) %>%
   ggplot(aes(x, -y, colour = AES)) +
   geom_point(size = 1) +
-  scale_color_brewer(type = "seq", palette = "BuPu") +
-  theme_dark() +
+  scale_color_brewer(type = "seq", palette = "PuRd") +
   theme(
     panel.grid = element_blank(),
     axis.title = element_blank(),
@@ -310,7 +341,7 @@ f_ita_pol %>%
 ```{r gest-line}
 gestures %>%
   ggplot(aes(as.factor(months), count)) +
-  geom_line(aes(group = id), alpha = 0.5) +
+  geom_line(aes(group = id), alpha = 0.2) +
   geom_point()
 ```
 
@@ -320,7 +351,7 @@ gestures %>%
 ```{r gest-line-facet-1}
 gestures %>%
   ggplot(aes(as.factor(months), count)) +
-  geom_line(aes(group = id), alpha = 0.5) +
+  geom_line(aes(group = id), alpha = 0.2) +
   geom_point() +
   facet_grid(~ gesture)
 ```
@@ -330,7 +361,7 @@ gestures %>%
 ```{r gest-line-facet-2}
 gestures %>%
   ggplot(aes(as.factor(months), count)) +
-  geom_line(aes(group = id), alpha = 0.5) +
+  geom_line(aes(group = id), alpha = 0.2) +
   geom_point() +
   facet_grid(background ~ gesture)
 ```
@@ -352,7 +383,7 @@ gestures %>%
     count_tot = sum(count)
   ) %>%
   ggplot(aes(gesture, count_tot)) +
-  geom_line(aes(group = dyad)) +
+  geom_line(aes(group = dyad), alpha = 0.2) +
   geom_point() +
   facet_grid(~ months)
 ```
@@ -366,7 +397,7 @@ gestures %>%
   summarise(
     count_tot = sum(count)
   ) %>%
-  ggplot(aes(gesture, count_tot)) +
+  ggplot(aes(gesture, count_tot), alpha = 0.2) +
   geom_line(aes(group = dyad)) +
   geom_point() +
   facet_grid(background ~ months)
@@ -384,7 +415,7 @@ layout: true
 ```{r pol-strip-f0}
 polite %>%
   ggplot(aes(attitude, f0mn, colour = gender)) +
-  geom_jitter(width = 0.1, size = 2) +
+  geom_jitter(width = 0.1, size = 2, alpha = 0.7) +
   facet_grid(~ gender)
 ```
 
@@ -393,7 +424,7 @@ polite %>%
 ```{r pol-strip-hnr}
 polite %>%
   ggplot(aes(attitude, HNRmn, colour = gender)) +
-  geom_jitter(width = 0.1, size = 2) +
+  geom_jitter(width = 0.1, size = 2, alpha = 0.7) +
   facet_grid(~ gender)
 ```
 
@@ -573,6 +604,10 @@ mald_1_1 %>%
   geom_bar(position = "dodge")
 ```
 
+???
+
+Bar charts should be used for discrete numeric variables, not for continuous variables.
+
 ---
 
 ```{r mald-bar-2}
@@ -580,6 +615,10 @@ mald_1_1 %>%
   ggplot(aes(IsWord, fill = ACC)) +
   geom_bar(position = "fill")
 ```
+
+???
+
+If you want to show proportions, instead of raw counts, use proportion bar charts (aka filled bar chart).
 
 ---
 
@@ -593,6 +632,10 @@ mald_1_1 %>%
   ggplot(aes(IsWord, prop, colour = ACC)) +
   geom_jitter(position = position_jitterdodge(dodge.width = 1))
 ```
+
+???
+
+To show proportions from multiple subjects/items, use strip charts.
 
 ---
 
@@ -617,6 +660,15 @@ mald_1_1 %>%
   geom_errorbar(aes(ymin = mean_prop - sd_prop, ymax = mean_prop + sd_prop), position = position_dodge(width = 0.9), width = 0.2)
 ```
 
+???
+
+Never ever ever use bar charts with error bars to show mean proportions. They are misleading:
+
+- The bars do not indicate a discrete numeric values: mean proportions are continuous variables.
+- Error bars mask the true variability of the data: show raw proportions instead.
+
+For more see: https://www.data-to-viz.com/caveat/error_bar.html, https://stats.stackexchange.com/questions/349422/does-it-make-sense-to-add-error-bars-in-a-bar-chart-of-frequencies/367889#367889
+
 ---
 
 # DO
@@ -629,6 +681,10 @@ polite %>%
   facet_grid(~ gender)
 ```
 
+???
+
+For continuous variables, like acoustic measures or reaction times, use violins with overlaid strip charts. You can include very narrow box plots, but remember that box plots mask variability in the raw data.
+
 ---
 
 # DON'T
@@ -639,3 +695,23 @@ polite %>%
   geom_boxplot(alpha = 0.5) +
   facet_grid(~ gender)
 ```
+
+???
+
+Can you see what difference it makes to use box plots only?
+
+---
+
+# Summary
+
+- Carefully think about which type of variable you are working with: **continuous or discrete**?
+
+- The type of variable allows you to select appropriate types of plots. Your **go-to plots** are:
+
+  - Bar charts (and variants).
+  - Strip charts.
+  - Line plots.
+  - Density plots.
+  - Violin plots.
+
+- Be mindful of the **DOs and DON'Ts** of plotting.
