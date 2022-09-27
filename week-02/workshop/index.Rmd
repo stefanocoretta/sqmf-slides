@@ -59,6 +59,8 @@ Run the following in the console:
 remotes::install_github("stefanocoretta/sqmf")
 ```
 
+---
+
 # Data visualisation
 
 ![](../../img/data-quant.png)
