@@ -39,9 +39,31 @@ style_mono_light(
 )
 ```
 
-class: center middle inverse
 
 # Slido quiz 1
+
+.f3[*Which of the following is the formula of a straight line?*]
+
+<br>
+
+.pull-left[
+.f3[Join at]
+
+.f1[slido.com]
+
+.f1[\#2272 798]
+]
+
+.pull-right[
+.center[
+![](../../img/QR-SQM-1-Week-3.png)
+]
+]
+
+???
+
+Slido poll. <https://app.sli.do/event/krtv5FmoQy4ESjd45RhHQF>
+
 
 ---
 
@@ -75,11 +97,11 @@ layout: true
 ```{r homework}
 x <- c(2, 4, 5, 8, 10, 23, 36)
 y <- 2 + (3 * x)
-line <- tibble(
+line_1 <- tibble(
   x = x,
   y = y
 )
-ggplot(line, aes(x, y)) +
+ggplot(line_1, aes(x, y)) +
   geom_point(size = 5) +
   labs(title = bquote(italic(y) == 2 + 3 * italic(x)))
 ```
@@ -87,11 +109,18 @@ ggplot(line, aes(x, y)) +
 ---
 
 ```{r line}
-ggplot(line, aes(x, y)) +
+ggplot(line_1, aes(x, y)) +
   geom_point(size = 5, colour = "gray") +
   geom_line(colour = "red") +
   labs(title = bquote(italic(y) == 2 + 3 * italic(x)))
 ```
+
+---
+
+layout: false
+layout: true
+
+# Given the .orange[points], find the .green[formula]
 
 ---
 
@@ -107,24 +136,20 @@ ggplot(line, aes(x, y)) +
 
 ---
 
-layout: false
-
-# Given the .orange[points], find the .green[formula]
-
----
-
 ```{r sample}
-ggplot(line, aes(x, y)) +
+ggplot(line_1, aes(x, y)) +
   geom_point(size = 5) +
   labs(title = bquote(italic(y) == "?" + "?" * italic(x)))
 ```
 
 ---
 
+layout: false
+
 # But...
 
 .pull-left[
-![](../img/world-data.jpg)
+![](../../img/world-data.jpg)
 ]
 
 .pull-right[
@@ -139,8 +164,8 @@ Measurements are .red[noisy].
 
 ```{r sample-noisy}
 set.seed(4321)
-line$y <- line$y + rnorm(7, 0, 10)
-ggplot(line, aes(x, y)) +
+line_1$y <- line_1$y + rnorm(7, 0, 10)
+ggplot(line_1, aes(x, y)) +
   geom_point(size = 5) +
   labs(title = bquote(italic(y) == "?" + "?" * italic(x)))
 ```
@@ -170,7 +195,7 @@ layout: true
 ---
 
 ```{r lm-plot}
-ggplot(line, aes(x, y)) +
+ggplot(line_1, aes(x, y)) +
   geom_point(size = 5, ) +
   geom_abline(intercept = 10, slope = 1, size = 2, colour = "blue", alpha = 0.2) +
   geom_abline(intercept = 30, slope = 2, size = 2, colour = "blue", alpha = 0.2) +
@@ -183,7 +208,7 @@ ggplot(line, aes(x, y)) +
 ---
 
 ```{r lm-plot-2}
-ggplot(line, aes(x, y)) +
+ggplot(line_1, aes(x, y)) +
   geom_point(size = 5, ) +
   geom_abline(intercept = 10, slope = 1, size = 2, colour = "blue", alpha = 0.2) +
   geom_abline(intercept = 30, slope = 2, size = 2, colour = "blue", alpha = 0.2) +
@@ -225,9 +250,29 @@ We know $x$ and $y$ and we need to .green[estimate] $\beta_0$ and $\beta_1$.
 
 layout: false
 
-class: center middle inverse
-
 # Slido quiz 2
+
+.f3[*Which of the following is NOT the formula of a straight line?*]
+
+<br>
+
+.pull-left[
+.f3[Join at]
+
+.f1[slido.com]
+
+.f1[\#2272 798]
+]
+
+.pull-right[
+.center[
+![](../../img/QR-SQM-1-Week-3.png)
+]
+]
+
+???
+
+Slido poll. <https://app.sli.do/event/krtv5FmoQy4ESjd45RhHQF>
 
 ---
 
@@ -241,9 +286,9 @@ layout: true
 x <- sample(1:100, 50)
 y <- 2 + (3 * x) + rnorm(length(x), 0, 10)
 
-line <- tibble(x, y)
+line_2 <- tibble(x, y)
 
-ggplot(line, aes(x, y)) +
+ggplot(line_2, aes(x, y)) +
   geom_point(size = 5) +
   labs(title = bquote(italic(y) == "?" + "?" * italic(x)))
 ```
@@ -251,14 +296,14 @@ ggplot(line, aes(x, y)) +
 ---
 
 ```{r line-lm, echo=TRUE}
-line_lm <- lm(y ~ x, data = line)
+line_lm <- lm(y ~ x, data = line_2)
 summary(line_lm)
 ```
 
 ---
 
 ```{r line-model}
-ggplot(line, aes(x, y)) +
+ggplot(line_2, aes(x, y)) +
   geom_point(size = 5, alpha = 0.5) +
   geom_abline(intercept = 2, slope = 3, size = 2) +
   labs(title = bquote(italic(y) == "2" + "3" * italic(x)))
@@ -271,28 +316,53 @@ layout: false
 # Standard error
 
 ```{r se}
-ggplot(line, aes(x, y)) +
+ggplot(line_2, aes(x, y)) +
   geom_point(size = 5, alpha = 0.1) +
   geom_abline(intercept = rnorm(100, 2, 2.66), slope = rnorm(100, 3, 0.05), size = 0.5, alpha = 0.05) +
   labs(title = bquote(italic(y) == "2" + "3" * italic(x)))
 ```
 
-
 ---
 
 layout: true
 
-# Checking residuals
+# Residuals
 
 ---
 
-```{r fig.asp=1}
+```{r line-model-2}
+ggplot(line_2, aes(x, y)) +
+  geom_point(size = 5, alpha = 0.5) +
+  geom_abline(intercept = 2, slope = 3, size = 2) +
+  labs(title = bquote(italic(y) == "2" + "3" * italic(x)))
+```
+
+---
+
+```{r line-model-3}
+ggplot(line_2, aes(x, y)) +
+  geom_point(size = 3, alpha = 0.2) +
+  geom_abline(intercept = 2, slope = 3, size = 1) +
+  geom_segment(aes(x = x, xend = x, y = y, yend = 2 + 3 * x), colour = "red") +
+  labs(title = bquote(italic(y) == "2" + "3" * italic(x)))
+```
+
+---
+
+layout: false
+layout: true
+
+# Model checks
+
+---
+
+```{r qq-plots, fig.asp=1}
 plot(line_lm, which = 2)
 ```
 
 ---
 
-```{r}
+```{r nonlinear}
 x_c <- sample(1:100, 50)
 y_c <- 2 + (3 * x_c) + (0.5 * x_c^2) + rnorm(length(x_c), 0, 100)
 
@@ -306,25 +376,11 @@ curve %>%
 
 ---
 
-```{r fig.asp=1}
+```{r nonlinear-residuals, fig.asp=1}
 curve_lm <- lm(y_c ~ x_c, data = curve)
 
 plot(curve_lm, which = 2)
 ```
 
 
----
 
-layout: false
-
-```{r sample-3}
-x <- rnorm(200, 2, 0.5)
-z <- rnorm(200, -3.5, 1)
-y <- 12 + (3 * x) + (1.5 * z) + rnorm(length(x), 0, 4)
-
-sample_3 <- tibble(x, z, y)
-
-ggplot(sample_3, aes(y)) +
-  geom_density(fill = "darkgreen", alpha = 0.5) +
-  geom_rug()
-```

@@ -40,9 +40,31 @@ class: center, middle, inverse, title-slide
 
 
 
-class: center middle inverse
 
 # Slido quiz 1
+
+.f3[*Which of the following is the formula of a straight line?*]
+
+&lt;br&gt;
+
+.pull-left[
+.f3[Join at]
+
+.f1[slido.com]
+
+.f1[\#2272 798]
+]
+
+.pull-right[
+.center[
+![](../../img/QR-SQM-1-Week-3.png)
+]
+]
+
+???
+
+Slido poll. &lt;https://app.sli.do/event/krtv5FmoQy4ESjd45RhHQF&gt;
+
 
 ---
 
@@ -81,6 +103,13 @@ layout: true
 
 ---
 
+layout: false
+layout: true
+
+# Given the .orange[points], find the .green[formula]
+
+---
+
 ## You have:
 
 .f2[$$x = (2, 4, 5, 8, 10, 23, 36)$$]
@@ -93,20 +122,16 @@ layout: true
 
 ---
 
-layout: false
-
-# Given the .orange[points], find the .green[formula]
-
----
-
 &lt;img src="index_files/figure-html/sample-1.png" height="500px" style="display: block; margin: auto;" /&gt;
 
 ---
 
+layout: false
+
 # But...
 
 .pull-left[
-![](../img/world-data.jpg)
+![](../../img/world-data.jpg)
 ]
 
 .pull-right[
@@ -183,9 +208,29 @@ We know `\(x\)` and `\(y\)` and we need to .green[estimate] `\(\beta_0\)` and `\
 
 layout: false
 
-class: center middle inverse
-
 # Slido quiz 2
+
+.f3[*Which of the following is NOT the formula of a straight line?*]
+
+&lt;br&gt;
+
+.pull-left[
+.f3[Join at]
+
+.f1[slido.com]
+
+.f1[\#2272 798]
+]
+
+.pull-right[
+.center[
+![](../../img/QR-SQM-1-Week-3.png)
+]
+]
+
+???
+
+Slido poll. &lt;https://app.sli.do/event/krtv5FmoQy4ESjd45RhHQF&gt;
 
 ---
 
@@ -201,14 +246,14 @@ layout: true
 
 
 ```r
-line_lm &lt;- lm(y ~ x, data = line)
+line_lm &lt;- lm(y ~ x, data = line_2)
 summary(line_lm)
 ```
 
 ```
 ## 
 ## Call:
-## lm(formula = y ~ x, data = line)
+## lm(formula = y ~ x, data = line_2)
 ## 
 ## Residuals:
 ##      Min       1Q   Median       3Q      Max 
@@ -236,31 +281,41 @@ layout: false
 
 &lt;img src="index_files/figure-html/se-1.png" height="500px" style="display: block; margin: auto;" /&gt;
 
-
 ---
 
 layout: true
 
-# Checking residuals
+# Residuals
 
 ---
 
-&lt;img src="index_files/figure-html/unnamed-chunk-1-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/line-model-2-1.png" height="500px" style="display: block; margin: auto;" /&gt;
 
 ---
 
-&lt;img src="index_files/figure-html/unnamed-chunk-2-1.png" height="500px" style="display: block; margin: auto;" /&gt;
-
----
-
-&lt;img src="index_files/figure-html/unnamed-chunk-3-1.png" height="500px" style="display: block; margin: auto;" /&gt;
-
+&lt;img src="index_files/figure-html/line-model-3-1.png" height="500px" style="display: block; margin: auto;" /&gt;
 
 ---
 
 layout: false
+layout: true
 
-&lt;img src="index_files/figure-html/sample-3-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+# Model checks
+
+---
+
+&lt;img src="index_files/figure-html/qq-plots-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+
+---
+
+&lt;img src="index_files/figure-html/nonlinear-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+
+---
+
+&lt;img src="index_files/figure-html/nonlinear-residuals-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+
+
+
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
