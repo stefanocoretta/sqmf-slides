@@ -221,6 +221,29 @@ fortune()
 
 - You can now attach the endangerment data with `data("glot_aes")`.
 
+The top of your script should look like this (also see next slide for a more convoluted example).
+
+``` r
+library(tidyverse)
+library(glottologR)
+data("glot_aes")
+```
+
+???
+
+The tidyverse and glottologR packages should have been installed automatically when you installed sqmf.
+
+If for any reason that didn't work, run the following lines in the console:
+
+``` r
+install.packages("tidyverse")
+remotes::install_github("stefanocoretta/glottologR")
+```
+
+---
+
+# R script basics
+
 .center[
 ![:scale 80%](../../img/r-script-basics-2.png)
 ]
@@ -246,8 +269,8 @@ ggplot(
 - `ggplot()` function.
 
 - Arguments:
-  - `data` to specify which data to plot
-  - `mapping` to specify mapping between columns in the data and "aesthetics"
+  - `data` to specify which data to plot.
+  - `mapping` to specify mapping between columns in the data and "aesthetics".
   
 - `geom_bar()` to add a bar geometry.
 
@@ -259,6 +282,26 @@ ggplot(
   mapping = aes(x = AES)
 ) +
   geom_bar()
+```
+
+---
+
+To check what the data looks like, just call the data in the console, and you will see the first few lines of the data table.
+
+```{r glot_aes}
+glot_aes
+```
+
+---
+
+Alternatively, you can also view the data as a table in RStudio:
+
+- By clicking on the name of the data in the Environment panel.
+
+- Or by running the following in the console:
+
+``` r
+view(glot_aes)
 ```
 
 ---
@@ -386,6 +429,33 @@ layout: false
 layout: true
 
 # Politeness and f0
+
+---
+
+Let's play around with other data.
+
+- When you installed the sqmf package, you also installed some data tables with it.
+
+- To attach the data from the sqmg package you have first to attach the package.
+
+- Add the following line of code at the top of your script, after the other `library()` lines:
+
+``` r
+library(sqmf)
+```
+
+- Now check the list of data tables available in the package:
+
+``` r
+data(package = "sqmf")
+```
+
+- Finally, attach the `polite` data table.
+
+``` r
+data("polite")
+```
+
 
 ---
 
@@ -612,3 +682,13 @@ layout: false
 class: middle center inverse
 
 .f1[TUTORIAL]
+
+???
+
+To run the tutorial, go to the Tutorial tab in the top right panel of RStudio. You will find the tutorial at the bottom of the list.
+
+Or, run the following:
+
+``` r
+learnr::run_tutorial("02_dataviz", "sqmf")
+```
