@@ -250,6 +250,26 @@ remotes::install_github("stefanocoretta/glottologR")
 
 ---
 
+To check what the data looks like, just call the data in the console, and you will see the first few lines of the data table.
+
+```{r glot_aes}
+glot_aes
+```
+
+---
+
+Alternatively, you can also view the data as a table in RStudio:
+
+- By clicking on the name of the data in the Environment panel.
+
+- Or by running the following in the console:
+
+``` r
+view(glot_aes)
+```
+
+---
+
 layout: true
 
 # Language endangerment 
@@ -282,26 +302,6 @@ ggplot(
   mapping = aes(x = AES)
 ) +
   geom_bar()
-```
-
----
-
-To check what the data looks like, just call the data in the console, and you will see the first few lines of the data table.
-
-```{r glot_aes}
-glot_aes
-```
-
----
-
-Alternatively, you can also view the data as a table in RStudio:
-
-- By clicking on the name of the data in the Environment panel.
-
-- Or by running the following in the console:
-
-``` r
-view(glot_aes)
 ```
 
 ---
@@ -548,6 +548,16 @@ layout: true
 
 ---
 
+Now, let's use the `gestures` data.
+
+```{r gest}
+# This data table is in the sqmf package.
+data("gestures")
+gestures
+```
+
+---
+
 .pull-left[
 ```{r gest-plot-1, fig.show='hide'}
 gestures %>%
@@ -613,6 +623,16 @@ layout: false
 layout: true
 
 # Lexical decision task
+
+---
+
+Data from MALD.
+
+```{r mald}
+data("mald_1_1")
+mald_1_1
+```
+
 
 ---
 

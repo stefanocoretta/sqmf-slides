@@ -195,10 +195,12 @@ fortune()
 
 ```
 ## 
-## Basically, you are calling .Internal from the command line. It is not designed to be called from there and only wizards know what happens if it is. (The set of wizards who
-## might know whether it makes any sense at all does not include me!)
-##    -- Peter Dalgaard
-##       R-devel (May 2014)
+## Thomas W. Blackwell: I just discovered to my surprise that I cannot define a
+## function with an argument named 'break' or 'while'!
+## Brian D. Ripley: No, they are reserved names. [...] Most programming languages
+## have reserved words, so I am surprised you are surprised.
+##    -- Thomas W. Blackwell and Brian D. Ripley
+##       R-help (November 2003)
 ```
 
 ]
@@ -245,6 +247,47 @@ remotes::install_github("stefanocoretta/glottologR")
 
 ---
 
+To check what the data looks like, just call the data in the console, and you will see the first few lines of the data table.
+
+
+```r
+glot_aes
+```
+
+```
+## # A tibble: 8,345 × 18
+##    ID           Langu…¹ Param…² Value Code_ID Comment Source codeR…³ AES   Name 
+##    &lt;chr&gt;        &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;  &lt;lgl&gt;   &lt;fct&gt; &lt;chr&gt;
+##  1 kolp1236-aes kolp12… aes     3     aes-sh… Kol (1… hh:he… NA      shif… Kol …
+##  2 tana1288-aes tana12… aes     3     aes-sh… Tanahm… hh:he… NA      shif… Tana…
+##  3 touo1238-aes touo12… aes     3     aes-sh… Touo (… hh:he… NA      shif… Touo 
+##  4 bert1248-aes bert12… aes     3     aes-sh… Fadash… hh:he… NA      shif… Berta
+##  5 sius1254-aes sius12… aes     6     aes-ex… Siusla… hh:he… NA      exti… Sius…
+##  6 cent2045-aes cent20… aes     6     aes-ex… Jalaa … &lt;NA&gt;   NA      exti… Jalaa
+##  7 else1239-aes else12… aes     3     aes-sh… Elseng… hh:he… NA      shif… Else…
+##  8 taia1239-aes taia12… aes     4     aes-mo… Taiap … hh:he… NA      mori… Taiap
+##  9 pyuu1245-aes pyuu12… aes     3     aes-sh… Pyu (4… hh:he… NA      shif… Pyu  
+## 10 mato1253-aes mato12… aes     6     aes-ex… Arára … hh:he… NA      exti… Mato…
+## # … with 8,335 more rows, 8 more variables: Macroarea &lt;chr&gt;, Latitude &lt;dbl&gt;,
+## #   Longitude &lt;dbl&gt;, Glottocode &lt;chr&gt;, ISO639P3code &lt;chr&gt;, Countries &lt;chr&gt;,
+## #   Family_ID &lt;chr&gt;, Language_ID.y &lt;chr&gt;, and abbreviated variable names
+## #   ¹​Language_ID, ²​Parameter_ID, ³​codeReference
+```
+
+---
+
+Alternatively, you can also view the data as a table in RStudio:
+
+- By clicking on the name of the data in the Environment panel.
+
+- Or by running the following in the console:
+
+``` r
+view(glot_aes)
+```
+
+---
+
 layout: true
 
 # Language endangerment 
@@ -273,44 +316,6 @@ ggplot(
 ---
 
 &lt;img src="index_files/figure-html/aes-plot-1.png" height="500px" style="display: block; margin: auto;" /&gt;
-
----
-
-To check what the data looks like, just call the data in the console, and you will see the first few lines of the data table.
-
-
-```r
-glot_aes
-```
-
-```
-## # A tibble: 8,345 × 18
-##    ID           Language_ID Parameter_ID Value Code_ID      Comment                   Source codeR…¹ AES   Name  Macro…² Latit…³ Longi…⁴ Glott…⁵ ISO63…⁶ Count…⁷ Famil…⁸ Langu…⁹
-##    &lt;chr&gt;        &lt;chr&gt;       &lt;chr&gt;        &lt;chr&gt; &lt;chr&gt;        &lt;chr&gt;                     &lt;chr&gt;  &lt;lgl&gt;   &lt;fct&gt; &lt;chr&gt; &lt;chr&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;   &lt;chr&gt;  
-##  1 kolp1236-aes kolp1236    aes          3     aes-shifting Kol (10809-kol) = Threat… hh:he… NA      shif… Kol … Papune…   -5.21   152.  kolp12… kol     PG      &lt;NA&gt;    &lt;NA&gt;   
-##  2 tana1288-aes tana1288    aes          3     aes-shifting Tanahmerah (10732-tcm) =… hh:he… NA      shif… Tana… Papune…   -2.55   133.  tana12… tcm     ID      &lt;NA&gt;    &lt;NA&gt;   
-##  3 touo1238-aes touo1238    aes          3     aes-shifting Touo (10811-tqu) = Threa… hh:he… NA      shif… Touo  Papune…   -8.58   157.  touo12… tqu     SB      &lt;NA&gt;    &lt;NA&gt;   
-##  4 bert1248-aes bert1248    aes          3     aes-shifting Fadashi (5931-wti-fad) =… hh:he… NA      shif… Berta Africa    10.6     34.7 bert12… wti     ET;SD   &lt;NA&gt;    &lt;NA&gt;   
-##  5 sius1254-aes sius1254    aes          6     aes-extinct  Siuslaw (8390-sis) = Dor… hh:he… NA      exti… Sius… North …   42.5   -124.  sius12… sis     US      &lt;NA&gt;    &lt;NA&gt;   
-##  6 cent2045-aes cent2045    aes          6     aes-extinct  Jalaa (cet-cet) = 10 (Ex… &lt;NA&gt;   NA      exti… Jalaa Africa     9.59    11.6 cent20… cet     NG      &lt;NA&gt;    &lt;NA&gt;   
-##  7 else1239-aes else1239    aes          3     aes-shifting Elseng (10679-mrf) = End… hh:he… NA      shif… Else… Papune…   -3.00   140.  else12… mrf     ID      &lt;NA&gt;    &lt;NA&gt;   
-##  8 taia1239-aes taia1239    aes          4     aes-moribund Taiap (2216-gpn) = Sever… hh:he… NA      mori… Taiap Papune…   -4.05   145.  taia12… gpn     PG      &lt;NA&gt;    &lt;NA&gt;   
-##  9 pyuu1245-aes pyuu1245    aes          3     aes-shifting Pyu (4950-pby) = Endange… hh:he… NA      shif… Pyu   Papune…   -4.45   141.  pyuu12… pby     ID;PG   &lt;NA&gt;    &lt;NA&gt;   
-## 10 mato1253-aes mato1253    aes          6     aes-extinct  Arára of Mato Grosso (30… hh:he… NA      exti… Mato… South …   -9.17   -60.6 mato12… axg     BR      &lt;NA&gt;    &lt;NA&gt;   
-## # … with 8,335 more rows, and abbreviated variable names ¹​codeReference, ²​Macroarea, ³​Latitude, ⁴​Longitude, ⁵​Glottocode, ⁶​ISO639P3code, ⁷​Countries, ⁸​Family_ID, ⁹​Language_ID.y
-```
-
----
-
-Alternatively, you can also view the data as a table in RStudio:
-
-- By clicking on the name of the data in the Environment panel.
-
-- Or by running the following in the console:
-
-``` r
-view(glot_aes)
-```
 
 ---
 
@@ -567,6 +572,35 @@ layout: true
 
 ---
 
+Now, let's use the `gestures` data.
+
+
+```r
+# This data table is in the sqmf package.
+data("gestures")
+gestures
+```
+
+```
+## # A tibble: 1,620 × 11
+##    dyad  backgro…¹ months task  gesture count…² count ct_raw    ct pro_r…³    id
+##    &lt;chr&gt; &lt;chr&gt;      &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;   &lt;dbl&gt;
+##  1 b01   Bengali       10 five  reach         5     5      1     1 no          3
+##  2 b01   Bengali       10 five  point         0     0      0     0 no          2
+##  3 b01   Bengali       10 five  ho_gv         0     0      0     0 no          1
+##  4 b01   Bengali       10 tp1   reach         0     0      0     0 no          6
+##  5 b01   Bengali       10 tp1   point         0     0      0     0 no          5
+##  6 b01   Bengali       10 tp1   ho_gv         0     0      0     0 no          4
+##  7 b01   Bengali       10 tp2   reach         0     0      0     0 no          9
+##  8 b01   Bengali       10 tp2   point         0     0      0     0 no          8
+##  9 b01   Bengali       10 tp2   ho_gv         0     0      0     0 no          7
+## 10 b01   Bengali       11 five  reach         7     8      3     3 yes         3
+## # … with 1,610 more rows, and abbreviated variable names ¹​background,
+## #   ²​count_raw, ³​pro_rata
+```
+
+---
+
 .pull-left[
 
 ```r
@@ -636,6 +670,34 @@ layout: false
 layout: true
 
 # Lexical decision task
+
+---
+
+Data from MALD.
+
+
+```r
+data("mald_1_1")
+mald_1_1
+```
+
+```
+## # A tibble: 5,000 × 7
+##    Subject Item        IsWord PhonLev    RT ACC     RT_log
+##    &lt;chr&gt;   &lt;chr&gt;       &lt;fct&gt;    &lt;dbl&gt; &lt;int&gt; &lt;fct&gt;    &lt;dbl&gt;
+##  1 15308   acreage     TRUE      6.01   617 correct   6.42
+##  2 15308   maxraezaxr  FALSE     6.78  1198 correct   7.09
+##  3 15308   prognosis   TRUE      8.14   954 correct   6.86
+##  4 15308   giggles     TRUE      6.22   579 correct   6.36
+##  5 15308   baazh       FALSE     6.13  1011 correct   6.92
+##  6 15308   unflagging  TRUE      7.66  1402 correct   7.25
+##  7 15308   ihnpaykaxrz FALSE     7.47  1059 correct   6.97
+##  8 15308   hawk        TRUE      6.09   739 correct   6.61
+##  9 15308   assessing   TRUE      6.37   789 correct   6.67
+## 10 15308   mehlaxl     FALSE     5.80   926 correct   6.83
+## # … with 4,990 more rows
+```
+
 
 ---
 
