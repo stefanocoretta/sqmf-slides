@@ -69,7 +69,7 @@ Slido poll. &lt;https://app.sli.do/event/krtv5FmoQy4ESjd45RhHQF&gt;
 ---
 
 class: inverse
-background-image: url(../img/time-travel.jpg)
+background-image: url(../../img/time-travel.jpg)
 background-size: contain
 
 # Time travel...
@@ -207,6 +207,16 @@ We know `\(x\)` and `\(y\)` and we need to .green[estimate] `\(\beta_0\)` and `\
 ---
 
 layout: false
+class: center middle
+
+&lt;iframe src="https://stefanocoretta.shinyapps.io/lines/" width="1200" height="600"&gt;&lt;/iframe&gt;
+
+
+???
+
+&lt;https://stefanocoretta.shinyapps.io/lines/&gt;
+
+---
 
 # Slido quiz 2
 
@@ -276,13 +286,95 @@ summary(line_lm)
 ---
 
 layout: false
+layout: true
 
 # Standard error
 
-&lt;img src="index_files/figure-html/se-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+---
+
+
+```r
+summary(line_lm)
+```
+
+```
+## 
+## Call:
+## lm(formula = y ~ x, data = line_2)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -25.2197  -5.2243   0.3434   6.2411  20.7275 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept)  1.99182    2.66626   0.747    0.459
+## x            3.02079    0.04762  63.432   &lt;2e-16
+## 
+## Residual standard error: 10.07 on 48 degrees of freedom
+## Multiple R-squared:  0.9882,	Adjusted R-squared:  0.988 
+## F-statistic:  4024 on 1 and 48 DF,  p-value: &lt; 2.2e-16
+```
+
+???
+
+The **standard error** is a measure of (lack of) precision of the estimates.
+
+The greater the standard error the least precise the estimate is.
+
+Standard errors tend to decrease with more data.
 
 ---
 
+&lt;img src="index_files/figure-html/se-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+
+???
+
+In this plot you see a set of lines that represent some of the possible lines that are a good fit for the data (according to the model).
+
+These lines are a random selection from all the possible lines that are compatible with the estimates and standard errors calculated by the model.
+
+In other words, any of these could be the actual line that "generated" the data.
+**We cannot be sure because of the error each estimate comes with!**
+
+---
+
+Let's try now with more data (N = 300).
+
+
+```
+## 
+## Call:
+## lm(formula = y ~ x, data = line_3)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -29.718  -6.762  -0.188   6.479  40.657 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept)  2.10313    1.18137    1.78   0.0761
+## x            2.99189    0.02079  143.94   &lt;2e-16
+## 
+## Residual standard error: 10.05 on 298 degrees of freedom
+## Multiple R-squared:  0.9858,	Adjusted R-squared:  0.9858 
+## F-statistic: 2.072e+04 on 1 and 298 DF,  p-value: &lt; 2.2e-16
+```
+
+---
+
+&lt;img src="index_files/figure-html/se-2-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+
+???
+
+Compare this to the previous plot.
+
+Now the lines are much less variable, because the error of the estimates is smaller.
+(Of course it is, there is much more data to estimate those numbers with!)
+
+---
+
+layout: false
 layout: true
 
 # Residuals
@@ -294,6 +386,14 @@ layout: true
 ---
 
 &lt;img src="index_files/figure-html/line-model-3-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+
+---
+
+&lt;img src="index_files/figure-html/line-model-4-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+
+---
+
+&lt;img src="index_files/figure-html/line-model-5-1.png" height="500px" style="display: block; margin: auto;" /&gt;
 
 ---
 
