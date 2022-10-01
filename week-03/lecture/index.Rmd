@@ -400,8 +400,8 @@ layout: true
 
 ```{r line-model-2}
 ggplot(line_2, aes(x, y)) +
-  geom_point(size = 5, alpha = 0.5) +
-  geom_abline(intercept = 2, slope = 3, size = 2) +
+  geom_point(size = 3, alpha = 0.2) +
+  geom_abline(intercept = 2, slope = 3, size = 1) +
   labs(title = bquote(italic(y) == "2" + "3" * italic(x)))
 ```
 
@@ -415,6 +415,13 @@ ggplot(line_2, aes(x, y)) +
   labs(title = bquote(italic(y) == "2" + "3" * italic(x)))
 ```
 
+???
+
+A **residual** is the difference between the *y* value of a raw data point and the predicted value for the *x* value of that point.
+
+One way to estimate linear models is to find the line that minimises the residuals across all data points.
+There are other methods, but for the purpose of applied data analysis, it doesn't matter which one is used and specific R packages use specific methods.
+
 ---
 
 ```{r line-model-4}
@@ -424,6 +431,10 @@ ggplot(line_2, aes(x, y)) +
   geom_segment(aes(x = x, xend = x, y = y, yend = 5 + 2 * x), colour = "red") +
   labs(title = bquote(italic(y) == "5" + "2" * italic(x)))
 ```
+
+???
+
+See how the residuals here are much larger, because the line is "off" relative to the data points?
 
 ---
 
@@ -435,40 +446,7 @@ ggplot(line_2, aes(x, y)) +
   labs(title = bquote(italic(y) == "-100" + "5" * italic(x)))
 ```
 
----
+???
 
-layout: false
-layout: true
-
-# Model checks
-
----
-
-```{r qq-plots, fig.asp=1}
-plot(line_lm, which = 2)
-```
-
----
-
-```{r nonlinear}
-x_c <- sample(1:100, 50)
-y_c <- 2 + (3 * x_c) + (0.5 * x_c^2) + rnorm(length(x_c), 0, 100)
-
-curve <- tibble(x_c, y_c)
-
-curve %>%
-  ggplot(aes(x_c, y_c)) +
-  geom_point() +
-  geom_smooth(method = "lm")
-```
-
----
-
-```{r nonlinear-residuals, fig.asp=1}
-curve_lm <- lm(y_c ~ x_c, data = curve)
-
-plot(curve_lm, which = 2)
-```
-
-
+Another example of bad "fit" of the line (or model) to the data.
 
