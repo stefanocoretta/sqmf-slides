@@ -195,12 +195,11 @@ fortune()
 
 ```
 ## 
-## I seem to recall that we were targetting 512k Macintoshes. In our dreams we
-## might have seen 16Mb Sun.
-##    -- Ross Ihaka (in reply to the question whether R&amp;R thought when they
-##       started out that they would see R using 16G memory on a dual Opteron
-##       computer)
-##       R-help (November 2003)
+## However, if you want to do this at all efficiently for a data frame, start with
+## my solution not Uwe's [...]
+##    -- Brian D. Ripley (in a second reply to a question related to data frame
+##       manipulations)
+##       R-help (June 2004)
 ```
 
 ]
@@ -781,6 +780,46 @@ Or, run the following:
 ``` r
 learnr::run_tutorial("02_dataviz", "sqmf")
 ```
+
+---
+
+# Further resources
+
+- For a detailed overview with exercises of ggplot2, see Chapter 3 of the [R4DS book](https://r4ds.had.co.nz/data-visualisation.html).
+
+- [Fundamentals of Data Visualisation](https://clauswilke.com/dataviz/).
+
+.pull-left[
+**Catalog**
+
+- [Directory of visualisations](https://clauswilke.com/dataviz/directory-of-visualizations.html).
+- [Data viz catalogue](https://datavizcatalogue.com/index.html).
+- [Data Viz project](https://datavizproject.com).
+- [Top 50](http://r-statistics.co/Top50-Ggplot2-Visualizations-MasterList-R-Code.html).
+- [Data Viz](https://datavizm20.classes.andrewheiss.com/).
+
+**Tutorials**
+
+- [Raincloud plots](https://wellcomeopenresearch.org/articles/4-63).
+- [Labels](https://www.cararthompson.com/talks/user2022/).
+- [Graphic design](https://rstudio-conf-2022.github.io/ggplot2-graphic-design/).
+]
+
+.pull-right[
+**Colour**
+
+- [Use colour wisely](https://albert-rapp.de/post/2022-02-19-ggplot2-color-tips-from-datawrapper/).
+- [ColorBrewer2](https://colorbrewer2.org/#type=sequential&amp;scheme=BuGn&amp;n=3).
+- [MetBrewer](https://github.com/BlakeRMills/MetBrewer).
+
+**Recommendations**
+
+- [Same stats different data](https://www.autodesk.com/research/publications/same-stats-different-graphs).
+- [I stopped using box plots](https://nightingaledvs.com/ive-stopped-using-box-plots-should-you/).
+- [Issues with error bars](https://www.data-to-viz.com/caveat/error_bar.html).
+- [Behind bars](https://stats.stackexchange.com/a/367889).
+- [Visual Word Paradigm](https://link.springer.com/article/10.3758/s13423-022-02143-8).
+]
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
