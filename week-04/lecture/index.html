@@ -42,11 +42,11 @@ class: center, middle, inverse, title-slide
 
 layout: true
 
-# Linear model: the basics
+# Summary of last week
 
 ---
 
-&lt;img src="index_files/figure-html/line-model-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/dur-f1-1.png" height="500px" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -61,9 +61,11 @@ layout: true
 ## -66.05 -25.16  -6.76  21.46 122.18 
 ## 
 ## Coefficients:
-##             Estimate Std. Error t value Pr(&gt;|t|)
-## (Intercept) 70.33909    3.02569   23.25   &lt;2e-16
-## f1           0.05915    0.00504   11.74   &lt;2e-16
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 70.33909    3.02569   23.25   &lt;2e-16 ***
+## f1           0.05915    0.00504   11.74   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
 ## Residual standard error: 32.92 on 1332 degrees of freedom
 ## Multiple R-squared:  0.09373,	Adjusted R-squared:  0.09305 
@@ -72,34 +74,62 @@ layout: true
 
 ---
 
-layout: false
+- We can fit linear models with the `lm()` function.
+  
+  - `lm(outcome ~ predictor, data = your_data)`.
+  
+- The model `summary()` provides you with the estimates of the model and their standard errors.
 
-# Summary of last week
-
-- ...
+--
 
 - So far we used **continuous** predictors.
 
-  - ...
+  - `RT ~ PhonLev`: Reaction times as a function of Levenshtein distance.
+  - `inmn ~ articulation_rate`: Mean intensity as a function of articulation rate.
+  - `v2_duration ~ c2_clos_duration`: Vowel duration as a function of closure duration.
 
 ---
 
+.f1[
+`$$\text{RT} = \beta_0 + \beta_1\text{PhonLev}$$`
+]
+
+&lt;br&gt;
+
+--
+
+.f2[
+`$$\beta_0 = \text{intercept}$$`
+`$$\beta_1 = \text{coefficient for PhonLev}$$`
+]
+
+--
+
+&lt;br&gt;
+
+We know `RT` and `PhonLev` and we need to .green[estimate] `\(\beta_0\)` and `\(\beta_1\)`.
+
+
+---
+
+layout: false
 class: center middle inverse
 
-# What if we have **categorical** predictors?
+# What if we have *categorical* predictors?
 
-Like group, condition, gender, ...
+Like group, condition, gender, L1/L2, treatment, place of articulation...
 
 ---
 
+layout: true
+
 # Categorical predictors
+
+---
 
 &lt;img src="index_files/figure-html/categorical-1.png" height="500px" style="display: block; margin: auto;" /&gt;
 
 ---
-
-# Categorical predictors
-
 
 .f1[
 `$$\text{RT} = \beta_0 + \beta_1\text{IsWord}$$`
@@ -122,8 +152,9 @@ We know `RT` and `IsWord` (`TRUE` or `FALSE`) and we need to .green[estimate] `\
 
 ---
 
+layout: false
 class: bottom
-background-image: url(../img/hannah-grace-fk4tiMlDFF0-unsplash.jpg)
+background-image: url(../../img/hannah-grace-fk4tiMlDFF0-unsplash.jpg)
 background-size: cover
 
 # .white[But *IsWord* is not numeric!!!]
@@ -135,7 +166,36 @@ Photo by &lt;a href="https://unsplash.com/@oddityandgrace?utm_source=unsplash&am
 
 ---
 
-# Dummy coding
+layout: true
+
+# Coding categorical predictors
+
+---
+
+Technically, linear models only work with numeric variables.
+
+So we can simply **code our categorical predictors using numbers!**
+
+--
+
+Two common types of coding systems:
+
+- **Treatment** coding.
+
+- **Sum** coding.
+
+???
+
+As with anything else, naming of coding systems is not an established matter and the same coding can have different names, and vice versa the same name could refer to different systems.
+
+For an excellent overview, see &lt;https://debruine.github.io/faux/articles/contrasts.html&gt;.
+
+
+---
+
+**Treatment** coding uses `0`s and `1`s to code categorical predictors.
+
+&lt;br&gt;
 
 .f3[
 |     | IsWord    |
@@ -162,7 +222,37 @@ Photo by &lt;a href="https://unsplash.com/@oddityandgrace?utm_source=unsplash&am
 
 ---
 
-# Categorical predictors
+With treatment coding, the first level in the predictor is the **reference level** (here, it is `TRUE`).
+
+The other level is compared agains the reference level (`FALSE` vs `TRUE`).
+
+--
+
+&lt;br&gt;
+
+.f3[
+`$$\text{RT} = \beta_0 + \beta_1\text{IsWord}$$`
+]
+
+&lt;br&gt;
+
+.f2[
+`$$\beta_0 = RT_\text{IsWord=T}$$`
+]
+
+.f2[
+`$$\beta_1 = RT_{\text{IsWord=F}} - RT_{\text{IsWord=T}}$$`
+]
+
+???
+
+For now, it is easy because we only have two levels, but we will see an example with three later.
+
+`\(\beta_0\)`, aka the *intercept*, corresponds to the mean Reaction Time when `IsWord = TRUE`, because `TRUE` is the reference level of `IsWord`.
+
+`\(\beta_1\)` corresponds to the **DIFFERENCE** between the *intercept* and the mean Reaction Time when `IsWord = FALSE`. In other words, we are comparing RTs when `IsWord = FALSE` vs when `IsWord = TRUE`.
+
+---
 
 
 ```r
@@ -180,24 +270,35 @@ summary(isword_lm)
 ## -919.07 -195.07  -69.34  104.66 2033.93 
 ## 
 ## Coefficients:
-##             Estimate Std. Error t value Pr(&gt;|t|)
-## (Intercept)  953.074      6.211  153.44   &lt;2e-16
-## IsWordFALSE  116.261      8.839   13.15   &lt;2e-16
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  953.074      6.211  153.44   &lt;2e-16 ***
+## IsWordFALSE  116.261      8.839   13.15   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
 ## Residual standard error: 312.5 on 4998 degrees of freedom
 ## Multiple R-squared:  0.03346,	Adjusted R-squared:  0.03326 
 ## F-statistic:   173 on 1 and 4998 DF,  p-value: &lt; 2.2e-16
 ```
 
+???
+
+So, how do we interpret the output? Easy!
+
+- `(Intercept)`: the mean Reaction Times when `IsWord` is `TRUE`.
+
+- `IsWordFalse`:
+
+  - The **effect** of `IsWord` on RTs when `IsWord = FALSE`.
+  - The **difference** between RTs when `IsWord = FALSE` and `IsWord = TRUE`.
+  - What you **need to add to the `(Intercept)`** to get the mean RT value of `IsWord = FALSE`.
 
 ---
 
-&lt;img src="index_files/figure-html/unnamed-chunk-2-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/unnamed-chunk-1-1.png" height="500px" style="display: block; margin: auto;" /&gt;
 
 
 ---
-
-# Dummy coding
 
 .f3[
 |      | Lev_cat  |
@@ -208,8 +309,6 @@ summary(isword_lm)
 ]
 
 ---
-
-# Dummy coding
 
 .f3[
 |      | Lev_cat_mid  | Lev_cat_high |
@@ -264,10 +363,12 @@ We know `RT` and `Lev_cat` (`low`, `mid` or `high`) and we need to .green[estima
 ## -1027.31  -200.01   -78.07   108.69  1925.69 
 ## 
 ## Coefficients:
-##             Estimate Std. Error t value Pr(&gt;|t|)
-## (Intercept)  967.131      7.727 125.158  &lt; 2e-16
-## Lev_catmid    35.877     10.930   3.283  0.00104
-## Lev_cathigh   94.176     10.928   8.618  &lt; 2e-16
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  967.131      7.727 125.158  &lt; 2e-16 ***
+## Lev_catmid    35.877     10.930   3.283  0.00104 ** 
+## Lev_cathigh   94.176     10.928   8.618  &lt; 2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
 ## Residual standard error: 315.5 on 4997 degrees of freedom
 ## Multiple R-squared:  0.01492,	Adjusted R-squared:  0.01452 
@@ -276,7 +377,7 @@ We know `RT` and `Lev_cat` (`low`, `mid` or `high`) and we need to .green[estima
 
 ---
 
-&lt;img src="index_files/figure-html/unnamed-chunk-4-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/unnamed-chunk-3-1.png" height="500px" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -304,11 +405,13 @@ We know `RT` and `Lev_cat` (`low`, `mid` or `high`) and we need to .green[estima
 ## -968.91 -195.10  -71.34  104.09 1984.09 
 ## 
 ## Coefficients:
-##             Estimate Std. Error t value Pr(&gt;|t|)
-## (Intercept)  913.114      8.666 105.368  &lt; 2e-16
-## IsWordFALSE  113.984      8.783  12.978  &lt; 2e-16
-## Lev_catmid    33.450     10.753   3.111  0.00188
-## Lev_cathigh   89.800     10.755   8.350  &lt; 2e-16
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  913.114      8.666 105.368  &lt; 2e-16 ***
+## IsWordFALSE  113.984      8.783  12.978  &lt; 2e-16 ***
+## Lev_catmid    33.450     10.753   3.111  0.00188 ** 
+## Lev_cathigh   89.800     10.755   8.350  &lt; 2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
 ## Residual standard error: 310.3 on 4996 degrees of freedom
 ## Multiple R-squared:  0.04704,	Adjusted R-squared:  0.04647 
@@ -378,13 +481,15 @@ We know `RT` and `Lev_cat` (`low`, `mid` or `high`) and we need to .green[estima
 
 ---
 
+&lt;img src="index_files/figure-html/unnamed-chunk-8-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+
+---
+
 &lt;img src="index_files/figure-html/unnamed-chunk-9-1.png" height="500px" style="display: block; margin: auto;" /&gt;
 
 ---
 
-&lt;img src="index_files/figure-html/unnamed-chunk-10-1.png" height="500px" style="display: block; margin: auto;" /&gt;
-
----
+layout: false
 
 # Summary
 
