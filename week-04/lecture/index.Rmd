@@ -31,6 +31,7 @@ use_xaringan_extra(c("panelset", "tachyons", "freezeframe"))
 library(sqmf)
 data("dur_ita_pol")
 dur_ita_pol %<>% drop_na(f1, v1_duration)
+dur_ita <- filter(dur_ita_pol, language == "Italian")
 data("polite")
 data("mald_1_1")
 
@@ -132,7 +133,7 @@ layout: true
 
 ---
 
-```{r categorical}
+```{r rt-plot}
 mald_1_1 %>%
   filter(RT_log > 6) %>%
   ggplot(aes(IsWord, RT)) +
@@ -268,7 +269,7 @@ $\beta_1$ corresponds to the **DIFFERENCE** between the *intercept* and the mean
 
 ---
 
-```{r lm-group, echo=TRUE}
+```{r rt-lm, echo=TRUE}
 isword_lm <- lm(RT ~ IsWord, data = mald_1_1)
 summary(isword_lm)
 ```
@@ -287,13 +288,26 @@ So, how do we interpret the output? Easy!
 
 ---
 
-```{r}
-mald_1_1 %>%
-  ggplot(aes(Lev_cat, RT)) +
-  geom_violin(aes(fill = Lev_cat), width = 0.5) +
+```{r rt-lm-plot}
+ggpredict(isword_lm, "IsWord") %>%
+  plot()
+```
+
+---
+
+layout: false
+layout: true
+
+# More than two levels
+
+---
+
+```{r vdur-plot}
+dur_ita %>%
+  ggplot(aes(vowel, v2_duration)) +
+  geom_violin(aes(fill = vowel), width = 0.5) +
   geom_jitter(size = 1, alpha = 0.1, width = 0.1) +
   geom_boxplot(width = 0.025) +
-  scale_y_continuous(breaks = seq(0, 3000, by = 500)) +
   theme(legend.position = "bottom")
 ```
 
@@ -301,33 +315,33 @@ mald_1_1 %>%
 ---
 
 .f3[
-|      | Lev_cat  |
+|      | vowel  |
 | ---- | -------: |
-| low  | 0        |
-| mid  | 1        |
-| high | ???      |
+| a  | 0        |
+| o  | 1        |
+| u   | ???      |
 ]
 
 ---
 
 .f3[
-|      | Lev_cat_mid  | Lev_cat_high |
+|      | vowel_a  | vowel_o |
 | ---- | -------: | -------: |
-| low  | 0        | 0        |
-| mid  | 1        | 0        |
-| high | 0        | 1        |
+| a  | 0        | 0        |
+| o  | 1        | 0        |
+| u | 0        | 1        |
 ]
 
 <br>
 
-$$\text{RT} = \beta_0 + \beta_1\text{Lev_cat_mid} + \beta_2\text{Lev_cat_high}$$
+$$\text{vdur} = \beta_0 + \beta_1\text{vowel_a} + \beta_2\text{vowel_o}$$
 
 --
 
 
 <br>
 
-We know `RT` and `Lev_cat` (`low`, `mid` or `high`) and we need to .green[estimate] $\beta_0$,  $\beta_1$ and $\beta_2$.
+We know `v2_duration` and `vowel` (`a`, `o` or `u`) and we need to .green[estimate] $\beta_0$,  $\beta_1$ and $\beta_2$.
 
 
 ---
@@ -335,76 +349,89 @@ We know `RT` and `Lev_cat` (`low`, `mid` or `high`) and we need to .green[estima
 
 --
 
-$$\text{RT}(Lev_cat = low) = \beta_0 + \beta_1 \cdot 0 + \beta_2 \cdot 0 = \beta_0$$
+$$\text{vdur}(vowel = a) = \beta_0 + \beta_1 \cdot 0 + \beta_2 \cdot 0 = \beta_0$$
 
 <br>
 
 --
 
-$$\text{RT}(Lev_cat = mid) = \beta_0 + \beta_1 \cdot 1 + \beta_2 \cdot 0 = \beta_0 + \beta_1$$
+$$\text{vdur}(vowel = o) = \beta_0 + \beta_1 \cdot 1 + \beta_2 \cdot 0 = \beta_0 + \beta_1$$
 
 <br>
 
 --
 
-$$\text{RT}(Lev_cat = high) = \beta_0 + \beta_1 \cdot 0 + \beta_2 \cdot 1 = \beta_0 + \beta_2$$
+$$\text{vdur}(vowel = u) = \beta_0 + \beta_1 \cdot 0 + \beta_2 \cdot 1 = \beta_0 + \beta_2$$
 
 
 ---
 
-```{r}
-cat_3 <- lm(RT ~ Lev_cat, data = mald_1_1)
+```{r vdur-lm}
+vdur_lm <- lm(v2_duration ~ vowel, data = dur_ita)
 
-summary(cat_3)
+summary(vdur_lm)
 ```
 
 ---
 
-```{r}
-ggpredict(cat_3, terms = "Lev_cat") %>% plot()
+```{r vdur-lm-plot}
+ggpredict(vdur_lm, terms = "vowel") %>% plot()
 ```
 
 ---
 
-```{r}
-ggpredict(cat_3, terms = "Lev_cat")
-```
-
----
-
-```{r}
-cat_4 <- lm(RT ~ IsWord + Lev_cat, data = mald_1_1)
-
-summary(cat_4)
-```
-
----
-
-```{r}
-ggpredict(cat_4)
-```
-
----
-
-```{r}
-ggpredict(cat_4, terms = c("IsWord", "Lev_cat"))
-```
-
----
-
-```{r}
-ggpredict(cat_4, terms = c("IsWord", "Lev_cat")) %>% plot()
-```
-
----
-
-```{r}
-ggpredict(cat_4, terms = c("Lev_cat", "IsWord")) %>% plot()
+```{r vdur-lm-pred}
+ggpredict(vdur_lm, terms = "vowel")
 ```
 
 ---
 
 layout: false
+layout: true
+
+# Two categorical predictors
+
+---
+
+```{r vdur-lm-2}
+vdur_lm_2 <- lm(v2_duration ~ vowel + c2_phonation, data = dur_ita)
+
+summary(vdur_lm_2)
+```
+
+---
+
+```{r vdur-lm-2-pred}
+ggpredict(vdur_lm_2)
+```
+
+---
+
+```{r vdur-lm-2-pred-2}
+ggpredict(vdur_lm_2, terms = c("vowel", "c2_phonation"))
+```
+
+---
+
+```{r vdur-lm-2-plot-1}
+ggpredict(vdur_lm_2, terms = c("vowel", "c2_phonation")) %>% plot()
+```
+
+---
+
+```{r vdur-lm-2-plot-2}
+ggpredict(vdur_lm_2, terms = c("c2_phonation", "vowel")) %>% plot()
+```
+
+---
+
+layout: false
+
+# Sum coding
+
+...
+
+---
 
 # Summary
 
@@ -416,5 +443,5 @@ $$y = \beta_0 + \beta_1 x$$
 
 $$y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_4 x_1 x_2 + \beta_3 x_3$$
 
-* Categorical predictors are .orange[dummy coded].
+* Categorical predictors can be coded with treatment or sum coding systems.
 
