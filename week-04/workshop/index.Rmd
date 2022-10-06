@@ -171,13 +171,23 @@ Photo by <a href="https://unsplash.com/@karakupf?utm_source=unsplash&utm_medium=
 ---
 
 layout: false
+class: center middle inverse
 
 background-image: url(../../img/scott-rodgerson-BwMcYuHI9OI-unsplash.jpg)
 background-size: cover
 
-
+.f1[ARE YOU IN A<br>RSTUDIO PROJECT?]
 
 ???
 
 Photo by <a href="https://unsplash.com/@scottrodgerson?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Scott Rodgerson</a> on <a href="https://unsplash.com/s/photos/warning?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>
   
+---
+
+layout: true
+
+# Reading data
+
+Explain working dir, rel and abs paths.
+
+Then they can do tutorial using Rmd file.
