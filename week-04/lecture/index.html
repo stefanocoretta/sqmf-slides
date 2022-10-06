@@ -30,7 +30,7 @@ class: center, middle, inverse, title-slide
 ### University of Edinburgh
 ]
 .date[
-### 2022/09/01
+### 2022/10/11
 ]
 
 ---
@@ -489,12 +489,18 @@ We know `voice_duration` and `height` (`low`, `mid-low`, `mid-high` or `high`) a
 ---
 
 layout: false
-layour: true
+layout: true
 
 # Two categorical predictors
 
 ---
 
+
+```r
+vdur_lm_2 &lt;- lm(v2_duration ~ vowel + c2_phonation, data = dur_ita)
+
+summary(vdur_lm_2)
+```
 
 ```
 ## 
@@ -519,6 +525,10 @@ layour: true
 
 ---
 
+
+```r
+ggpredict(vdur_lm_2)
+```
 
 ```
 ## $vowel
@@ -552,6 +562,10 @@ layour: true
 
 ---
 
+
+```r
+ggpredict(vdur_lm_2, terms = c("vowel", "c2_phonation"))
+```
 
 ```
 ## # Predicted values of v2_duration

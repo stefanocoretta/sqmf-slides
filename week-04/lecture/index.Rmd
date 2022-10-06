@@ -3,7 +3,7 @@ title: "Statistics and Quantitative Methods (S1)"
 subtitle: "Week 4"
 author: "Dr Stefano Coretta"
 institute: "University of Edinburgh"
-date: "2022/09/01"
+date: "2022/10/11"
 output:
   xaringan::moon_reader:
     lib_dir: libs
@@ -464,13 +464,13 @@ ggpredict(voicedur_lm, terms = "height")
 ---
 
 layout: false
-layour: true
+layout: true
 
 # Two categorical predictors
 
 ---
 
-```{r vdur-lm-2}
+```{r vdur-lm-2, echo=TRUE}
 vdur_lm_2 <- lm(v2_duration ~ vowel + c2_phonation, data = dur_ita)
 
 summary(vdur_lm_2)
@@ -478,13 +478,13 @@ summary(vdur_lm_2)
 
 ---
 
-```{r vdur-lm-2-pred}
+```{r vdur-lm-2-pred, echo=TRUE}
 ggpredict(vdur_lm_2)
 ```
 
 ---
 
-```{r vdur-lm-2-pred-2}
+```{r vdur-lm-2-pred-2, echo=TRUE}
 ggpredict(vdur_lm_2, terms = c("vowel", "c2_phonation"))
 ```
 
