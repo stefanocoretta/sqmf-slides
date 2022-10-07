@@ -327,6 +327,16 @@ class: center middle inverse
 
 # R MARKDOWN TUTORIAL
 
-???
+---
 
-Download the tutorial file from <TBA>.
+# Instructions
+
+1. Download the following files (right-click on the `Raw` button and download):
+  - `alb_vot.csv` from <TBA>.
+  - `04_lm_cat.Rmd` from <TBA>.
+  
+1. Download the pupillometry data from <TBA>.
+
+3. Copy `04_lm_cat.Rmd` to the `code` folder in your RStudio project.
+
+4. Copy `alb_vot.csv` and `...csv` to the `data` folder in your RStudio project.
