@@ -332,11 +332,11 @@ class: center middle inverse
 # Instructions
 
 1. Download the following files (right-click on the `Raw` button and download):
-  - `alb_vot.csv` from <TBA>.
-  - `04_lm_cat.Rmd` from <TBA>.
+  - `alb_vot.csv` from <https://github.com/stefanocoretta/sqmf/blob/main/data-raw/tutorial-files/alb_vot.csv>.
+  - `04_lm_cat.Rmd` from <https://github.com/stefanocoretta/sqmf/blob/main/data-raw/tutorial-files/alb_vot.csv>.
   
-1. Download the pupillometry data from <TBA>.
+1. Download the pupillometry data `PDQ_WT_preprocessed.csv` from <https://osf.io/s5ut8/>.
 
 3. Copy `04_lm_cat.Rmd` to the `code` folder in your RStudio project.
 
-4. Copy `alb_vot.csv` and `...csv` to the `data` folder in your RStudio project.
+4. Copy `alb_vot.csv` and `PDQ_WT_preprocessed.csv` to the `data` folder in your RStudio project.
