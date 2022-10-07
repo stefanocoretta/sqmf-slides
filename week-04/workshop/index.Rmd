@@ -188,6 +188,145 @@ layout: true
 
 # Reading data
 
-Explain working dir, rel and abs paths.
+---
 
-Then they can do tutorial using Rmd file.
+Fundamental concepts:
+
+- **Working directory**:
+
+  - This is the directory (i.e. folder) which is set as the folder you are working from.
+  - You can check this in R with `getwd()`.
+  - When using RStudio projects, the working directory is your project's folder.
+
+--
+
+- **File paths**:
+  
+  - A file path is the "address" of a file on your computer.
+    For example: `"/Users/stefano/Documents/sqmf/script_1.R"`
+
+--
+
+- There are **two ways** of specifying file paths:
+
+  - **Absolute paths**: `"/Users/stefano/projects/voicing/code/analysis.R"`
+  - **Relative paths**: `"./code/analysis.R"`
+    - Relative paths are relative to the **working directory**.
+    - The `"./"` part means "start from the working directory".
+
+---
+
+layout: false
+class: center middle inverse
+
+# Please use RStudio projects and relative paths!
+
+---
+
+layout: true
+
+# Reading data
+
+---
+
+- The `read_csv()` function reads `.csv` files into R as a tibble (data frame, data table).
+
+- It takes at least one argument: the `file` path (as a string).
+
+<br>
+
+``` r
+vot_df <- read_csv("./data/vot.csv")
+vot_df
+```
+
+<br>
+
+- `"./data/vot.csv"` is a relative path.
+
+---
+
+When working with file paths, you can use **RStudio auto-complete**:
+
+- Start by typing `read_csv("")`.
+
+- Then move the text cursor between the `""`.
+
+- Press `TAB` and a list of files and folders from the working directory will be displayed.
+
+- You can navigate the list with the arrow keys and ENTER.
+
+---
+
+layout: false
+layout: true
+
+# Rmarkdown
+
+---
+
+Rmarkdown files start with a **YAML preamble**.
+
+```yaml
+---
+title: "My first Rmd file"
+author: "Stefano"
+date: "2022-10-11"
+output: html_document
+---
+```
+
+--
+
+You specify some info or settings about the document in the YAML preamble using `key: value` pairs.
+
+---
+
+Then you can start writing text using **markdown**!
+
+```md
+# A title (H1)
+
+Some text, this is **bold**.
+
+## Another title (H2)
+
+Some more *italics* text and a list:
+
+- Apples.
+- Pears.
+- Oranges.
+```
+
+---
+
+.center[
+![:scale 50%](../../img/code-chunk.png)
+]
+
+And code... in **code chunks**.
+
+- Code chunks are created by "fencing" code with **three backticks**.
+
+  - Lines 26 and 28 in the picture above.
+
+- Everything between the lines with backticks must be working R code.
+
+--
+
+- The opening backticks are followed by `{r pressure, echo=FALSE}`.
+
+--
+
+- In the top-right corner of the code chunk there are three buttons: (1) Code chunk settings, (2) Run all code above, (3) Run the code of the current chunk.
+
+---
+
+layout: false
+class: center middle inverse
+
+# R MARKDOWN TUTORIAL
+
+???
+
+Download the tutorial file from <TBA>.
