@@ -1,0 +1,93 @@
+---
+title: "Class difficulty ratings"
+format: html
+editor: visual
+---
+
+## Set-up and read data
+
+```{r}
+#| label: setup
+
+library(tidyverse)
+theme_set(theme_light())
+library(googlesheets4)
+library(here)
+
+class_rate <- read_sheet("https://docs.google.com/spreadsheets/d/1aJZGteU-tH5uxSNUkFj7wD3ln4iHnOjo5O3g02Juhyk/edit#gid=891329069")
+
+colnames(class_rate) <- c("timestamp", "week", "rel_rating", "first_rating")
+
+class_rate <- class_rate %>%
+  mutate(
+    timestamp = as.character(timestamp),
+    rating = ifelse(
+      is.na(rel_rating),
+      case_when(
+        first_rating == "Very difficult" ~ -2,
+        first_rating == "Difficult" ~ -1,
+        first_rating == "Neither easy nor difficult" ~ 0,
+        first_rating == "Easy" ~ 1,
+        first_rating == "Very easy" ~ 2,
+      ),
+      case_when(
+        rel_rating == "Much more difficult" ~ -2,
+        rel_rating == "More difficult" ~ -1,
+        rel_rating == "Same as last week" ~ 0,
+        rel_rating == "Easier" ~ 1,
+        rel_rating == "Much easier" ~ 2,
+      )
+    ),
+    # Fix wrong week numbers
+    week = case_when(
+      timestamp == "2022-09-30 10:32:05" ~ 2,
+      timestamp == "2022-10-07 08:29:10" ~ 3,
+      timestamp == "2022-10-07 10:47:46" ~ 3,
+      TRUE ~ week
+    ),
+    rating_2 = case_when(
+      week == 1 ~ rating,
+      week == 2 ~ rating + median(rating[week == 1]),
+      week == 3 ~ rating + median(rating[week == 1]) + median(rating[week == 2])
+    )
+  )
+
+class_counts <- class_rate %>%
+  count(week, rating) %>%
+  group_by(week) %>%
+  mutate(prop = n / sum(n) * 100)
+
+class_counts_2 <- class_rate %>%
+  count(week, rating_2) %>%
+  group_by(week) %>%
+  mutate(prop = n / sum(n) * 100)
+```
+
+## Plotting
+
+```{r}
+class_counts %>%
+  ggplot(aes(as.character(week), rating)) +
+  geom_point(aes(size = prop)) +
+  scale_size_continuous(range = c(0, 20))
+```
+
+```{r}
+class_counts_2 %>%
+  ggplot(aes(as.character(week), -rating_2)) +
+  geom_vline(xintercept = c("1", "2", "3"), size = 1.5, colour = "gray") +
+  geom_point(aes(size = prop, fill = prop), shape = 21, colour = "black") +
+  scale_size_continuous(range = c(0, 15), guide = "none") +
+  scale_fill_distiller(palette = "Purples", direction = 1) +
+  annotate(
+    "line",
+    x = seq(1, 3, by = 0.5),
+    y = c(-1, -1, 0, 0, 1),
+    size = 2, colour = "#31a354"
+  ) +
+  labs(y = "Difficulty", x = "Week", fill = "Percentage") +
+  ylim(-2.5, 2) +
+  theme(axis.text.y = element_blank())
+
+ggsave(here("img/class-ratings.png"), width = 7, height = 3)
+```
