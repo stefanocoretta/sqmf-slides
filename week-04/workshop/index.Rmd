@@ -333,7 +333,7 @@ class: center middle inverse
 
 1. Download the following files (right-click on the `Raw` button and download):
   - `alb_vot.csv` from <https://github.com/stefanocoretta/sqmf/blob/main/data-raw/tutorial-files/alb_vot.csv>.
-  - `04_lm_cat.Rmd` from <https://github.com/stefanocoretta/sqmf/blob/main/data-raw/tutorial-files/alb_vot.csv>.
+  - `04_lm_cat.Rmd` from <https://github.com/stefanocoretta/sqmf/blob/main/data-raw/tutorial-files/04_lm_cat.Rmd>.
   
 1. Download the pupillometry data `PDQ_WT_preprocessed.csv` from <https://osf.io/s5ut8/>.
 
