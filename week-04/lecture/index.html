@@ -72,11 +72,23 @@ layout: true
 
 ---
 
+We fitted a linear model to vowel duration with first formant (F1) as the only predictor.
+
+According to the model, the mean vowel duration is 70 ms (SE = 3) when F1 is 0 Hz.
+For each unit increase of F1, vowels get 0.06 ms longer (SE = 0.005).
+In other words, for each 1 Hz increase in F1, there is a 0.06 ms increase in vowel duration.
+
+This means that when F1 increases by 100 Hz, vowels are 6 ms longer.
+
+---
+
 - We can fit linear models with the `lm()` function.
   
   - `lm(outcome ~ predictor, data = your_data)`.
   
 - The model `summary()` provides you with the estimates of the model and their standard errors.
+
+- Interpret the estimated coefficients with care!
 
 --
 
