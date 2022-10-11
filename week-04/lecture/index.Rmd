@@ -68,6 +68,16 @@ layout: true
 
 ---
 
+The data:
+
+```{r dur-ita-pol}
+dur_ita_pol %>%
+  select(speaker, word, vowel, v1_duration, f1)
+```
+
+
+---
+
 ```{r dur-f1}
 ggplot(dur_ita_pol, aes(f1, v1_duration)) +
   geom_point(size = 1, alpha = 0.5) +
@@ -146,6 +156,16 @@ Like group, condition, gender, L1/L2, treatment, place of articulation...
 layout: true
 
 # Categorical predictors
+
+---
+
+The data:
+
+```{r mald}
+mald_1_1 %>%
+  select(Subject, RT, IsWord)
+```
+
 
 ---
 
@@ -323,6 +343,15 @@ layout: true
 
 ---
 
+The data:
+
+```{r dur-ita}
+dur_ita %>%
+  select(speaker, word, vowel, v2_duration)
+```
+
+
+---
 
 ```{r vdur-plot}
 dur_ita %>%
@@ -417,6 +446,16 @@ layout: true
 
 ---
 
+The data:
+
+```{r ita_egg}
+ita_egg %>%
+  select(speaker, word, vowel, height, voice_duration)
+```
+
+
+---
+
 ```{r itaegg-plot}
 ita_egg %>%
   ggplot(aes(height, voice_duration)) +
@@ -482,6 +521,16 @@ layout: true
 
 ---
 
+The data:
+
+```{r dur-ita-2}
+dur_ita %>%
+  select(speaker, word, vowel, c2_phonation, v2_duration)
+```
+
+
+---
+
 ```{r vdur-lm-2, echo=TRUE}
 vdur_lm_2 <- lm(v2_duration ~ vowel + c2_phonation, data = dur_ita)
 
@@ -518,13 +567,35 @@ layout: false
 
 # Summary
 
-* The simplest .orange[**linear model**] is a straight line.
 
-$$y = \beta_0 + \beta_1 x$$
+.pull-left[
+* The simplest form of a linear model is the following:
 
+  * $y = \beta_0 + \beta_1 x$, in R syntax `lm(y ~ x)`.
+  
 * We want to estimate the $\beta_n$ .orange[**coefficients**].
 
-$$y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_4 x_1 x_2 + \beta_3 x_3$$
+* When `x` and `y` are **both continuous variables**, all good!
 
-* Categorical predictors can be coded as numbers with treatment coding.
+  * $\beta_0$ is the intercept.
+  * $\beta_1$ is the slope.
 
+* In other words:
+  
+  * $\beta_0$ is the mean value of `y` when `x` is 0.
+  * $\beta_1$ is what you have to add (or subtract) to $\beta_0$ when `x` goes from 0 to 1.
+]
+
+--
+
+.pull-right[
+* When `y` is continuous but `x` is a **discrete variable**:
+
+  * We code discrete predictors as numbers with treatment coding (i.e. with `0`s and `1`s).
+  
+  * $\beta_0$ is the mean value of `y` when `x` is at the reference level.
+  
+  * $\beta_1$ is what you have to add (or subtract) to $\beta_0$ when `x` is at the other level.
+  
+  * and so on for each $\beta_n$...
+]

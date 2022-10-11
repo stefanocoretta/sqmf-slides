@@ -46,6 +46,29 @@ layout: true
 
 ---
 
+The data:
+
+
+```
+## # A tibble: 1,334 × 5
+##    speaker word  vowel v1_duration    f1
+##    &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt;
+##  1 it01    pugu  u            95.2  313.
+##  2 it01    pada  a           139.   781.
+##  3 it01    poco  o           127.   563.
+##  4 it01    pata  a           127.   749.
+##  5 it01    boco  o           132.   552.
+##  6 it01    podo  o           125.   557.
+##  7 it01    boto  o           134.   548.
+##  8 it01    paca  a           119.   733.
+##  9 it01    bodo  o           130.   554.
+## 10 it01    pucu  u            99.1  283.
+## # … with 1,324 more rows
+```
+
+
+---
+
 &lt;img src="index_files/figure-html/dur-f1-1.png" height="500px" style="display: block; margin: auto;" /&gt;
 
 ---
@@ -134,6 +157,29 @@ Like group, condition, gender, L1/L2, treatment, place of articulation...
 layout: true
 
 # Categorical predictors
+
+---
+
+The data:
+
+
+```
+## # A tibble: 5,000 × 3
+##    Subject    RT IsWord
+##    &lt;chr&gt;   &lt;int&gt; &lt;fct&gt; 
+##  1 15308     617 TRUE  
+##  2 15308    1198 FALSE 
+##  3 15308     954 TRUE  
+##  4 15308     579 TRUE  
+##  5 15308    1011 FALSE 
+##  6 15308    1402 TRUE  
+##  7 15308    1059 FALSE 
+##  8 15308     739 TRUE  
+##  9 15308     789 TRUE  
+## 10 15308     926 FALSE 
+## # … with 4,990 more rows
+```
+
 
 ---
 
@@ -319,6 +365,28 @@ layout: true
 
 ---
 
+The data:
+
+
+```
+## # A tibble: 879 × 4
+##    speaker word  vowel v2_duration
+##    &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;       &lt;dbl&gt;
+##  1 it01    pugu  u            90.0
+##  2 it01    pada  a            50.0
+##  3 it01    poco  o            50.0
+##  4 it01    pata  a            80.0
+##  5 it01    boco  o            50.0
+##  6 it01    podo  o            80.0
+##  7 it01    boto  o            40.0
+##  8 it01    paca  a            60.0
+##  9 it01    bodo  o            70.0
+## 10 it01    pucu  u            70.0
+## # … with 869 more rows
+```
+
+
+---
 
 &lt;img src="index_files/figure-html/vdur-plot-1.png" height="500px" style="display: block; margin: auto;" /&gt;
 
@@ -426,6 +494,29 @@ layout: true
 
 ---
 
+The data:
+
+
+```
+## # A tibble: 3,268 × 5
+##    speaker word  vowel height   voice_duration
+##    &lt;chr&gt;   &lt;chr&gt; &lt;fct&gt; &lt;fct&gt;             &lt;dbl&gt;
+##  1 it01    poto  o     mid-low           133. 
+##  2 it01    topo  o     mid-low           167. 
+##  3 it01    pato  a     low               178. 
+##  4 it01    teto  e     mid-high          142. 
+##  5 it01    toto  o     mid-low           154. 
+##  6 it01    puco  u     high               77.0
+##  7 it01    chipo i     high               78.7
+##  8 it01    peco  e     mid-high          105. 
+##  9 it01    poco  o     mid-low           137. 
+## 10 it01    poto  o     mid-low           129. 
+## # … with 3,258 more rows
+```
+
+
+---
+
 &lt;img src="index_files/figure-html/itaegg-plot-1.png" height="500px" style="display: block; margin: auto;" /&gt;
 
 ---
@@ -504,6 +595,29 @@ layout: false
 layout: true
 
 # Two categorical predictors
+
+---
+
+The data:
+
+
+```
+## # A tibble: 879 × 5
+##    speaker word  vowel c2_phonation v2_duration
+##    &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;              &lt;dbl&gt;
+##  1 it01    pugu  u     voiced              90.0
+##  2 it01    pada  a     voiced              50.0
+##  3 it01    poco  o     voiceless           50.0
+##  4 it01    pata  a     voiceless           80.0
+##  5 it01    boco  o     voiceless           50.0
+##  6 it01    podo  o     voiced              80.0
+##  7 it01    boto  o     voiceless           40.0
+##  8 it01    paca  a     voiceless           60.0
+##  9 it01    bodo  o     voiced              70.0
+## 10 it01    pucu  u     voiceless           70.0
+## # … with 869 more rows
+```
+
 
 ---
 
@@ -613,16 +727,38 @@ layout: false
 
 # Summary
 
-* The simplest .orange[**linear model**] is a straight line.
 
-`$$y = \beta_0 + \beta_1 x$$`
+.pull-left[
+* The simplest form of a linear model is the following:
 
+  * `\(y = \beta_0 + \beta_1 x\)`, in R syntax `lm(y ~ x)`.
+  
 * We want to estimate the `\(\beta_n\)` .orange[**coefficients**].
 
-`$$y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_4 x_1 x_2 + \beta_3 x_3$$`
+* When `x` and `y` are **both continuous variables**, all good!
 
-* Categorical predictors can be coded as numbers with treatment coding.
+  * `\(\beta_0\)` is the intercept.
+  * `\(\beta_1\)` is the slope.
 
+* In other words:
+  
+  * `\(\beta_0\)` is the mean value of `y` when `x` is 0.
+  * `\(\beta_1\)` is what you have to add (or subtract) to `\(\beta_0\)` when `x` goes from 0 to 1.
+]
+
+--
+
+.pull-right[
+* When `y` is continuous but `x` is a **discrete variable**:
+
+  * We code discrete predictors as numbers with treatment coding (i.e. with `0`s and `1`s).
+  
+  * `\(\beta_0\)` is the mean value of `y` when `x` is at the reference level.
+  
+  * `\(\beta_1\)` is what you have to add (or subtract) to `\(\beta_0\)` when `x` is at the other level.
+  
+  * and so on for each `\(\beta_n\)`...
+]
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
