@@ -260,6 +260,25 @@ For an excellent overview, see <https://debruine.github.io/faux/articles/contras
 | FALSE | 1        |
 ]
 
+---
+
+```{r mald-2}
+mald_1_1 %>%
+  mutate(IsWord_coded = ifelse(IsWord == "TRUE", 0, 1)) %>%
+  select(Subject, Item, RT, IsWord, IsWord_coded)
+```
+
+**NOTE:** You don't have to do the coding of the `IsWord` column yourself! `lm()` does everything for you.
+
+---
+
+.f3[
+|     | IsWord    |
+| --- | -------: |
+| TRUE  | 0        |
+| FALSE | 1        |
+]
+
 <br>
 
 $$\text{RT} = \beta_0 + \beta_1\text{IsWord}$$
@@ -280,7 +299,7 @@ $$\text{RT}(IsWord = FALSE) = \beta_0 + \beta_1 \cdot 1 =  \beta_0 + \beta_1$$
 
 With treatment coding, the first level in the predictor is the **reference level** (here, it is `TRUE`).
 
-The other level is compared agains the reference level (`FALSE` vs `TRUE`).
+The other level is compared against the reference level (`FALSE` vs `TRUE`).
 
 --
 
@@ -334,6 +353,25 @@ ggpredict(isword_lm, "IsWord") %>%
   plot()
 ```
 
+???
+
+If you are curious about the inner workings of the coding system, try the following code:
+
+
+```r
+mald_coded <- mald_1_1 %>%
+  mutate(
+    IsWordFALSE = ifelse(
+      IsWord == "TRUE",
+      0,
+      1)
+  )
+
+lm_2 <- lm(RT ~ IsWordFALSE,
+          data = mald_coded)
+summary(lm_2)
+```
+
 ---
 
 layout: false
@@ -349,7 +387,6 @@ The data:
 dur_ita %>%
   select(speaker, word, vowel, v2_duration)
 ```
-
 
 ---
 
@@ -378,6 +415,28 @@ How can we code three levels with just `0`s and `1`s?
 ---
 
 Easy! We cheat the system...
+
+.f3[
+|      | vowel_o  | vowel_u |
+| ---- | -------: | -------: |
+| a  | 0        | 0        |
+| o  | 1        | 0        |
+| u | 0        | 1        |
+]
+
+---
+
+```{r dur-ita-1}
+dur_ita %>%
+  mutate(
+    vowel_o = ifelse(vowel == "o", 1, 0),
+    vowel_u = ifelse(vowel == "u", 1, 0)
+  ) %>% select(speaker, word, vowel, vowel_o, vowel_u)
+```
+
+**NOTE:** You don't have to do the coding of the `vowel` column yourself! `lm()` does everything for you.
+
+---
 
 .f3[
 |      | vowel_o  | vowel_u |
@@ -468,6 +527,31 @@ ita_egg %>%
 ---
 
 You know the drill...
+
+.f3[
+|          | height_midlow | height_midhigh | height_high |
+|----------| :----------------: | :-----------------: | :-------------: |
+| low      | 0              | 0               | 0           |
+| mid-low  | 1              | 0               | 0           |
+| mid-high | 0              | 1               | 0           |
+| high     | 0              | 0               | 1           |
+]
+
+---
+
+```{r ita-egg-2}
+ita_egg %>%
+  mutate(
+    height_midlow = ifelse(height == "mid-low", 1, 0),
+    height_midhigh = ifelse(height == "mid-high", 1, 0),
+    height_high = ifelse(height == "high", 1, 0)
+  ) %>%
+  select(speaker, word, vowel, height, height_midlow, height_midhigh, height_high)
+```
+
+**NOTE:** You don't have to do the coding of the `height` column yourself! `lm()` does everything for you.
+
+---
 
 .f3[
 |          | height_midlow | height_midhigh | height_high |
