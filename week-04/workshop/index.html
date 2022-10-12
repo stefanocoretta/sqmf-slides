@@ -140,19 +140,21 @@ class: center middle inverse
 
 # Instructions
 
-1. Download the following files (you will have to right-click on the `Raw` button on the page that opens):
-  - `alb_vot.csv` from [here](https://github.com/stefanocoretta/sqmf/blob/main/data-raw/tutorial-files/alb_vot.csv).
-  - `04_lm_cat.Rmd` from [here](https://github.com/stefanocoretta/sqmf/blob/main/data-raw/tutorial-files/04_lm_cat.Rmd).
-  
-1. Download the pupillometry data `PDQ_WT_preprocessed.csv` from &lt;https://osf.io/s5ut8/&gt;.
+1. Download an unzip [this archive](https://drive.google.com/drive/folders/1h5YAoabIk0vhBGpcU8cQdUmNZYNPuh3z?usp=sharing).
 
-3. Copy `04_lm_cat.Rmd` to the `code` folder in your **RStudio project**.
+2. Create two folders in your RStudio project (if you haven't already):
 
-  1. **NOTE**: Don't confuse RStudio with an RStudio project!!! RStudio is the software, a project is a folder with an `.Rproj` file.
+  1. `code` and `data`.
 
-4. Copy `alb_vot.csv` and `PDQ_WT_preprocessed.csv` to the `data` folder in your RStudio project.
+3. Move `04_lm_cat.Rmd` into the `code` folder in yout RStudio Project.
 
-5. Open `04_lm_cat.Rmd`.
+4. Move `alb_vot.csv` and `PDQ_WT_preprocessed.csv` to the `data` folder in your RStudio project.
+
+5. Open `04_lm_cat.Rmd` in RStudio.
+
+&lt;br&gt;
+
+**NOTE**: Don't confuse RStudio with an RStudio project!!! RStudio is the software, a project is a folder with an `.Rproj` file.
 
 ---
 
@@ -245,16 +247,20 @@ layout: true
 
 ---
 
+- Attach the tidyverse packages with `library(tidyverse)`.
+
 - The `read_csv()` function reads `.csv` files into R as a tibble (data frame, data table).
+
+  - **NOTE** this is `read_csv()` NOT `read.csv()`.
 
 - It takes at least one argument: the `file` path (as a string).
 
   ``` r
-  vot_df &lt;- read_csv("./data/vot.csv")
-  vot_df
+  alb_vot &lt;- read_csv("./data/alb_vot.csv")
+  alb_vot
   ```
 
-- `"./data/vot.csv"` is a relative path.
+- `"./data/alb_vot.csv"` is a relative path.
 
 ---
 
