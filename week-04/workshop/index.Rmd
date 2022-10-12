@@ -141,6 +141,31 @@ layout: true
 ---
 
 layout: false
+class: center middle inverse
+
+# R MARKDOWN TUTORIAL
+
+---
+
+# Instructions
+
+1. Download the following files (you will have to right-click on the `Raw` button on the page that opens):
+  - `alb_vot.csv` from [here](https://github.com/stefanocoretta/sqmf/blob/main/data-raw/tutorial-files/alb_vot.csv).
+  - `04_lm_cat.Rmd` from [here](https://github.com/stefanocoretta/sqmf/blob/main/data-raw/tutorial-files/04_lm_cat.Rmd).
+  
+1. Download the pupillometry data `PDQ_WT_preprocessed.csv` from <https://osf.io/s5ut8/>.
+
+3. Copy `04_lm_cat.Rmd` to the `code` folder in your **RStudio project**.
+
+  1. **NOTE**: Don't confuse RStudio with an RStudio project!!! RStudio is the software, a project is a folder with an `.Rproj` file.
+
+4. Copy `alb_vot.csv` and `PDQ_WT_preprocessed.csv` to the `data` folder in your RStudio project.
+
+5. Open `04_lm_cat.Rmd`.
+
+---
+
+layout: false
 layout: true
 
 # Reading data
@@ -176,7 +201,7 @@ class: center middle inverse
 background-image: url(../../img/scott-rodgerson-BwMcYuHI9OI-unsplash.jpg)
 background-size: cover
 
-.f1[ARE YOU IN A<br>RSTUDIO PROJECT?]
+.f1[ARE YOU IN AN<br>RSTUDIO PROJECT?]
 
 ???
 
@@ -233,14 +258,10 @@ layout: true
 
 - It takes at least one argument: the `file` path (as a string).
 
-<br>
-
-``` r
-vot_df <- read_csv("./data/vot.csv")
-vot_df
-```
-
-<br>
+  ``` r
+  vot_df <- read_csv("./data/vot.csv")
+  vot_df
+  ```
 
 - `"./data/vot.csv"` is a relative path.
 
@@ -325,18 +346,4 @@ And code... in **code chunks**.
 layout: false
 class: center middle inverse
 
-# R MARKDOWN TUTORIAL
-
----
-
-# Instructions
-
-1. Download the following files (right-click on the `Raw` button and download):
-  - `alb_vot.csv` from <https://github.com/stefanocoretta/sqmf/blob/main/data-raw/tutorial-files/alb_vot.csv>.
-  - `04_lm_cat.Rmd` from <https://github.com/stefanocoretta/sqmf/blob/main/data-raw/tutorial-files/04_lm_cat.Rmd>.
-  
-1. Download the pupillometry data `PDQ_WT_preprocessed.csv` from <https://osf.io/s5ut8/>.
-
-3. Copy `04_lm_cat.Rmd` to the `code` folder in your RStudio project.
-
-4. Copy `alb_vot.csv` and `PDQ_WT_preprocessed.csv` to the `data` folder in your RStudio project.
+# NOW GO THROUGH THE RMARKDOWN TUTORIAL
