@@ -126,7 +126,7 @@ summary(f0_lm_1)
 ---
 
 ```{r f0-plot}
-ggpredict(f0_lm_1, terms = c("attitude", "months_ger", "gender")) %>%
+ggpredict(f0_lm_1, terms = c("attitude", "months_ger [0, 24, 48]", "gender"), condition = ) %>%
   plot() +
   theme(text = element_text(size = 20))
 ```
@@ -395,19 +395,6 @@ We can describe that distribution with this formula (much easier than listing al
 
 ---
 
-layout: false
-
-# Bernoulli distribution
-
-```{r bern, echo=TRUE}
-x_bern <- rbernoulli(20, p = 0.75)
-x_bern
-
-table(x_bern)
-```
-
----
-
 class: center middle inverse
 
 # Think about the probability distribution of the outcome variable
@@ -453,51 +440,129 @@ But from a practical point of view, these are all linear models, whether you fit
 
 ---
 
-# Dichotomous outcome: Bernoulli distribution
+layout: true
 
-```{r shallow-lm-1}
+# Dichotomous variables: Accuracy
+
+---
+
+```{r shallow-2}
 shallow <- shallow %>%
   mutate(
     accuracy = factor(accuracy, levels = c("incorrect", "correct"))
   )
 
+shallow %>% select(ID, accuracy, Relation_type)
+```
+
+---
+
+```{r shallow-plot}
+shallow %>%
+  ggplot(aes(accuracy, fill = accuracy)) +
+  geom_bar()
+```
+
+???
+
+You can clearly see that `"correct"` is much more frequent than `"incorrect"`.
+
+In other words, the probability of getting `"correct"` is greater than the probability of getting `"incorrect"`.
+
+---
+
+```{r shallow-plot-1}
+shallow %>%
+  ggplot(aes(Relation_type, fill = accuracy)) +
+  geom_bar()
+```
+
+???
+
+What happens if we separate by `Releation_type`?
+
+You can still see that `"correct"` is more frequent than `"incorrect"` in all relation types, but since each type has a different number of observations it is not easy to compare *across* types.
+
+---
+
+```{r shallow-plot-2}
+shallow %>%
+  ggplot(aes(Relation_type, fill = accuracy)) +
+  geom_bar(position = "fill") +
+  labs(y = "Proportion")
+```
+
+???
+
+In this plot, we use `position = "fill"` to plot *proportions* rather than raw counts.
+
+Now you can see that, proportionally, there are more correct responses in `Constituent` vs `NonConstituent` and that `Unrelated` is sorta mid-way through the other two.
+
+---
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt5[
+
+When the outcome variable is **dichotomous**, we need to estimate the **probability** of getting either level in the variable.
+
+]
+
+--
+
+In the `shallow` data:
+
+- `accuracy` is dichotomous with levels `"inaccurate"` and `"accurate"`
+- `Relation_type` is discrete with three levels: `Unrelated`, `Constituent`, `NonConstituent`.
+
+So, we want to know (i.e. estimate) the probability of getting a `"correct"` response depending on `Relation_type`.
+
+---
+
+```{r shallow-lm-1}
 shallow_lm_1 <- glm(accuracy ~ Relation_type, data = shallow, family = binomial())
 
 summary(shallow_lm_1)
 ```
 
----
+???
 
-# Do you notice something weird?
+Here's the summary of `shallow_lm_1`.
 
-```{r shallo-lm-1-2}
-summary(shallow_lm_1)
-```
+Do you notice something weird?
 
 ---
 
-# From log-odds to probabilities
+layout: false
+class: middle center inverse
 
-```{r plogis}
-# What is the probability at -1 log-odds?
-plogis(-1)
+# What is the unit of the estimates?!
 
-# What is the probability at 0 log-odds?
-plogis(0)
+???
 
-# What is the probability at 1 log-odds?
-plogis(1)
-```
+Should be probabilities, because we are estimating probabilities.
 
---
-
-<br>
-
-Now try different numbers with `plogis()`.
+But those cannot be probabilities, because probabilities are between 0 and 1.
 
 ---
 
-# From log-odds to probabilities
+class: middle center
+
+# Probabilities as log-odds
+
+???
+
+Linear models cannot work with probabilities! 
+
+So we need to transform probabilities into something the model can work with.
+
+And that something is log-odds!
+
+---
+
+layout: true
+
+# Probabilities and log-odds
+
+---
 
 ```{r p-log-odds, warning=FALSE}
 dots <- tibble(
@@ -528,15 +593,30 @@ tibble(
 
 ---
 
-# Dichotomous outcome: Bernoulli distribution
+```{r plogis, echo=TRUE}
+# What is the probability at -1 log-odds?
+plogis(-1)
+
+# What is the probability at 0 log-odds?
+plogis(0)
+
+# What is the probability at 1 log-odds?
+plogis(1)
+```
+
+--
+
+<br>
+
+Now try different numbers with `plogis()`.
+
+---
 
 ```{r shallow-lm-1-3}
 summary(shallow_lm_1)
 ```
 
 ---
-
-# Dichotomous outcome: Bernoulli distribution
 
 ```{r shallow-lm-1-predics}
 ggpredict(shallow_lm_1, terms = "Relation_type")
@@ -552,8 +632,6 @@ ggpredict(shallow_lm_1, terms = "Relation_type") %>%
 
 ---
 
-# Dichotomous outcome: Bernoulli distribution
-
 ```{r shallow-lm-2}
 shallow_lm_2 <- glm(accuracy ~ Relation_type + Group, data = shallow, family = binomial())
 
@@ -563,13 +641,13 @@ summary(shallow_lm_2)
 
 ---
 
-# Dichotomous outcome: Bernoulli distribution
-
 ```{r shallow-lm-2-plot}
 ggpredict(shallow_lm_2, terms = c("Group"))
 ggpredict(shallow_lm_2, terms = c("Relation_type"))
 ggpredict(shallow_lm_2, terms = c("Relation_type", "Group"))
 ```
+
+---
 
 ```{r shallow-lm-2-pred}
 ggpredict(shallow_lm_2, terms = c("Group")) %>%
@@ -579,8 +657,6 @@ ggpredict(shallow_lm_2, terms = c("Group", "Relation_type")) %>%
 ```
 
 ---
-
-# Log-odds
 
 ```{r log-exp, echo=TRUE}
 # What is the log of 1?
@@ -597,8 +673,6 @@ exp(0)
 Now try different numbers with `log()` and `exp()`.
 
 ---
-
-# From log-odds to odds
 
 ```{r log-odds}
 tibble(
@@ -621,8 +695,6 @@ tibble(
 ```
 
 ---
-
-# From log-odds to odds: Examples
 
 - 10 mo infants perform on average 10 iconic gestures per day. At 11 mo, the number of gestures increases by a factor of 1.6. At 12 mo, there is a further increase by a factor of 1.2.
 
@@ -650,8 +722,6 @@ summary(ct_lm_2)
 
 ---
 
-# Counts: Poisson distribution
-
 ```{r ct-2-plot}
 ggpredict(ct_lm_2, terms = c("count [0:40 by=0.1]")) %>%
   plot()
@@ -659,8 +729,6 @@ ggpredict(ct_lm_2, terms = c("count [0:40 by=0.1]")) %>%
 
 
 ---
-
-# Counts: Poisson distribution
 
 ```{r ct-3}
 ct_lm_3 <- glm(ct ~ count + background, data = gestures, family = poisson())
@@ -670,15 +738,11 @@ summary(ct_lm_3)
 
 ---
 
-# Counts: Poisson distribution
-
 ```{r ct-lm-3-coefs, echo=TRUE}
 tidy(ct_lm_3, exponentiate = FALSE)
 ```
 
 ---
-
-# Counts: Poisson distribution
 
 ```{r ct-lm-3-coefs-exp, echo=TRUE}
 tidy(ct_lm_3, exponentiate = TRUE)
@@ -686,8 +750,6 @@ tidy(ct_lm_3, exponentiate = TRUE)
 
 
 ---
-
-# Counts: Poisson distribution
 
 ```{r ct-3-plot}
 ggpredict(ct_lm_3, terms = c("count [0:30 by=0.1]", "background")) %>%

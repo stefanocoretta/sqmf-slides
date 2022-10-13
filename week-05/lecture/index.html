@@ -362,32 +362,6 @@ We can describe that distribution with this formula (much easier than listing al
 
 ---
 
-layout: false
-
-# Bernoulli distribution
-
-
-```r
-x_bern &lt;- rbernoulli(20, p = 0.75)
-x_bern
-```
-
-```
-##  [1] FALSE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE
-```
-
-```r
-table(x_bern)
-```
-
-```
-## x_bern
-## FALSE  TRUE 
-##     4    16
-```
-
----
-
 class: center middle inverse
 
 # Think about the probability distribution of the outcome variable
@@ -433,7 +407,78 @@ But from a practical point of view, these are all linear models, whether you fit
 
 ---
 
-# Dichotomous outcome: Bernoulli distribution
+layout: true
+
+# Dichotomous variables: Accuracy
+
+---
+
+
+```
+## # A tibble: 1,950 × 3
+##    ID    accuracy  Relation_type 
+##    &lt;chr&gt; &lt;fct&gt;     &lt;fct&gt;         
+##  1 L1_01 correct   Unrelated     
+##  2 L1_01 correct   Constituent   
+##  3 L1_01 correct   Unrelated     
+##  4 L1_01 correct   Constituent   
+##  5 L1_01 incorrect Unrelated     
+##  6 L1_01 correct   Unrelated     
+##  7 L1_01 correct   Constituent   
+##  8 L1_01 correct   NonConstituent
+##  9 L1_01 correct   NonConstituent
+## 10 L1_01 correct   Constituent   
+## # … with 1,940 more rows
+```
+
+---
+
+&lt;img src="index_files/figure-html/shallow-plot-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+
+???
+
+You can clearly see that `"correct"` is much more frequent than `"incorrect"`.
+
+In other words, the probability of getting `"correct"` is greater than the probability of getting `"incorrect"`.
+
+---
+
+&lt;img src="index_files/figure-html/shallow-plot-1-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+
+???
+
+What happens if we separate by `Releation_type`?
+
+You can still see that `"correct"` is more frequent than `"incorrect"` in all relation types, but since each type has a different number of observations it is not easy to compare *across* types.
+
+---
+
+&lt;img src="index_files/figure-html/shallow-plot-2-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+
+???
+
+In this plot, we use `position = "fill"` to plot *proportions* rather than raw counts.
+
+Now you can see that, proportionally, there are more correct responses in `Constituent` vs `NonConstituent` and that `Unrelated` is sorta mid-way through the other two.
+
+---
+
+.bg-washed-blue.b--dark-blue.ba.bw2.br3.shadow-5.ph4.mt5[
+
+When the outcome variable is **dichotomous**, we need to estimate the **probability** of getting either level in the variable.
+
+]
+
+--
+
+In the `shallow` data:
+
+- `accuracy` is dichotomous with levels `"inaccurate"` and `"accurate"`
+- `Relation_type` is discrete with three levels: `Unrelated`, `Constituent`, `NonConstituent`.
+
+So, we want to know (i.e. estimate) the probability of getting a `"correct"` response depending on `Relation_type`.
+
+---
 
 
 ```
@@ -461,47 +506,73 @@ But from a practical point of view, these are all linear models, whether you fit
 ## Number of Fisher Scoring iterations: 4
 ```
 
----
+???
 
-# Do you notice something weird?
+Here's the summary of `shallow_lm_1`.
 
-
-```
-## 
-## Call:
-## glm(formula = accuracy ~ Relation_type, family = binomial(), 
-##     data = shallow)
-## 
-## Deviance Residuals: 
-##     Min       1Q   Median       3Q      Max  
-## -2.0269   0.5238   0.5238   0.6438   0.7518  
-## 
-## Coefficients:
-##                             Estimate Std. Error z value Pr(&gt;|z|)
-## (Intercept)                   1.4684     0.0918  15.997  &lt; 2e-16
-## Relation_typeConstituent      0.4485     0.1411   3.179  0.00148
-## Relation_typeNonConstituent  -0.3492     0.1492  -2.341  0.01921
-## 
-## (Dispersion parameter for binomial family taken to be 1)
-## 
-##     Null deviance: 1810.9  on 1949  degrees of freedom
-## Residual deviance: 1784.8  on 1947  degrees of freedom
-## AIC: 1790.8
-## 
-## Number of Fisher Scoring iterations: 4
-```
+Do you notice something weird?
 
 ---
 
-# From log-odds to probabilities
+layout: false
+class: middle center inverse
 
+# What is the unit of the estimates?!
+
+???
+
+Should be probabilities, because we are estimating probabilities.
+
+But those cannot be probabilities, because probabilities are between 0 and 1.
+
+---
+
+class: middle center
+
+# Probabilities as log-odds
+
+???
+
+Linear models cannot work with probabilities! 
+
+So we need to transform probabilities into something the model can work with.
+
+And that something is log-odds!
+
+---
+
+layout: true
+
+# Probabilities and log-odds
+
+---
+
+&lt;img src="index_files/figure-html/p-log-odds-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+```r
+# What is the probability at -1 log-odds?
+plogis(-1)
+```
 
 ```
 ## [1] 0.2689414
 ```
 
+```r
+# What is the probability at 0 log-odds?
+plogis(0)
+```
+
 ```
 ## [1] 0.5
+```
+
+```r
+# What is the probability at 1 log-odds?
+plogis(1)
 ```
 
 ```
@@ -516,14 +587,6 @@ Now try different numbers with `plogis()`.
 
 ---
 
-# From log-odds to probabilities
-
-&lt;img src="index_files/figure-html/p-log-odds-1.png" height="500px" style="display: block; margin: auto;" /&gt;
-
----
-
-# Dichotomous outcome: Bernoulli distribution
-
 
 ```
 ## 
@@ -551,8 +614,6 @@ Now try different numbers with `plogis()`.
 ```
 
 ---
-
-# Dichotomous outcome: Bernoulli distribution
 
 
 ```
@@ -571,8 +632,6 @@ Now try different numbers with `plogis()`.
 
 
 ---
-
-# Dichotomous outcome: Bernoulli distribution
 
 
 ```
@@ -603,8 +662,6 @@ Now try different numbers with `plogis()`.
 
 
 ---
-
-# Dichotomous outcome: Bernoulli distribution
 
 
 ```
@@ -652,11 +709,11 @@ Now try different numbers with `plogis()`.
 ## NonConstituent |      0.73 | [0.68, 0.78]
 ```
 
+---
+
 &lt;img src="index_files/figure-html/shallow-lm-2-pred-1.png" height="500px" style="display: block; margin: auto;" /&gt;&lt;img src="index_files/figure-html/shallow-lm-2-pred-2.png" height="500px" style="display: block; margin: auto;" /&gt;
 
 ---
-
-# Log-odds
 
 
 ```r
@@ -685,13 +742,9 @@ Now try different numbers with `log()` and `exp()`.
 
 ---
 
-# From log-odds to odds
-
 &lt;img src="index_files/figure-html/log-odds-1.png" height="500px" style="display: block; margin: auto;" /&gt;
 
 ---
-
-# From log-odds to odds: Examples
 
 - 10 mo infants perform on average 10 iconic gestures per day. At 11 mo, the number of gestures increases by a factor of 1.6. At 12 mo, there is a further increase by a factor of 1.2.
 
@@ -738,14 +791,10 @@ Now try different numbers with `log()` and `exp()`.
 
 ---
 
-# Counts: Poisson distribution
-
 &lt;img src="index_files/figure-html/ct-2-plot-1.png" height="500px" style="display: block; margin: auto;" /&gt;
 
 
 ---
-
-# Counts: Poisson distribution
 
 
 ```
@@ -776,8 +825,6 @@ Now try different numbers with `log()` and `exp()`.
 
 ---
 
-# Counts: Poisson distribution
-
 
 ```r
 tidy(ct_lm_3, exponentiate = FALSE)
@@ -794,8 +841,6 @@ tidy(ct_lm_3, exponentiate = FALSE)
 ```
 
 ---
-
-# Counts: Poisson distribution
 
 
 ```r
@@ -814,8 +859,6 @@ tidy(ct_lm_3, exponentiate = TRUE)
 
 
 ---
-
-# Counts: Poisson distribution
 
 &lt;img src="index_files/figure-html/ct-3-plot-1.png" height="500px" style="display: block; margin: auto;" /&gt;
 

@@ -45,7 +45,8 @@ style_mono_light(
   base_color = "#23395b",
   text_font_google = google_font("Lato", "400", "700", "400i", "700i"),
   header_font_google = google_font("Montserrat", "400", "700", "400i", "700i"),
-  code_font_google = google_font("Source Code Pro", "400", "700")
+  code_font_google = google_font("Source Code Pro", "400", "700"),
+  link_color = "#d95f02"
 )
 ```
 
