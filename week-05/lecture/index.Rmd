@@ -49,6 +49,12 @@ style_mono_light(
 )
 ```
 
+class: center middle inverse
+
+# SUMMARY
+
+---
+
 # Summary
 
 * The simplest .orange[**linear model**] is a straight line.
@@ -70,21 +76,11 @@ $$y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \beta_3 x_3$$
 
 class: center middle
 
-![:scale 40%](../../img/charlesdeluvio-D44HIk-qsvI-unsplash.jpg)
+![:scale 30%](../../img/charlesdeluvio-D44HIk-qsvI-unsplash.jpg)
 
 ???
 
 Photo by <a href="https://unsplash.com/@charlesdeluvio?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">charlesdeluvio</a> on <a href="https://unsplash.com/s/photos/sad-puppy?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>
-  
----
-
-class: center middle
-
-![:scale 90%](../../img/joe-caione-qO-PIF84Vxg-unsplash.jpg)
-
-???
-
-Photo by <a href="https://unsplash.com/@joeyc?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Joe Caione</a> on <a href="https://unsplash.com/s/photos/happy-puppy?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>
 
 ---
 
@@ -134,8 +130,21 @@ ggpredict(f0_lm_1, terms = c("attitude", "months_ger [0, 24, 48]", "gender"), co
 ---
 
 layout: false
+class: center middle
+
+![:scale 80%](../../img/joe-caione-qO-PIF84Vxg-unsplash.jpg)
+
+???
+
+Photo by <a href="https://unsplash.com/@joeyc?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Joe Caione</a> on <a href="https://unsplash.com/s/photos/happy-puppy?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>
+
+---
+
+layout: true
 
 # Shallow Morphological Processing
+
+---
 
 - English L1 and L2 speakers (L2 speakers are native speakers of Cantonese).
 
@@ -144,6 +153,17 @@ layout: false
 - Target: *unkindness* ([[un]-[kind]]-ness).
 
 - Primes: *prolong* (Unrelated), *unkind* (Constituent), *kindness* (Non-Constituent).
+
+---
+
+```{r shallow-2}
+shallow <- shallow %>%
+  mutate(
+    accuracy = factor(accuracy, levels = c("incorrect", "correct"))
+  )
+
+shallow %>% select(ID, accuracy, Relation_type)
+```
 
 ---
 
@@ -177,7 +197,7 @@ What is the difference between this model and the models we have run so far?
 layout: false
 class: center middle inverse
 
-# Probability distributions
+# PROBABILITY DISTRIBUTIONS
 
 ---
 
@@ -440,18 +460,19 @@ But from a practical point of view, these are all linear models, whether you fit
 
 ---
 
+class: center middle inverse
+
+# DICHOTOMOUS VARIABLES: ACCURACY
+
+---
+
 layout: true
 
 # Dichotomous variables: Accuracy
 
 ---
 
-```{r shallow-2}
-shallow <- shallow %>%
-  mutate(
-    accuracy = factor(accuracy, levels = c("incorrect", "correct"))
-  )
-
+```{r shallow-3}
 shallow %>% select(ID, accuracy, Relation_type)
 ```
 
@@ -510,10 +531,12 @@ When the outcome variable is **dichotomous**, we need to estimate the **probabil
 
 In the `shallow` data:
 
-- `accuracy` is dichotomous with levels `"inaccurate"` and `"accurate"`
+- `accuracy` is dichotomous with levels `"incorrect"` and `"correct"`
 - `Relation_type` is discrete with three levels: `Unrelated`, `Constituent`, `NonConstituent`.
 
 So, we want to know (i.e. estimate) the probability of getting a `"correct"` response depending on `Relation_type`.
+
+We need to use `glm()` and `family = binomial()`!
 
 ---
 
@@ -560,7 +583,7 @@ And that something is log-odds!
 
 layout: true
 
-# Probabilities and log-odds
+# Probabilities as log-odds
 
 ---
 
@@ -580,8 +603,8 @@ tibble(
   geom_hline(yintercept = 1, colour = "#8856a7", size = 1) +
   geom_vline(xintercept = 0, alpha = 0.5) +
   geom_line(size = 2) +
-  geom_point(data = dots, size = 4) +
-  geom_point(x = 0, y = 0.5, colour = "#8856a7") +
+  # geom_point(data = dots, size = 4) +
+  geom_point(x = 0, y = 0.5, colour = "#8856a7", size = 4) +
   scale_x_continuous(breaks = seq(-6, 6, by = 1), minor_breaks = NULL, limits = c(-6, 6)) +
   scale_y_continuous(breaks = seq(0, 1, by = 0.1), minor_breaks = NULL) +
   labs(
@@ -592,6 +615,8 @@ tibble(
 ```
 
 ---
+
+To transform log-odds to probabilities you can use the `plogis()` function!
 
 ```{r plogis, echo=TRUE}
 # What is the probability at -1 log-odds?
@@ -612,13 +637,66 @@ Now try different numbers with `plogis()`.
 
 ---
 
+layout: false
+layout: true
+
+# Dichotomous variables: Accuracy
+
+---
+
 ```{r shallow-lm-1-3}
 summary(shallow_lm_1)
 ```
 
 ---
 
-```{r shallow-lm-1-predics}
+```{r sha-lm-sum-1}
+tidy(shallow_lm_1, exponentiate = FALSE)
+```
+
+--
+
+- `Intercept`
+  
+  - log-odds = 1.4684
+  - `plogis(1.4684)` = `r round(plogis(1.4684), 2)`
+  - i.e. 81% probability of getting `"correct"` *when* `Relation_type` is `"Unrelated"`.
+
+--
+
+- What about `Relation_typeConstituent` and `Relation_typeNonConstituent`?
+
+<br>
+
+.f3[As with the estimates of discrete predictors in `lm()` these tell you the difference between `Intercept` and the predictor level, **but in log-odds** rather than probabilities.]
+
+---
+
+```{r sha-lm-sum-2}
+tidy(shallow_lm_1, exponentiate = FALSE)
+```
+
+We need to **add** the estimate to the intercept to calculate probabilities!
+
+- `Relation_typeConstituent`
+
+  - log-odds = 0.4485.
+  - `plogis(1.4684 + 0.4485)` = `r round(plogis(1.4684 + 0.4485), 2)`
+  - i.e. when `Relation_type` is `Constituent`, we go from 81% to 87% probability of getting `"correct"`.
+  - In other words, there is a probability increase of about 6%.
+  
+--
+
+- `Relation_typeNonConstituent`
+
+  - log-odds = -0.3492.
+  - `plogis(1.4684 + -0.3492)` = `r round(plogis(1.4684 + -0.3492), 2)`
+  - i.e. when `Relation_type` is `NonConstituent`, we go from 81% to 75% probability of getting `"correct"`.
+  - In other words, there is a probability decrease of about 6%.
+
+---
+
+```{r shallow-lm-1-predics, echo=TRUE}
 ggpredict(shallow_lm_1, terms = "Relation_type")
 ```
 
@@ -642,35 +720,148 @@ summary(shallow_lm_2)
 ---
 
 ```{r shallow-lm-2-plot}
-ggpredict(shallow_lm_2, terms = c("Group"))
-ggpredict(shallow_lm_2, terms = c("Relation_type"))
 ggpredict(shallow_lm_2, terms = c("Relation_type", "Group"))
 ```
 
 ---
 
 ```{r shallow-lm-2-pred}
-ggpredict(shallow_lm_2, terms = c("Group")) %>%
-  plot()
 ggpredict(shallow_lm_2, terms = c("Group", "Relation_type")) %>%
   plot()
 ```
 
 ---
 
-```{r log-exp, echo=TRUE}
-# What is the log of 1?
-log(1)
+layout: false
+class: center middle inverse
 
-# What is the exponential function at 0?
+# COUNTS: CONTINGENT TALK
+
+---
+
+layout: true
+
+# Counts: Contingent talk
+
+---
+
+```{r gest}
+gestures %>% select(dyad, background, count, ct)
+```
+
+
+---
+
+```{r gest-plot, warning=FALSE}
+gestures %>%
+  ggplot(aes(count, ct)) +
+  geom_point() +
+  labs(
+    x = "Gesture count",
+    y = "Contingent talk count"
+  )
+```
+
+
+---
+
+```{r ct-2}
+ct_lm_2 <- glm(ct ~ count, data = gestures, family = poisson())
+
+summary(ct_lm_2)
+```
+
+---
+
+layout: false
+class: middle center inverse
+
+# What is the unit of the estimates?!
+
+???
+
+Should be counts, because we are estimating number of contingent talks.
+
+But those cannot be counts, because counts are discrete and cannot be negative.
+
+---
+
+class: middle center
+
+# Counts as log-odds
+
+???
+
+Linear models don't work well with counts (because they are discrete and cannot be negative)!
+
+So we need to transform counts into something the model can work with.
+
+And that something is (again) log-odds! How convenient!
+
+---
+
+layout: true
+
+# Counts as log-odds
+
+---
+
+To transform log-odds into counts, you can use the `exp()` function.
+
+```{r log-exp, echo=TRUE}
+exp(-1)
+
 exp(0)
+
+exp(1)
 ```
 
 --
 
 <br>
 
-Now try different numbers with `log()` and `exp()`.
+Note that `log()` is the inverse of `exp()`. For example: `log(1)` = 0 and `exp(0)` = 1.
+
+---
+
+layout: false
+layout: true
+
+# Counts: Contingent talk
+
+---
+
+```{r ct-2-1}
+tidy(ct_lm_2, exponentiate = FALSE)
+```
+
+--
+
+- `Intercept`
+  
+  - log-odds = -1.9519
+  - `exp(-1.9519)` = `r round(exp(-1.9519), 2)`.
+  - i.e.*when* gesture `count` is `0`, there are between 0 and 1 contingent talks.
+
+--
+
+- What about gesture `count`?
+
+<br>
+
+.f4[As with the estimates of continuous predictors in `lm()` these tell you the difference in `Intercept` when `count` goes from 0 to 1, **but in log-odds** rather than counts.]
+
+--
+
+.f3[When dealing with counts, we normally talk about effects as **rate of change**, aka **odd ratios**.]
+
+???
+
+So we need to transform log-odds into odd ratios (aka simply odds).
+
+How do we do that? Easy! We use the `exp()` function.
+
+So `exp()` converts log-odds into counts and into odd ratios.
 
 ---
 
@@ -694,36 +885,43 @@ tibble(
   )
 ```
 
+???
+
+When the odds are 1, then it means that there is no change.
+
+Think about this this way:
+
+If you start off with £5 and every day your savings change by a factor of 1, then every day you will still have those £5.
+Because `5 * 1 = 5`.
+
+But if every day your savings increase by a factor of 1.5, then after the first day you have £7.5 (`5 * 1.5 = 7.5`), after the second day you have £11.25 (`7.5 * 1.5 = 11.25`), and so on.
+
+You see that the rate of change is always the same (1.5, or 50%), but the absolute change depends on the day's savings:
+
+- first day: +2.5
+- second day: +3.75
+- third day: +5.62
+- ...
+
 ---
 
-- 10 mo infants perform on average 10 iconic gestures per day. At 11 mo, the number of gestures increases by a factor of 1.6. At 12 mo, there is a further increase by a factor of 1.2.
-
---
-
-  - Calculate the average number of gestures per day at 12 months based on the 10 month average (10 gestures).
-
---
-
-- The average number of errors L2 learners make decreases by a factor of 0.2 every year and a half.
-
---
-
-  - Calculate the average number of errors after 6 years, assuming 265 errors at year 1.
-  
----
-
-# Counts: Poisson distribution
-
-```{r ct-2}
-ct_lm_2 <- glm(ct ~ count, data = gestures, family = poisson())
-
-summary(ct_lm_2)
+```{r ct-2-2}
+tidy(ct_lm_2, exponentiate = FALSE)
 ```
+
+- `count`
+
+  - log-odds = 0.133939.
+  - `exp(0.133939)` = `r round(exp(0.133939), 2)`
+  - i.e. for each unit increase of `count`, coontingent talks increase by a factor of 1.14.
+  - In other words, for every one extra gesture, there is a 14% increase in contingent talks.
+
+
 
 ---
 
 ```{r ct-2-plot}
-ggpredict(ct_lm_2, terms = c("count [0:40 by=0.1]")) %>%
+ggpredict(ct_lm_2, terms = c("count [0:30 by=0.1]")) %>%
   plot()
 ```
 
@@ -756,5 +954,19 @@ ggpredict(ct_lm_3, terms = c("count [0:30 by=0.1]", "background")) %>%
   plot()
 ```
 
+---
 
+- 10 mo infants perform on average 10 iconic gestures per day. At 11 mo, the number of gestures increases by a factor of 1.6. At 12 mo, there is a further increase by a factor of 1.2.
+
+--
+
+  - Calculate the average number of gestures per day at 12 months based on the 10 month average (10 gestures).
+
+--
+
+- The average number of errors L2 learners make decreases by a factor of 0.2 every year and a half.
+
+--
+
+  - Calculate the average number of errors after 6 years, assuming 265 errors at year 1.
 

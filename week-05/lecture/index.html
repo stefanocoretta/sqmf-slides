@@ -40,6 +40,12 @@ class: center, middle, inverse, title-slide
 
 
 
+class: center middle inverse
+
+# SUMMARY
+
+---
+
 # Summary
 
 * The simplest .orange[**linear model**] is a straight line.
@@ -61,21 +67,11 @@ class: center, middle, inverse, title-slide
 
 class: center middle
 
-![:scale 40%](../../img/charlesdeluvio-D44HIk-qsvI-unsplash.jpg)
+![:scale 30%](../../img/charlesdeluvio-D44HIk-qsvI-unsplash.jpg)
 
 ???
 
 Photo by &lt;a href="https://unsplash.com/@charlesdeluvio?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText"&gt;charlesdeluvio&lt;/a&gt; on &lt;a href="https://unsplash.com/s/photos/sad-puppy?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText"&gt;Unsplash&lt;/a&gt;
-  
----
-
-class: center middle
-
-![:scale 90%](../../img/joe-caione-qO-PIF84Vxg-unsplash.jpg)
-
-???
-
-Photo by &lt;a href="https://unsplash.com/@joeyc?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText"&gt;Joe Caione&lt;/a&gt; on &lt;a href="https://unsplash.com/s/photos/happy-puppy?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText"&gt;Unsplash&lt;/a&gt;
 
 ---
 
@@ -149,8 +145,21 @@ layout: true
 ---
 
 layout: false
+class: center middle
+
+![:scale 80%](../../img/joe-caione-qO-PIF84Vxg-unsplash.jpg)
+
+???
+
+Photo by &lt;a href="https://unsplash.com/@joeyc?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText"&gt;Joe Caione&lt;/a&gt; on &lt;a href="https://unsplash.com/s/photos/happy-puppy?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText"&gt;Unsplash&lt;/a&gt;
+
+---
+
+layout: true
 
 # Shallow Morphological Processing
+
+---
 
 - English L1 and L2 speakers (L2 speakers are native speakers of Cantonese).
 
@@ -159,6 +168,26 @@ layout: false
 - Target: *unkindness* ([[un]-[kind]]-ness).
 
 - Primes: *prolong* (Unrelated), *unkind* (Constituent), *kindness* (Non-Constituent).
+
+---
+
+
+```
+## # A tibble: 1,950 × 3
+##    ID    accuracy  Relation_type 
+##    &lt;chr&gt; &lt;fct&gt;     &lt;fct&gt;         
+##  1 L1_01 correct   Unrelated     
+##  2 L1_01 correct   Constituent   
+##  3 L1_01 correct   Unrelated     
+##  4 L1_01 correct   Constituent   
+##  5 L1_01 incorrect Unrelated     
+##  6 L1_01 correct   Unrelated     
+##  7 L1_01 correct   Constituent   
+##  8 L1_01 correct   NonConstituent
+##  9 L1_01 correct   NonConstituent
+## 10 L1_01 correct   Constituent   
+## # … with 1,940 more rows
+```
 
 ---
 
@@ -193,7 +222,7 @@ What is the difference between this model and the models we have run so far?
 layout: false
 class: center middle inverse
 
-# Probability distributions
+# PROBABILITY DISTRIBUTIONS
 
 ---
 
@@ -407,6 +436,12 @@ But from a practical point of view, these are all linear models, whether you fit
 
 ---
 
+class: center middle inverse
+
+# DICHOTOMOUS VARIABLES: ACCURACY
+
+---
+
 layout: true
 
 # Dichotomous variables: Accuracy
@@ -473,10 +508,12 @@ When the outcome variable is **dichotomous**, we need to estimate the **probabil
 
 In the `shallow` data:
 
-- `accuracy` is dichotomous with levels `"inaccurate"` and `"accurate"`
+- `accuracy` is dichotomous with levels `"incorrect"` and `"correct"`
 - `Relation_type` is discrete with three levels: `Unrelated`, `Constituent`, `NonConstituent`.
 
 So, we want to know (i.e. estimate) the probability of getting a `"correct"` response depending on `Relation_type`.
+
+We need to use `glm()` and `family = binomial()`!
 
 ---
 
@@ -543,13 +580,15 @@ And that something is log-odds!
 
 layout: true
 
-# Probabilities and log-odds
+# Probabilities as log-odds
 
 ---
 
 &lt;img src="index_files/figure-html/p-log-odds-1.png" height="500px" style="display: block; margin: auto;" /&gt;
 
 ---
+
+To transform log-odds to probabilities you can use the `plogis()` function!
 
 
 ```r
@@ -587,6 +626,13 @@ Now try different numbers with `plogis()`.
 
 ---
 
+layout: false
+layout: true
+
+# Dichotomous variables: Accuracy
+
+---
+
 
 ```
 ## 
@@ -615,6 +661,68 @@ Now try different numbers with `plogis()`.
 
 ---
 
+
+```
+## # A tibble: 3 × 5
+##   term                        estimate std.error statistic  p.value
+##   &lt;chr&gt;                          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 (Intercept)                    1.47     0.0918     16.0  1.35e-57
+## 2 Relation_typeConstituent       0.448    0.141       3.18 1.48e- 3
+## 3 Relation_typeNonConstituent   -0.349    0.149      -2.34 1.92e- 2
+```
+
+--
+
+- `Intercept`
+  
+  - log-odds = 1.4684
+  - `plogis(1.4684)` = 0.81
+  - i.e. 81% probability of getting `"correct"` *when* `Relation_type` is `"Unrelated"`.
+
+--
+
+- What about `Relation_typeConstituent` and `Relation_typeNonConstituent`?
+
+&lt;br&gt;
+
+.f3[As with the estimates of discrete predictors in `lm()` these tell you the difference between `Intercept` and the predictor level, **but in log-odds** rather than probabilities.]
+
+---
+
+
+```
+## # A tibble: 3 × 5
+##   term                        estimate std.error statistic  p.value
+##   &lt;chr&gt;                          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 (Intercept)                    1.47     0.0918     16.0  1.35e-57
+## 2 Relation_typeConstituent       0.448    0.141       3.18 1.48e- 3
+## 3 Relation_typeNonConstituent   -0.349    0.149      -2.34 1.92e- 2
+```
+
+We need to **add** the estimate to the intercept to calculate probabilities!
+
+- `Relation_typeConstituent`
+
+  - log-odds = 0.4485.
+  - `plogis(1.4684 + 0.4485)` = 0.87
+  - i.e. when `Relation_type` is `Constituent`, we go from 81% to 87% probability of getting `"correct"`.
+  - In other words, there is a probability increase of about 6%.
+  
+--
+
+- `Relation_typeNonConstituent`
+
+  - log-odds = -0.3492.
+  - `plogis(1.4684 + -0.3492)` = 0.75
+  - i.e. when `Relation_type` is `NonConstituent`, we go from 81% to 75% probability of getting `"correct"`.
+  - In other words, there is a probability decrease of about 6%.
+
+---
+
+
+```r
+ggpredict(shallow_lm_1, terms = "Relation_type")
+```
 
 ```
 ## # Predicted probabilities of accuracy
@@ -667,31 +775,6 @@ Now try different numbers with `plogis()`.
 ```
 ## # Predicted probabilities of accuracy
 ## 
-## Group | Predicted |       95% CI
-## --------------------------------
-## L1    |      0.84 | [0.80, 0.86]
-## L2    |      0.79 | [0.76, 0.83]
-## 
-## Adjusted for:
-## * Relation_type = Unrelated
-```
-
-```
-## # Predicted probabilities of accuracy
-## 
-## Relation_type  | Predicted |       95% CI
-## -----------------------------------------
-## Unrelated      |      0.79 | [0.76, 0.83]
-## Constituent    |      0.86 | [0.83, 0.88]
-## NonConstituent |      0.73 | [0.68, 0.78]
-## 
-## Adjusted for:
-## * Group = L2
-```
-
-```
-## # Predicted probabilities of accuracy
-## 
 ## # Group = L1
 ## 
 ## Relation_type  | Predicted |       95% CI
@@ -711,58 +794,48 @@ Now try different numbers with `plogis()`.
 
 ---
 
-&lt;img src="index_files/figure-html/shallow-lm-2-pred-1.png" height="500px" style="display: block; margin: auto;" /&gt;&lt;img src="index_files/figure-html/shallow-lm-2-pred-2.png" height="500px" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/shallow-lm-2-pred-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+
+---
+
+layout: false
+class: center middle inverse
+
+# COUNTS: CONTINGENT TALK
+
+---
+
+layout: true
+
+# Counts: Contingent talk
 
 ---
 
 
-```r
-# What is the log of 1?
-log(1)
+```
+## # A tibble: 1,620 × 4
+##    dyad  background count    ct
+##    &lt;chr&gt; &lt;chr&gt;      &lt;dbl&gt; &lt;dbl&gt;
+##  1 b01   Bengali        5     1
+##  2 b01   Bengali        0     0
+##  3 b01   Bengali        0     0
+##  4 b01   Bengali        0     0
+##  5 b01   Bengali        0     0
+##  6 b01   Bengali        0     0
+##  7 b01   Bengali        0     0
+##  8 b01   Bengali        0     0
+##  9 b01   Bengali        0     0
+## 10 b01   Bengali        8     3
+## # … with 1,610 more rows
 ```
 
-```
-## [1] 0
-```
-
-```r
-# What is the exponential function at 0?
-exp(0)
-```
-
-```
-## [1] 1
-```
-
---
-
-&lt;br&gt;
-
-Now try different numbers with `log()` and `exp()`.
 
 ---
 
-&lt;img src="index_files/figure-html/log-odds-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/gest-plot-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+
 
 ---
-
-- 10 mo infants perform on average 10 iconic gestures per day. At 11 mo, the number of gestures increases by a factor of 1.6. At 12 mo, there is a further increase by a factor of 1.2.
-
---
-
-  - Calculate the average number of gestures per day at 12 months based on the 10 month average (10 gestures).
-
---
-
-- The average number of errors L2 learners make decreases by a factor of 0.2 every year and a half.
-
---
-
-  - Calculate the average number of errors after 6 years, assuming 265 errors at year 1.
-  
----
-
-# Counts: Poisson distribution
 
 
 ```
@@ -788,6 +861,162 @@ Now try different numbers with `log()` and `exp()`.
 ## 
 ## Number of Fisher Scoring iterations: 6
 ```
+
+---
+
+layout: false
+class: middle center inverse
+
+# What is the unit of the estimates?!
+
+???
+
+Should be counts, because we are estimating number of contingent talks.
+
+But those cannot be counts, because counts are discrete and cannot be negative.
+
+---
+
+class: middle center
+
+# Counts as log-odds
+
+???
+
+Linear models don't work well with counts (because they are discrete and cannot be negative)!
+
+So we need to transform counts into something the model can work with.
+
+And that something is (again) log-odds! How convenient!
+
+---
+
+layout: true
+
+# Counts as log-odds
+
+---
+
+To transform log-odds into counts, you can use the `exp()` function.
+
+
+```r
+exp(-1)
+```
+
+```
+## [1] 0.3678794
+```
+
+```r
+exp(0)
+```
+
+```
+## [1] 1
+```
+
+```r
+exp(1)
+```
+
+```
+## [1] 2.718282
+```
+
+--
+
+&lt;br&gt;
+
+Note that `log()` is the inverse of `exp()`. For example: `log(1)` = 0 and `exp(0)` = 1.
+
+---
+
+layout: false
+layout: true
+
+# Counts: Contingent talk
+
+---
+
+
+```
+## # A tibble: 2 × 5
+##   term        estimate std.error statistic   p.value
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)   -1.95    0.0629      -31.0 3.65e-211
+## 2 count          0.134   0.00292      45.9 0
+```
+
+--
+
+- `Intercept`
+  
+  - log-odds = -1.9519
+  - `exp(-1.9519)` = 0.14.
+  - i.e.*when* gesture `count` is `0`, there are between 0 and 1 contingent talks.
+
+--
+
+- What about gesture `count`?
+
+&lt;br&gt;
+
+.f4[As with the estimates of continuous predictors in `lm()` these tell you the difference in `Intercept` when `count` goes from 0 to 1, **but in log-odds** rather than counts.]
+
+--
+
+.f3[When dealing with counts, we normally talk about effects as **rate of change**, aka **odd ratios**.]
+
+???
+
+So we need to transform log-odds into odd ratios (aka simply odds).
+
+How do we do that? Easy! We use the `exp()` function.
+
+So `exp()` converts log-odds into counts and into odd ratios.
+
+---
+
+&lt;img src="index_files/figure-html/log-odds-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+
+???
+
+When the odds are 1, then it means that there is no change.
+
+Think about this this way:
+
+If you start off with £5 and every day your savings change by a factor of 1, then every day you will still have those £5.
+Because `5 * 1 = 5`.
+
+But if every day your savings increase by a factor of 1.5, then after the first day you have £7.5 (`5 * 1.5 = 7.5`), after the second day you have £11.25 (`7.5 * 1.5 = 11.25`), and so on.
+
+You see that the rate of change is always the same (1.5, or 50%), but the absolute change depends on the day's savings:
+
+- first day: +2.5
+- second day: +3.75
+- third day: +5.62
+- ...
+
+---
+
+
+```
+## # A tibble: 2 × 5
+##   term        estimate std.error statistic   p.value
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)   -1.95    0.0629      -31.0 3.65e-211
+## 2 count          0.134   0.00292      45.9 0
+```
+
+- `count`
+
+  - log-odds = 0.133939.
+  - `exp(0.133939)` = 1.14
+  - i.e. for each unit increase of `count`, coontingent talks increase by a factor of 1.14.
+  - In other words, for every one extra gesture, there is a 14% increase in contingent talks.
+
+
 
 ---
 
@@ -862,7 +1091,21 @@ tidy(ct_lm_3, exponentiate = TRUE)
 
 &lt;img src="index_files/figure-html/ct-3-plot-1.png" height="500px" style="display: block; margin: auto;" /&gt;
 
+---
 
+- 10 mo infants perform on average 10 iconic gestures per day. At 11 mo, the number of gestures increases by a factor of 1.6. At 12 mo, there is a further increase by a factor of 1.2.
+
+--
+
+  - Calculate the average number of gestures per day at 12 months based on the 10 month average (10 gestures).
+
+--
+
+- The average number of errors L2 learners make decreases by a factor of 0.2 every year and a half.
+
+--
+
+  - Calculate the average number of errors after 6 years, assuming 265 errors at year 1.
 
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
