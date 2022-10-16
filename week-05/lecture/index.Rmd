@@ -167,6 +167,8 @@ shallow %>% select(ID, accuracy, Relation_type)
 
 ---
 
+layout: false
+
 # This doesn't work!
 
 ```{r shallow, eval=FALSE, echo=TRUE}
@@ -194,7 +196,6 @@ What is the difference between this model and the models we have run so far?
 
 ---
 
-layout: false
 class: center middle inverse
 
 # PROBABILITY DISTRIBUTIONS
@@ -439,15 +440,15 @@ class: center middle inverse
 .pull-right[
 **Discrete outcome variable**
 
-* The variable is *counts*: **Poisson** distribution.
-  * Counts of words, segments, gestures, f0 peaks, ...
-  
-  * This family can be fitted with `glm(..., family = poisson)`.
-
 * The variable is *dichotomous*, i.e. it can take one of two levels: **Bernoulli** distribution.
   * Categorical outcome variables like yes/no, correct/incorrect, voiced/voiceless, follow this distribution.
   
   * This family is fitted when you run `glm(..., family = binomial)`, aka "logistic regression" or "binomial regression".
+
+* The variable is *counts*: **Poisson** distribution.
+  * Counts of words, segments, gestures, f0 peaks, ...
+  
+  * This family can be fitted with `glm(..., family = poisson)`.
 ]
 
 ???
@@ -457,6 +458,16 @@ Note that `glm()` stands for Generalised Linear Model.
 It's called "generalised" because the maths behind it generalises the use of linear models with the Gaussian distribution family to other distribution families.
 
 But from a practical point of view, these are all linear models, whether you fit them with `lm()` or `glm()`.
+
+---
+
+# So far we used Gaussian distributions
+
+`lm()` uses a Gaussian distribution by default.
+
+--
+
+But most variables are not Gaussian (in fact, there aren't any truly Gaussian variables, so much for the "normal" distribution).
 
 ---
 
@@ -735,13 +746,13 @@ ggpredict(shallow_lm_2, terms = c("Group", "Relation_type")) %>%
 layout: false
 class: center middle inverse
 
-# COUNTS: CONTINGENT TALK
+# COUNTS: CONTINGENT TALKS
 
 ---
 
 layout: true
 
-# Counts: Contingent talk
+# Counts: Contingent talks
 
 ---
 
@@ -827,7 +838,7 @@ Note that `log()` is the inverse of `exp()`. For example: `log(1)` = 0 and `exp(
 layout: false
 layout: true
 
-# Counts: Contingent talk
+# Counts: Contingent talks
 
 ---
 
@@ -954,7 +965,7 @@ ggpredict(ct_lm_3, terms = c("count [0:30 by=0.1]", "background")) %>%
   plot()
 ```
 
----
+???
 
 - 10 mo infants perform on average 10 iconic gestures per day. At 11 mo, the number of gestures increases by a factor of 1.6. At 12 mo, there is a further increase by a factor of 1.2.
 
