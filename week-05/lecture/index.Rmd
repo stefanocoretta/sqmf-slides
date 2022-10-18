@@ -172,7 +172,7 @@ layout: false
 # This doesn't work!
 
 ```{r shallow, eval=FALSE, echo=TRUE}
-shallow_lm <- lm(accuracy ~ Word_Nonword + accuracy, data = shallow)
+shallow_lm <- lm(accuracy ~ Word_Nonword, data = shallow)
 ```
 
 ```
