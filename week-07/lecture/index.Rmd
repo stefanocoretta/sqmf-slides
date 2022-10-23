@@ -18,7 +18,7 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, message = FALSE, dpi = 300, out.height = "500px", fig.align = "center")
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, dpi = 300, out.height = "500px", fig.align = "center")
 knitr::opts_knit$set(root.dir = here::here())
 options(htmltools.dir.version = FALSE)
 library(tidyverse)
@@ -31,6 +31,9 @@ library(marginaleffects)
 options(show.signif.stars = FALSE)
 library(broom.mixed)
 library(sqmf)
+data("shallow")
+data("polite")
+data("gestures")
 data("dur_ita_pol")
 dur_ita_pol %<>% drop_na(f1, v1_duration)
 ```
@@ -45,7 +48,130 @@ style_mono_light(
 )
 ```
 
+class: center middle inverse
+
+# SHALLOW MORPHOLOGICAL PARSING
+
+---
+
+layout: true
+
+# Shallow morphological parsing
+
+---
+
+```{r shallow}
+shallow %>% select(ID, Group, Target, Relation_type, Branching, accuracy)
+```
+
+---
+
+```{r shallow-2}
+shallow <- shallow %>%
+  filter(Relation_type != "NonConstituent") %>%
+  mutate(
+    Group = factor(Group, levels = c("L1", "L2")),
+    Relation_type = factor(Relation_type, levels = c("Unrelated", "Constituent", "NonConstituent")),
+    Branching = factor(Branching, levels = c("Left", "Right")),
+    accuracy = factor(accuracy, levels = c("incorrect", "correct"))
+  )
+```
+
+
+---
+
+```{r shallow-lm}
+shallow_lm <- glm(accuracy ~ Relation_type + Branching, data = shallow, family = binomial())
+
+# library(broom.mixed)
+tidy(shallow_lm)
+```
+
+--
+
+|                | Left          | Right                 |
+|----------------|---------------|-----------------------|
+| Unrelated      | 0.888         | 0.888 + 1.516         |
+| Constituent    | 0.888 + 0.477 | 0.888 + 0.477 + 1.516 |
+
+--
+
+|                | Left  | Right |
+|----------------|-------|-------|
+| Unrelated      | 0.888 | 2.404 |
+| Constituent    | 1.365 | 2.881 |
+
+---
+
+```{r shallow-preds}
+ggpredict(shallow_lm, terms = c("Relation_type", "Branching"))
+```
+
+---
+
+```{r shallow-preds-plot}
+ggpredict(shallow_lm, terms = c("Branching", "Relation_type")) %>% plot()
+```
+
+---
+
+```{r shallow-plot}
+shallow %>%
+  ggplot(aes(Relation_type, fill = accuracy)) +
+  geom_bar(position = "fill") +
+  facet_grid(~ Branching)
+```
+
+
+---
+
+```{r shallow-lm-2}
+shallow_lm_2 <- glm(
+  accuracy ~ Relation_type + Branching + Relation_type:Branching,
+  data = shallow, family = binomial()
+)
+
+tidy(shallow_lm_2)
+```
+
+--
+
+|             | Left          | Right                          |
+|-------------|---------------|--------------------------------|
+| Unrelated   | 0.822         | 0.822 + 1.775                  |
+| Constituent | 0.822 + 0.628 | 0.822 + 0.628 + 1.775 + -0.588 |
+
+--
+
+|             | Left  | Right |
+|-------------|-------|-------|
+| Unrelated   | 0.822 | 2.597 |
+| Constituent | 1.45  | 2.637 |
+
+---
+
+```{r shallow-preds-2}
+ggpredict(shallow_lm_2, terms = c("Relation_type", "Branching"))
+```
+
+---
+
+```{r shallow-preds-plot-2}
+ggpredict(shallow_lm_2, terms = c("Branching", "Relation_type")) %>% plot()
+```
+
+---
+
+Reporting of model
+
+---
+
+layout: false
+layout: true
+
 # Vowel duration and consonant voicing
+
+---
 
 Details of study
 
@@ -193,6 +319,12 @@ ggpredict(vdur_lm_2, terms = c("c2_phonation", "language")) %>%
 
 ---
 
+layout: false
+
+# Centering and scaling
+
+---
+
 # Exercise 1
 
 ```{r art-rate}
@@ -216,7 +348,7 @@ ggpredict(art_lm_1, terms = c("musicstudent", "attitude")) %>%
 # Exercise 2
 
 ```{r f0}
-f0_lm_1 <- lm(f0mn ~ attitude * years_in_ger, data = polite)
+f0_lm_1 <- lm(f0mn ~ attitude * months_ger, data = polite)
 
 summary(f0_lm_1)
 ```
@@ -226,7 +358,7 @@ summary(f0_lm_1)
 # Exercise 2
 
 ```{r f0-plot}
-ggpredict(f0_lm_1, terms = c("attitude", "years_in_ger [1,3,6,9]")) %>%
+ggpredict(f0_lm_1, terms = c("attitude", "months_ger [1,12,24,48]")) %>%
   plot() +
   theme(text = element_text(size = 20))
 ```
@@ -236,11 +368,6 @@ ggpredict(f0_lm_1, terms = c("attitude", "years_in_ger [1,3,6,9]")) %>%
 # Exercise 3
 
 ```{r ct}
-gestures <- read_csv("04-fit-models/gestures.csv") %>%
-  mutate(
-    background = factor(background, levels = c("English", "Chinese", "Bengali"))
-  )
-
 ct_lm_1 <- lm(ct ~ count * gesture * background, data = gestures)
 
 summary(ct_lm_1)

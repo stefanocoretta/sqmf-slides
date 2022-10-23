@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Statistics and Quantitative Methods (S1)</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Dr Stefano Coretta" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/tachyons/tachyons.min.css" rel="stylesheet" />
+    <link href="libs/panelset/panelset.css" rel="stylesheet" />
+    <script src="libs/panelset/panelset.js"></script>
+    <script src="libs/freezeframe/freezeframe.min.js"></script>
+    <script src="libs/xaringanExtra-freezeframe/freezeframe-init.js"></script>
+    <script id="xaringanExtra-freezeframe-options" type="application/json">{"selector":"img[src$=\"gif\"]","trigger":"click","overlay":false,"responsive":true,"warnings":true}</script>
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Statistics and Quantitative Methods (S1)
+]
+.subtitle[
+## Week 7
+]
+.author[
+### Dr Stefano Coretta
+]
+.institute[
+### University of Edinburgh
+]
+.date[
+### 2022/09/01
+]
+
+---
+
+
+
+
+
+
+class: center middle inverse
+
+# SHALLOW MORPHOLOGICAL PARSING
+
+---
+
+layout: true
+
+# Shallow morphological parsing
+
+---
+
+
+```r
+shallow %&gt;% select(ID, Group, Target, Relation_type, Branching, accuracy)
+```
+
+```
+## # A tibble: 1,950 × 6
+##    ID    Group Target      Relation_type  Branching accuracy 
+##    &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;       &lt;fct&gt;          &lt;chr&gt;     &lt;chr&gt;    
+##  1 L1_01 L1    unawareness Unrelated      Left      correct  
+##  2 L1_01 L1    unholiness  Constituent    Left      correct  
+##  3 L1_01 L1    unhappiness Unrelated      Left      correct  
+##  4 L1_01 L1    unsharpness Constituent    Left      correct  
+##  5 L1_01 L1    unripeness  Unrelated      Left      incorrect
+##  6 L1_01 L1    undeniable  Unrelated      Right     correct  
+##  7 L1_01 L1    unskillful  Constituent    Right     correct  
+##  8 L1_01 L1    unkindness  NonConstituent Left      correct  
+##  9 L1_01 L1    unwariness  NonConstituent Left      correct  
+## 10 L1_01 L1    unclearness Constituent    Left      correct  
+## # … with 1,940 more rows
+```
+
+---
+
+
+```r
+shallow &lt;- shallow %&gt;%
+  filter(Relation_type != "NonConstituent") %&gt;%
+  mutate(
+    Group = factor(Group, levels = c("L1", "L2")),
+    Relation_type = factor(Relation_type, levels = c("Unrelated", "Constituent", "NonConstituent")),
+    Branching = factor(Branching, levels = c("Left", "Right")),
+    accuracy = factor(accuracy, levels = c("incorrect", "correct"))
+  )
+```
+
+
+---
+
+
+```r
+shallow_lm &lt;- glm(accuracy ~ Relation_type + Branching, data = shallow, family = binomial())
+
+# library(broom.mixed)
+tidy(shallow_lm)
+```
+
+```
+## # A tibble: 3 × 5
+##   term                     estimate std.error statistic  p.value
+##   &lt;chr&gt;                       &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 (Intercept)                 0.888     0.105      8.45 2.98e-17
+## 2 Relation_typeConstituent    0.477     0.146      3.28 1.04e- 3
+## 3 BranchingRight              1.52      0.165      9.18 4.47e-20
+```
+
+--
+
+|                | Left          | Right                 |
+|----------------|---------------|-----------------------|
+| Unrelated      | 0.888         | 0.888 + 1.516         |
+| Constituent    | 0.888 + 0.477 | 0.888 + 0.477 + 1.516 |
+
+--
+
+|                | Left  | Right |
+|----------------|-------|-------|
+| Unrelated      | 0.888 | 2.404 |
+| Constituent    | 1.365 | 2.881 |
+
+---
+
+
+```r
+ggpredict(shallow_lm, terms = c("Relation_type", "Branching"))
+```
+
+```
+## # Predicted probabilities of accuracy
+## 
+## # Branching = Left
+## 
+## Relation_type | Predicted |       95% CI
+## ----------------------------------------
+## Unrelated     |      0.71 | [0.66, 0.75]
+## Constituent   |      0.80 | [0.76, 0.83]
+## 
+## # Branching = Right
+## 
+## Relation_type | Predicted |       95% CI
+## ----------------------------------------
+## Unrelated     |      0.92 | [0.89, 0.94]
+## Constituent   |      0.95 | [0.93, 0.96]
+```
+
+---
+
+
+```r
+ggpredict(shallow_lm, terms = c("Branching", "Relation_type")) %&gt;% plot()
+```
+
+&lt;img src="index_files/figure-html/shallow-preds-plot-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+```r
+shallow %&gt;%
+  ggplot(aes(Relation_type, fill = accuracy)) +
+  geom_bar(position = "fill") +
+  facet_grid(~ Branching)
+```
+
+&lt;img src="index_files/figure-html/shallow-plot-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+
+```r
+shallow_lm_2 &lt;- glm(
+  accuracy ~ Relation_type + Branching + Relation_type:Branching,
+  data = shallow, family = binomial()
+)
+
+tidy(shallow_lm_2)
+```
+
+```
+## # A tibble: 4 × 5
+##   term                                    estimate std.error statistic  p.value
+##   &lt;chr&gt;                                      &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 (Intercept)                                0.823     0.110      7.48 7.22e-14
+## 2 Relation_typeConstituent                   0.629     0.170      3.71 2.10e- 4
+## 3 BranchingRight                             1.78      0.228      7.80 6.44e-15
+## 4 Relation_typeConstituent:BranchingRight   -0.588     0.331     -1.78 7.58e- 2
+```
+
+--
+
+|             | Left          | Right                          |
+|-------------|---------------|--------------------------------|
+| Unrelated   | 0.822         | 0.822 + 1.775                  |
+| Constituent | 0.822 + 0.628 | 0.822 + 0.628 + 1.775 + -0.588 |
+
+--
+
+|             | Left  | Right |
+|-------------|-------|-------|
+| Unrelated   | 0.822 | 2.597 |
+| Constituent | 1.45  | 2.637 |
+
+---
+
+
+```r
+ggpredict(shallow_lm_2, terms = c("Relation_type", "Branching"))
+```
+
+```
+## # Predicted probabilities of accuracy
+## 
+## # Branching = Left
+## 
+## Relation_type | Predicted |       95% CI
+## ----------------------------------------
+## Unrelated     |      0.69 | [0.65, 0.74]
+## Constituent   |      0.81 | [0.77, 0.85]
+## 
+## # Branching = Right
+## 
+## Relation_type | Predicted |       95% CI
+## ----------------------------------------
+## Unrelated     |      0.93 | [0.90, 0.95]
+## Constituent   |      0.93 | [0.90, 0.95]
+```
+
+---
+
+
+```r
+ggpredict(shallow_lm_2, terms = c("Branching", "Relation_type")) %&gt;% plot()
+```
+
+&lt;img src="index_files/figure-html/shallow-preds-plot-2-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+
+---
+
+Reporting of model
+
+---
+
+layout: false
+layout: true
+
+# Vowel duration and consonant voicing
+
+---
+
+Details of study
+
+---
+
+
+```r
+ggplot(dur_ita_pol, aes(c2_phonation, v1_duration)) +
+  geom_jitter(aes(colour = c2_phonation), size = 1, alpha = 0.25, width = 0.2) +
+  geom_boxplot(aes(fill = c2_phonation), width = 0.025)
+```
+
+&lt;img src="index_files/figure-html/unnamed-chunk-1-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+```r
+ggplot(dur_ita_pol, aes(language, v1_duration)) +
+  geom_jitter(aes(colour = language), size = 1, alpha = 0.25, width = 0.2) +
+  geom_boxplot(aes(fill = language), width = 0.025)
+```
+
+&lt;img src="index_files/figure-html/unnamed-chunk-2-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: center middle inverse
+
+# Is the effect of C2 voicing the same in Italian and Polish?
+
+---
+
+
+```r
+jd_pos &lt;- position_jitterdodge(dodge.width = 0.8, jitter.width = 0.2)
+d_pos &lt;- position_dodge(width = 0.8)
+
+ggplot(dur_ita_pol, aes(language, v1_duration)) +
+  geom_jitter(aes(colour = c2_phonation), size = 1, alpha = 0.25, position = jd_pos) +
+  geom_boxplot(aes(fill = c2_phonation), position = d_pos, width = 0.05)
+```
+
+&lt;img src="index_files/figure-html/unnamed-chunk-3-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+```r
+vdur_lm &lt;- lm(v1_duration ~ c2_phonation + language, data = dur_ita_pol)
+
+summary(vdur_lm)
+```
+
+```
+## 
+## Call:
+## lm(formula = v1_duration ~ c2_phonation + language, data = dur_ita_pol)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -79.132 -19.562  -1.861  16.152 118.247 
+## 
+## Coefficients:
+##                       Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept)            123.035      1.258  97.804  &lt; 2e-16
+## c2_phonationvoiceless  -11.552      1.583  -7.295 5.11e-13
+## languagePolish         -38.121      1.670 -22.825  &lt; 2e-16
+## 
+## Residual standard error: 28.92 on 1331 degrees of freedom
+## Multiple R-squared:  0.3013,	Adjusted R-squared:  0.3003 
+## F-statistic:   287 on 2 and 1331 DF,  p-value: &lt; 2.2e-16
+```
+
+---
+
+
+```r
+ggpredict(vdur_lm, terms = "c2_phonation")
+```
+
+```
+## # Predicted values of v1_duration
+## 
+## c2_phonation | Predicted |           95% CI
+## -------------------------------------------
+## voiced       |    123.03 | [120.57, 125.50]
+## voiceless    |    111.48 | [109.02, 113.94]
+## 
+## Adjusted for:
+## * language = Italian
+```
+
+
+```r
+ggpredict(vdur_lm, terms = "language")
+```
+
+```
+## # Predicted values of v1_duration
+## 
+## language | Predicted |           95% CI
+## ---------------------------------------
+## Italian  |    111.48 | [109.02, 113.94]
+## Polish   |     73.36 | [ 70.29,  76.44]
+## 
+## Adjusted for:
+## * c2_phonation = voiceless
+```
+
+---
+
+
+```r
+ggpredict(vdur_lm, terms = c("c2_phonation", "language"))
+```
+
+```
+## # Predicted values of v1_duration
+## 
+## # language = Italian
+## 
+## c2_phonation | Predicted |           95% CI
+## -------------------------------------------
+## voiced       |    123.03 | [120.57, 125.50]
+## voiceless    |    111.48 | [109.02, 113.94]
+## 
+## # language = Polish
+## 
+## c2_phonation | Predicted |         95% CI
+## -----------------------------------------
+## voiced       |     84.91 | [81.84, 87.99]
+## voiceless    |     73.36 | [70.29, 76.44]
+```
+
+---
+
+
+```r
+marginaleffects(vdur_lm, variables = "c2_phonation", by = "language")
+```
+
+```
+##       type         term                       contrast      dydx std.error
+## 1 response c2_phonation mean(voiceless) - mean(voiced) -11.55164  1.583497
+## 2 response c2_phonation mean(voiceless) - mean(voiced) -11.55164  1.583497
+##   statistic      p.value  conf.low conf.high language
+## 1 -7.295018 2.986186e-13 -14.65523  -8.44804  Italian
+## 2 -7.295018 2.986186e-13 -14.65523  -8.44804   Polish
+```
+
+
+---
+
+# Without interaction term
+
+`$$\text{v1_duration} = \beta_0 + \beta_1 \cdot \text{c2_phonation} + \beta_2 \cdot \text{language}$$`
+
+&lt;br&gt;
+
+--
+
+`$$\text{v1_duration(voiced, Italian)} = \beta_0 + \beta_1 \cdot 0 + \beta_2 \cdot 0 = \beta_0$$`
+
+`$$\text{v1_duration(voiceless, Italian)} = \beta_0 + \beta_1 \cdot 1 + \beta_2 \cdot 0 = \beta_0 + \beta_1$$`
+`$$\text{v1_duration(voiced, Polish)} = \beta_0 + \beta_1 \cdot 0 + \beta_2 \cdot 1 = \beta_0 + \beta_2$$`
+
+`$$\text{v1_duration(voiceless, Polish)} = \beta_0 + \beta_1 \cdot 1 + \beta_2 \cdot 1 = \beta_0 + \beta_1 + \beta_2$$`
+
+---
+
+# With interaction term
+
+`$$\text{v1_duration} = \beta_0 + \beta_1 \cdot \text{c2_phonation} + \beta_2 \cdot \text{language} + \beta_3 \cdot \text{c2_phonation} \cdot \text{language}$$`
+
+&lt;br&gt;
+
+--
+
+`$$\text{v1_duration(voiced, Italian)} = \beta_0 + \beta_1 \cdot 0 + \beta_2 \cdot 0 + \beta_3 \cdot 0 \cdot 0= \beta_0$$`
+
+`$$\text{v1_duration(voiceless, Italian)} = \beta_0 + \beta_1 \cdot 1 + \beta_2 \cdot 0 + \beta_3 \cdot 1 \cdot 0 = \beta_0 + \beta_1$$`
+`$$\text{v1_duration(voiced, Polish)} = \beta_0 + \beta_1 \cdot 0 + \beta_2 \cdot 1 + \beta_3 \cdot 0 \cdot 1 = \beta_0 + \beta_2$$`
+
+`$$\text{v1_duration(voiceless, Polish)} = \beta_0 + \beta_1 \cdot 1 + \beta_2 \cdot 1 + \beta_3 \cdot 1 \cdot 1 = \beta_0 + \beta_1 + \beta_2 + \beta_3$$`
+
+
+---
+
+# Interactions
+
+
+```r
+vdur_lm_2 &lt;- lm(
+  v1_duration ~ 
+    c2_phonation + 
+    language + 
+    # interaction term
+    c2_phonation:language,
+  data = dur_ita_pol
+)
+
+summary(vdur_lm_2)
+```
+
+```
+## 
+## Call:
+## lm(formula = v1_duration ~ c2_phonation + language + c2_phonation:language, 
+##     data = dur_ita_pol)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -80.121 -19.058  -1.702  15.977 119.229 
+## 
+## Coefficients:
+##                                      Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept)                           124.023      1.381  89.826  &lt; 2e-16
+## c2_phonationvoiceless                 -13.523      1.949  -6.937 6.22e-12
+## languagePolish                        -41.018      2.363 -17.357  &lt; 2e-16
+## c2_phonationvoiceless:languagePolish    5.779      3.338   1.731   0.0836
+## 
+## Residual standard error: 28.9 on 1330 degrees of freedom
+## Multiple R-squared:  0.3029,	Adjusted R-squared:  0.3013 
+## F-statistic: 192.6 on 3 and 1330 DF,  p-value: &lt; 2.2e-16
+```
+
+---
+
+
+```r
+ggpredict(vdur_lm_2, terms = c("c2_phonation", "language"))
+```
+
+```
+## # Predicted values of v1_duration
+## 
+## # language = Italian
+## 
+## c2_phonation | Predicted |           95% CI
+## -------------------------------------------
+## voiced       |    124.02 | [121.32, 126.73]
+## voiceless    |    110.50 | [107.80, 113.20]
+## 
+## # language = Polish
+## 
+## c2_phonation | Predicted |         95% CI
+## -----------------------------------------
+## voiced       |     83.01 | [79.25, 86.76]
+## voiceless    |     75.26 | [71.51, 79.01]
+```
+
+---
+
+
+```r
+marginaleffects(vdur_lm_2, variables = "c2_phonation", by = "language")
+```
+
+```
+##       type         term                       contrast       dydx std.error
+## 1 response c2_phonation mean(voiceless) - mean(voiced) -13.522775  1.949285
+## 2 response c2_phonation mean(voiceless) - mean(voiced)  -7.743682  2.709335
+##   statistic      p.value  conf.low conf.high language
+## 1 -6.937299 3.996664e-12 -17.34330 -9.702246  Italian
+## 2 -2.858149 4.261203e-03 -13.05388 -2.433484   Polish
+```
+
+---
+
+
+```r
+ggpredict(vdur_lm_2, terms = c("c2_phonation", "language")) %&gt;%
+  plot()
+```
+
+&lt;img src="index_files/figure-html/unnamed-chunk-11-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+* Categorical predictors are .orange[dummy coded].
+
+* .orange[**Interactions**] model differences of the effects of the predictors on the outcome across groups/conditions.
+
+---
+
+# Exercise 1
+
+
+```r
+art_lm_1 &lt;- lm(articulation_rate ~ attitude * musicstudent, data = polite)
+
+summary(art_lm_1)
+```
+
+```
+## 
+## Call:
+## lm(formula = articulation_rate ~ attitude * musicstudent, data = polite)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -3.0869 -0.6740 -0.1004  0.6252  5.8252 
+## 
+## Coefficients:
+##                             Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept)                   7.1348     0.1349  52.898  &lt; 2e-16
+## attitudepol                  -0.5741     0.1907  -3.010  0.00292
+## musicstudentyes              -0.6675     0.2203  -3.030  0.00273
+## attitudepol:musicstudentyes   0.4409     0.3115   1.415  0.15839
+## 
+## Residual standard error: 1.128 on 220 degrees of freedom
+## Multiple R-squared:  0.07404,	Adjusted R-squared:  0.06141 
+## F-statistic: 5.864 on 3 and 220 DF,  p-value: 0.0007197
+```
+
+---
+
+# Exercise 1
+
+
+```r
+ggpredict(art_lm_1, terms = c("musicstudent", "attitude")) %&gt;%
+  plot() +
+  theme(text = element_text(size = 20))
+```
+
+&lt;img src="index_files/figure-html/art-rate-plot-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Exercise 2
+
+
+```r
+f0_lm_1 &lt;- lm(f0mn ~ attitude * months_ger, data = polite)
+
+summary(f0_lm_1)
+```
+
+```
+## 
+## Call:
+## lm(formula = f0mn ~ attitude * months_ger, data = polite)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -107.269  -63.455    5.143   47.519  221.929 
+## 
+## Coefficients:
+##                        Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept)            197.4612     7.8791  25.061   &lt;2e-16
+## attitudepol            -14.7880    11.1248  -1.329    0.185
+## months_ger               0.1752     0.1066   1.644    0.102
+## attitudepol:months_ger   0.0496     0.1502   0.330    0.742
+## 
+## Residual standard error: 68.68 on 208 degrees of freedom
+##   (12 observations deleted due to missingness)
+## Multiple R-squared:  0.04159,	Adjusted R-squared:  0.02776 
+## F-statistic: 3.008 on 3 and 208 DF,  p-value: 0.03127
+```
+
+---
+
+# Exercise 2
+
+
+```r
+ggpredict(f0_lm_1, terms = c("attitude", "months_ger [1,12,24,48]")) %&gt;%
+  plot() +
+  theme(text = element_text(size = 20))
+```
+
+&lt;img src="index_files/figure-html/f0-plot-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Exercise 3
+
+
+```r
+ct_lm_1 &lt;- lm(ct ~ count * gesture * background, data = gestures)
+
+summary(ct_lm_1)
+```
+
+```
+## 
+## Call:
+## lm(formula = ct ~ count * gesture * background, data = gestures)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -6.4081 -0.0543 -0.0096  0.0443  6.4612 
+## 
+## Coefficients:
+##                                      Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept)                           0.04250    0.05389   0.789 0.430459
+## count                                 0.05316    0.01203   4.419 1.06e-05
+## gesturepoint                         -0.03288    0.07241  -0.454 0.649844
+## gesturereach                         -0.05245    0.07447  -0.704 0.481323
+## backgroundChinese                     0.01182    0.07391   0.160 0.872987
+## backgroundEnglish                    -0.04188    0.07418  -0.565 0.572416
+## count:gesturepoint                    0.08521    0.02285   3.729 0.000199
+## count:gesturereach                    0.03875    0.02185   1.773 0.076353
+## count:backgroundChinese               0.01143    0.01508   0.758 0.448524
+## count:backgroundEnglish               0.19619    0.02532   7.747 1.67e-14
+## gesturepoint:backgroundChinese       -0.03705    0.10101  -0.367 0.713811
+## gesturereach:backgroundChinese       -0.04620    0.10355  -0.446 0.655506
+## gesturepoint:backgroundEnglish       -0.07564    0.10082  -0.750 0.453208
+## gesturereach:backgroundEnglish        0.09170    0.10280   0.892 0.372491
+## count:gesturepoint:backgroundChinese  0.22048    0.02898   7.608 4.75e-14
+## count:gesturereach:backgroundChinese  0.22901    0.03409   6.718 2.56e-11
+## count:gesturepoint:backgroundEnglish  0.20844    0.03289   6.337 3.06e-10
+## count:gesturereach:backgroundEnglish -0.16156    0.03888  -4.156 3.42e-05
+## 
+## Residual standard error: 0.617 on 1575 degrees of freedom
+##   (27 observations deleted due to missingness)
+## Multiple R-squared:  0.7891,	Adjusted R-squared:  0.7868 
+## F-statistic: 346.7 on 17 and 1575 DF,  p-value: &lt; 2.2e-16
+```
+
+---
+
+# Exercise 3
+
+
+```r
+ggpredict(ct_lm_1, terms = c("count", "gesture", "background")) %&gt;%
+  plot() +
+  theme(text = element_text(size = 20))
+```
+
+&lt;img src="index_files/figure-html/ct-plot-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Do you notice something weird?
+
+
+```r
+ggpredict(ct_lm_1, terms = c("count", "gesture", "background")) %&gt;%
+  plot() +
+  theme(text = element_text(size = 20))
+```
+
+&lt;img src="index_files/figure-html/ct-plot-2-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script src="../../assets/macros.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
