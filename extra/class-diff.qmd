@@ -50,7 +50,8 @@ class_rate <- class_rate %>%
       week == 1 ~ rating,
       week == 2 ~ rating + median(rating[week == 1]),
       week == 3 ~ rating + median(rating[week == 1]) + median(rating[week == 2]),
-      week == 4 ~ rating + median(rating[week == 1]) + median(rating[week == 2]) + median(rating[week == 3])
+      week == 4 ~ rating + median(rating[week == 1]) + median(rating[week == 2]) + median(rating[week == 3]),
+      week == 5 ~ rating + median(rating[week == 1]) + median(rating[week == 2]) + median(rating[week == 3]) + median(rating[week == 4])
     )
   )
 
@@ -93,14 +94,14 @@ class_counts_2 %>%
   scale_fill_distiller(palette = "Purples", direction = 1) +
   annotate(
     "line",
-    x = seq(1, 4, by = 0.5),
-    y = c(-1, -1, 0, 0, 1, 1, 1),
+    x = seq(1, 5, by = 0.5),
+    y = c(-1, -1, 0, 0, 1, 1, 1, 1, 2),
     size = 2, colour = "#31a354"
   ) +
   annotate("text", x = 0.6, y = -1, label = "easy", fontface = "italic") +
   annotate("text", x = 0.6, y = -2, label = "very\neasy", fontface = "italic") +
   labs(y = "Difficulty", x = "Week", fill = "Percentage") +
-  ylim(-2.5, 2.5) +
+  ylim(-2.5, 3.5) +
   theme(axis.text.y = element_blank())
 
 ggsave(here("img/class-ratings.png"), width = 7, height = 3)
