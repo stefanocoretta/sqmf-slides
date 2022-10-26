@@ -42,7 +42,7 @@ class: center, middle, inverse, title-slide
 
 class: center middle inverse
 
-# SHALLOW MORPHOLOGICAL PARSING
+# INTERACTIONS
 
 ---
 
@@ -88,13 +88,43 @@ shallow &lt;- shallow %&gt;%
   )
 ```
 
+---
+
+
+```r
+shallow %&gt;%
+  ggplot(aes(Relation_type, fill = accuracy)) +
+  geom_bar(position = "fill") +
+  facet_grid(~ Branching)
+```
+
+&lt;img src="index_files/figure-html/shallow-plot-2-1.png" height="500px" style="display: block; margin: auto;" /&gt;
 
 ---
 
 
 ```r
 shallow_lm &lt;- glm(accuracy ~ Relation_type + Branching, data = shallow, family = binomial())
+```
 
+`$$\text{accuracy}_{LO} = \beta_0 + \beta_1 \cdot \text{Relation_type}_{Const} + \beta_2 \cdot \text{Branching}_{Right}$$`
+
+
+&lt;br&gt;
+
+--
+
+`$$\text{accuracy(Unrelated, Left)}_{LO} = \beta_0 + \beta_1 \cdot 0 + \beta_2 \cdot 0 = \beta_0$$`
+
+`$$\text{accuracy(Constituent, Left)}_{LO} = \beta_0 + \beta_1 \cdot 1 + \beta_2 \cdot 0 = \beta_0 + \beta_1$$`
+`$$\text{accuracy(Unrelated, Right)}_{LO} = \beta_0 + \beta_1 \cdot 0 + \beta_2 \cdot 1 = \beta_0 + \beta_2$$`
+
+`$$\text{accuracy(Constituent, Right)}_{LO} = \beta_0 + \beta_1 \cdot 1 + \beta_2 \cdot 1 = \beta_0 + \beta_1 + \beta_2$$`
+
+---
+
+
+```r
 # library(broom.mixed)
 tidy(shallow_lm)
 ```
@@ -166,10 +196,14 @@ shallow %&gt;%
   facet_grid(~ Branching)
 ```
 
-&lt;img src="index_files/figure-html/shallow-plot-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/shallow-plot-2-2-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+
+
 
 
 ---
+
+Let's add an interaction term between `Relation_type` and `Branching`.
 
 
 ```r
@@ -177,7 +211,26 @@ shallow_lm_2 &lt;- glm(
   accuracy ~ Relation_type + Branching + Relation_type:Branching,
   data = shallow, family = binomial()
 )
+```
 
+`$$\text{accuracy}_{LO} = \beta_0 + \beta_1 \cdot \text{Relation_type}_{Const} + \beta_2 \cdot \text{Branching}_{Right} + \beta_3 \cdot \text{Relation_type}_{Const} \cdot \text{Branching}_{Right}$$`
+
+
+&lt;br&gt;
+
+--
+
+`$$\text{accuracy(Unrelated, Left)}_{LO} = \beta_0 + \beta_1 \cdot 0 + \beta_2 \cdot 0 + \beta_3 \cdot 1 \cdot 0 = \beta_0$$`
+
+`$$\text{accuracy(Constituent, Left)}_{LO} = \beta_0 + \beta_1 \cdot 1 + \beta_2 \cdot 0 + \beta_3 \cdot 1 \cdot 0 = \beta_0 + \beta_1$$`
+`$$\text{accuracy(Unrelated, Right)}_{LO} = \beta_0 + \beta_1 \cdot 0 + \beta_2 \cdot 1 + \beta_3 \cdot 0 \cdot 1 = \beta_0 + \beta_2$$`
+
+`$$\text{accuracy(Constituent, Right)}_{LO} = \beta_0 + \beta_1 \cdot 1 + \beta_2 \cdot 1 + \beta_3 \cdot 1 \cdot 1 = \beta_0 + \beta_1 + \beta_2 + \beta_3$$`
+
+---
+
+
+```r
 tidy(shallow_lm_2)
 ```
 
@@ -248,7 +301,7 @@ Reporting of model
 layout: false
 layout: true
 
-# Vowel duration and consonant voicing
+# Vowel duration and consonant voicing: interactions
 
 ---
 
@@ -258,107 +311,84 @@ Details of study
 
 
 ```r
+d_pos &lt;- position_dodge(width = 0.8)
+
 ggplot(dur_ita_pol, aes(c2_phonation, v1_duration)) +
-  geom_jitter(aes(colour = c2_phonation), size = 1, alpha = 0.25, width = 0.2) +
-  geom_boxplot(aes(fill = c2_phonation), width = 0.025)
+  geom_jitter(size = 1, alpha = 0.25, width = 0.2) +
+  geom_violin(aes(fill = c2_phonation), width = 0.25) +
+  stat_summary(fun = mean, position = d_pos, colour = "black") +
+  labs(
+    x = "Consonant voicing", y = "Vowel duration"
+  ) +
+  theme(legend.position = "none")
 ```
 
-&lt;img src="index_files/figure-html/unnamed-chunk-1-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/vdur-voi-plot-1.png" height="500px" style="display: block; margin: auto;" /&gt;
 
 ---
 
 
 ```r
 ggplot(dur_ita_pol, aes(language, v1_duration)) +
-  geom_jitter(aes(colour = language), size = 1, alpha = 0.25, width = 0.2) +
-  geom_boxplot(aes(fill = language), width = 0.025)
+  geom_jitter(size = 1, alpha = 0.25, width = 0.2) +
+  geom_violin(aes(fill = language), width = 0.25) +
+  stat_summary(fun = mean, position = d_pos, colour = "black") +
+  labs(
+    x = "Language", y = "Vowel duration"
+  ) +
+  theme(legend.position = "none")
 ```
 
-&lt;img src="index_files/figure-html/unnamed-chunk-2-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+```
+## Warning: Removed 2 rows containing missing values (geom_segment).
+```
 
----
-
-class: center middle inverse
-
-# Is the effect of C2 voicing the same in Italian and Polish?
+&lt;img src="index_files/figure-html/vdur-lang-plot-1.png" height="500px" style="display: block; margin: auto;" /&gt;
 
 ---
 
 
 ```r
-jd_pos &lt;- position_jitterdodge(dodge.width = 0.8, jitter.width = 0.2)
+jd_pos &lt;- position_jitterdodge(dodge.width = 0.8, jitter.width = 0.3)
 d_pos &lt;- position_dodge(width = 0.8)
 
 ggplot(dur_ita_pol, aes(language, v1_duration)) +
   geom_jitter(aes(colour = c2_phonation), size = 1, alpha = 0.25, position = jd_pos) +
-  geom_boxplot(aes(fill = c2_phonation), position = d_pos, width = 0.05)
+  geom_violin(aes(fill = c2_phonation), position = d_pos, width = 0.5) +
+  stat_summary(aes(group = paste(c2_phonation, language)), fun = mean, position = d_pos, colour = "black") +
+  labs(
+    x = "Language", y = "Vowel duration"
+  ) +
+  theme(legend.position = "none")
 ```
 
-&lt;img src="index_files/figure-html/unnamed-chunk-3-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/vdur-voi-lang-plot-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+
+???
+
+Is the effect of consonant voicing on vowel duration the same in Italian and Polish?
+
+To answer this question we need to include an interaction between consonant voicing and language.
 
 ---
 
 
 ```r
-vdur_lm &lt;- lm(v1_duration ~ c2_phonation + language, data = dur_ita_pol)
+vdur_lm &lt;- lm(v1_duration ~ c2_phonation * language, data = dur_ita_pol)
+# NOTE: "c2_phonation * language" is a short-cut for
+# "c2_phonation + language + c2_phonation:language"
 
-summary(vdur_lm)
+tidy(vdur_lm)
 ```
 
 ```
-## 
-## Call:
-## lm(formula = v1_duration ~ c2_phonation + language, data = dur_ita_pol)
-## 
-## Residuals:
-##     Min      1Q  Median      3Q     Max 
-## -79.132 -19.562  -1.861  16.152 118.247 
-## 
-## Coefficients:
-##                       Estimate Std. Error t value Pr(&gt;|t|)
-## (Intercept)            123.035      1.258  97.804  &lt; 2e-16
-## c2_phonationvoiceless  -11.552      1.583  -7.295 5.11e-13
-## languagePolish         -38.121      1.670 -22.825  &lt; 2e-16
-## 
-## Residual standard error: 28.92 on 1331 degrees of freedom
-## Multiple R-squared:  0.3013,	Adjusted R-squared:  0.3003 
-## F-statistic:   287 on 2 and 1331 DF,  p-value: &lt; 2.2e-16
-```
-
----
-
-
-```r
-ggpredict(vdur_lm, terms = "c2_phonation")
-```
-
-```
-## # Predicted values of v1_duration
-## 
-## c2_phonation | Predicted |           95% CI
-## -------------------------------------------
-## voiced       |    123.03 | [120.57, 125.50]
-## voiceless    |    111.48 | [109.02, 113.94]
-## 
-## Adjusted for:
-## * language = Italian
-```
-
-
-```r
-ggpredict(vdur_lm, terms = "language")
-```
-
-```
-## # Predicted values of v1_duration
-## 
-## language | Predicted |           95% CI
-## ---------------------------------------
-## Italian  |    111.48 | [109.02, 113.94]
-## Polish   |     73.36 | [ 70.29,  76.44]
-## 
-## Adjusted for:
-## * c2_phonation = voiceless
+## # A tibble: 4 × 5
+##   term                                 estimate std.error statistic  p.value
+##   &lt;chr&gt;                                   &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 (Intercept)                            124.        1.38     89.8  0       
+## 2 c2_phonationvoiceless                  -13.5       1.95     -6.94 6.22e-12
+## 3 languagePolish                         -41.0       2.36    -17.4  5.47e-61
+## 4 c2_phonationvoiceless:languagePolish     5.78      3.34      1.73 8.36e- 2
 ```
 
 ---
@@ -366,123 +396,6 @@ ggpredict(vdur_lm, terms = "language")
 
 ```r
 ggpredict(vdur_lm, terms = c("c2_phonation", "language"))
-```
-
-```
-## # Predicted values of v1_duration
-## 
-## # language = Italian
-## 
-## c2_phonation | Predicted |           95% CI
-## -------------------------------------------
-## voiced       |    123.03 | [120.57, 125.50]
-## voiceless    |    111.48 | [109.02, 113.94]
-## 
-## # language = Polish
-## 
-## c2_phonation | Predicted |         95% CI
-## -----------------------------------------
-## voiced       |     84.91 | [81.84, 87.99]
-## voiceless    |     73.36 | [70.29, 76.44]
-```
-
----
-
-
-```r
-marginaleffects(vdur_lm, variables = "c2_phonation", by = "language")
-```
-
-```
-##       type         term                       contrast      dydx std.error
-## 1 response c2_phonation mean(voiceless) - mean(voiced) -11.55164  1.583497
-## 2 response c2_phonation mean(voiceless) - mean(voiced) -11.55164  1.583497
-##   statistic      p.value  conf.low conf.high language
-## 1 -7.295018 2.986186e-13 -14.65523  -8.44804  Italian
-## 2 -7.295018 2.986186e-13 -14.65523  -8.44804   Polish
-```
-
-
----
-
-# Without interaction term
-
-`$$\text{v1_duration} = \beta_0 + \beta_1 \cdot \text{c2_phonation} + \beta_2 \cdot \text{language}$$`
-
-&lt;br&gt;
-
---
-
-`$$\text{v1_duration(voiced, Italian)} = \beta_0 + \beta_1 \cdot 0 + \beta_2 \cdot 0 = \beta_0$$`
-
-`$$\text{v1_duration(voiceless, Italian)} = \beta_0 + \beta_1 \cdot 1 + \beta_2 \cdot 0 = \beta_0 + \beta_1$$`
-`$$\text{v1_duration(voiced, Polish)} = \beta_0 + \beta_1 \cdot 0 + \beta_2 \cdot 1 = \beta_0 + \beta_2$$`
-
-`$$\text{v1_duration(voiceless, Polish)} = \beta_0 + \beta_1 \cdot 1 + \beta_2 \cdot 1 = \beta_0 + \beta_1 + \beta_2$$`
-
----
-
-# With interaction term
-
-`$$\text{v1_duration} = \beta_0 + \beta_1 \cdot \text{c2_phonation} + \beta_2 \cdot \text{language} + \beta_3 \cdot \text{c2_phonation} \cdot \text{language}$$`
-
-&lt;br&gt;
-
---
-
-`$$\text{v1_duration(voiced, Italian)} = \beta_0 + \beta_1 \cdot 0 + \beta_2 \cdot 0 + \beta_3 \cdot 0 \cdot 0= \beta_0$$`
-
-`$$\text{v1_duration(voiceless, Italian)} = \beta_0 + \beta_1 \cdot 1 + \beta_2 \cdot 0 + \beta_3 \cdot 1 \cdot 0 = \beta_0 + \beta_1$$`
-`$$\text{v1_duration(voiced, Polish)} = \beta_0 + \beta_1 \cdot 0 + \beta_2 \cdot 1 + \beta_3 \cdot 0 \cdot 1 = \beta_0 + \beta_2$$`
-
-`$$\text{v1_duration(voiceless, Polish)} = \beta_0 + \beta_1 \cdot 1 + \beta_2 \cdot 1 + \beta_3 \cdot 1 \cdot 1 = \beta_0 + \beta_1 + \beta_2 + \beta_3$$`
-
-
----
-
-# Interactions
-
-
-```r
-vdur_lm_2 &lt;- lm(
-  v1_duration ~ 
-    c2_phonation + 
-    language + 
-    # interaction term
-    c2_phonation:language,
-  data = dur_ita_pol
-)
-
-summary(vdur_lm_2)
-```
-
-```
-## 
-## Call:
-## lm(formula = v1_duration ~ c2_phonation + language + c2_phonation:language, 
-##     data = dur_ita_pol)
-## 
-## Residuals:
-##     Min      1Q  Median      3Q     Max 
-## -80.121 -19.058  -1.702  15.977 119.229 
-## 
-## Coefficients:
-##                                      Estimate Std. Error t value Pr(&gt;|t|)
-## (Intercept)                           124.023      1.381  89.826  &lt; 2e-16
-## c2_phonationvoiceless                 -13.523      1.949  -6.937 6.22e-12
-## languagePolish                        -41.018      2.363 -17.357  &lt; 2e-16
-## c2_phonationvoiceless:languagePolish    5.779      3.338   1.731   0.0836
-## 
-## Residual standard error: 28.9 on 1330 degrees of freedom
-## Multiple R-squared:  0.3029,	Adjusted R-squared:  0.3013 
-## F-statistic: 192.6 on 3 and 1330 DF,  p-value: &lt; 2.2e-16
-```
-
----
-
-
-```r
-ggpredict(vdur_lm_2, terms = c("c2_phonation", "language"))
 ```
 
 ```
@@ -507,7 +420,18 @@ ggpredict(vdur_lm_2, terms = c("c2_phonation", "language"))
 
 
 ```r
-marginaleffects(vdur_lm_2, variables = "c2_phonation", by = "language")
+ggpredict(vdur_lm, terms = c("c2_phonation", "language")) %&gt;%
+  plot()
+```
+
+&lt;img src="index_files/figure-html/vdur-lm-pred-plot-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+
+???
+
+
+
+```r
+marginaleffects(vdur_lm, variables = "c2_phonation", by = "language")
 ```
 
 ```
@@ -519,22 +443,71 @@ marginaleffects(vdur_lm_2, variables = "c2_phonation", by = "language")
 ## 2 -2.858149 4.261203e-03 -13.05388 -2.433484   Polish
 ```
 
----
-
-
-```r
-ggpredict(vdur_lm_2, terms = c("c2_phonation", "language")) %&gt;%
-  plot()
-```
-
-&lt;img src="index_files/figure-html/unnamed-chunk-11-1.png" height="500px" style="display: block; margin: auto;" /&gt;
 
 ---
 
+`$$\text{v1_duration} = \beta_0 + \beta_1 \cdot \text{c2_phonation} + \beta_2 \cdot \text{language} + \beta_3 \cdot \text{c2_phonation} \cdot \text{language}$$`
 
-* Categorical predictors are .orange[dummy coded].
+&lt;br&gt;
 
-* .orange[**Interactions**] model differences of the effects of the predictors on the outcome across groups/conditions.
+--
+
+`$$\text{v1_duration(voiced, Italian)} = \beta_0 + \beta_1 \cdot 0 + \beta_2 \cdot 0 + \beta_3 \cdot 0 \cdot 0= \beta_0$$`
+
+`$$\text{v1_duration(voiceless, Italian)} = \beta_0 + \beta_1 \cdot 1 + \beta_2 \cdot 0 + \beta_3 \cdot 1 \cdot 0 = \beta_0 + \beta_1$$`
+`$$\text{v1_duration(voiced, Polish)} = \beta_0 + \beta_1 \cdot 0 + \beta_2 \cdot 1 + \beta_3 \cdot 0 \cdot 1 = \beta_0 + \beta_2$$`
+
+`$$\text{v1_duration(voiceless, Polish)} = \beta_0 + \beta_1 \cdot 1 + \beta_2 \cdot 1 + \beta_3 \cdot 1 \cdot 1 = \beta_0 + \beta_1 + \beta_2 + \beta_3$$`
+
+---
+
+layout: false
+class: center middle inverse
+
+# CENTERING AND SCALING
+
+---
+
+layout: true
+
+# Centering
+
+---
+
+
+
+
+---
+
+layout: false
+layout: true
+
+# Scaling (z-scores)
+
+
+---
+
+layout: false
+class: center middle inverse
+
+# SUM CODING
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ---
 

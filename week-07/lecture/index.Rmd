@@ -50,7 +50,7 @@ style_mono_light(
 
 class: center middle inverse
 
-# SHALLOW MORPHOLOGICAL PARSING
+# INTERACTIONS
 
 ---
 
@@ -77,12 +77,38 @@ shallow <- shallow %>%
   )
 ```
 
+---
+
+```{r shallow-plot-2}
+shallow %>%
+  ggplot(aes(Relation_type, fill = accuracy)) +
+  geom_bar(position = "fill") +
+  facet_grid(~ Branching)
+```
 
 ---
 
 ```{r shallow-lm}
 shallow_lm <- glm(accuracy ~ Relation_type + Branching, data = shallow, family = binomial())
+```
 
+$$\text{accuracy}_{LO} = \beta_0 + \beta_1 \cdot \text{Relation_type}_{Const} + \beta_2 \cdot \text{Branching}_{Right}$$
+
+
+<br>
+
+--
+
+$$\text{accuracy(Unrelated, Left)}_{LO} = \beta_0 + \beta_1 \cdot 0 + \beta_2 \cdot 0 = \beta_0$$
+
+$$\text{accuracy(Constituent, Left)}_{LO} = \beta_0 + \beta_1 \cdot 1 + \beta_2 \cdot 0 = \beta_0 + \beta_1$$
+$$\text{accuracy(Unrelated, Right)}_{LO} = \beta_0 + \beta_1 \cdot 0 + \beta_2 \cdot 1 = \beta_0 + \beta_2$$
+
+$$\text{accuracy(Constituent, Right)}_{LO} = \beta_0 + \beta_1 \cdot 1 + \beta_2 \cdot 1 = \beta_0 + \beta_1 + \beta_2$$
+
+---
+
+```{r shallow-tidy}
 # library(broom.mixed)
 tidy(shallow_lm)
 ```
@@ -115,7 +141,7 @@ ggpredict(shallow_lm, terms = c("Branching", "Relation_type")) %>% plot()
 
 ---
 
-```{r shallow-plot}
+```{r shallow-plot-2-2}
 shallow %>%
   ggplot(aes(Relation_type, fill = accuracy)) +
   geom_bar(position = "fill") +
@@ -123,14 +149,36 @@ shallow %>%
 ```
 
 
+
+
 ---
+
+Let's add an interaction term between `Relation_type` and `Branching`.
 
 ```{r shallow-lm-2}
 shallow_lm_2 <- glm(
   accuracy ~ Relation_type + Branching + Relation_type:Branching,
   data = shallow, family = binomial()
 )
+```
 
+$$\text{accuracy}_{LO} = \beta_0 + \beta_1 \cdot \text{Relation_type}_{Const} + \beta_2 \cdot \text{Branching}_{Right} + \beta_3 \cdot \text{Relation_type}_{Const} \cdot \text{Branching}_{Right}$$
+
+
+<br>
+
+--
+
+$$\text{accuracy(Unrelated, Left)}_{LO} = \beta_0 + \beta_1 \cdot 0 + \beta_2 \cdot 0 + \beta_3 \cdot 1 \cdot 0 = \beta_0$$
+
+$$\text{accuracy(Constituent, Left)}_{LO} = \beta_0 + \beta_1 \cdot 1 + \beta_2 \cdot 0 + \beta_3 \cdot 1 \cdot 0 = \beta_0 + \beta_1$$
+$$\text{accuracy(Unrelated, Right)}_{LO} = \beta_0 + \beta_1 \cdot 0 + \beta_2 \cdot 1 + \beta_3 \cdot 0 \cdot 1 = \beta_0 + \beta_2$$
+
+$$\text{accuracy(Constituent, Right)}_{LO} = \beta_0 + \beta_1 \cdot 1 + \beta_2 \cdot 1 + \beta_3 \cdot 1 \cdot 1 = \beta_0 + \beta_1 + \beta_2 + \beta_3$$
+
+---
+
+```{r shallow-lm-2-2}
 tidy(shallow_lm_2)
 ```
 
@@ -169,7 +217,7 @@ Reporting of model
 layout: false
 layout: true
 
-# Vowel duration and consonant voicing
+# Vowel duration and consonant voicing: interactions
 
 ---
 
@@ -177,62 +225,79 @@ Details of study
 
 ---
 
-```{r}
+```{r vdur-voi-plot, warning=FALSE}
+d_pos <- position_dodge(width = 0.8)
+
 ggplot(dur_ita_pol, aes(c2_phonation, v1_duration)) +
-  geom_jitter(aes(colour = c2_phonation), size = 1, alpha = 0.25, width = 0.2) +
-  geom_boxplot(aes(fill = c2_phonation), width = 0.025)
+  geom_jitter(size = 1, alpha = 0.25, width = 0.2) +
+  geom_violin(aes(fill = c2_phonation), width = 0.25) +
+  stat_summary(fun = mean, position = d_pos, colour = "black") +
+  labs(
+    x = "Consonant voicing", y = "Vowel duration"
+  ) +
+  theme(legend.position = "none")
 ```
 
 ---
 
-```{r}
+```{r vdur-lang-plot}
 ggplot(dur_ita_pol, aes(language, v1_duration)) +
-  geom_jitter(aes(colour = language), size = 1, alpha = 0.25, width = 0.2) +
-  geom_boxplot(aes(fill = language), width = 0.025)
+  geom_jitter(size = 1, alpha = 0.25, width = 0.2) +
+  geom_violin(aes(fill = language), width = 0.25) +
+  stat_summary(fun = mean, position = d_pos, colour = "black") +
+  labs(
+    x = "Language", y = "Vowel duration"
+  ) +
+  theme(legend.position = "none")
 ```
 
 ---
 
-class: center middle inverse
-
-# Is the effect of C2 voicing the same in Italian and Polish?
-
----
-
-```{r}
-jd_pos <- position_jitterdodge(dodge.width = 0.8, jitter.width = 0.2)
+```{r vdur-voi-lang-plot, warning=FALSE}
+jd_pos <- position_jitterdodge(dodge.width = 0.8, jitter.width = 0.3)
 d_pos <- position_dodge(width = 0.8)
 
 ggplot(dur_ita_pol, aes(language, v1_duration)) +
   geom_jitter(aes(colour = c2_phonation), size = 1, alpha = 0.25, position = jd_pos) +
-  geom_boxplot(aes(fill = c2_phonation), position = d_pos, width = 0.05)
+  geom_violin(aes(fill = c2_phonation), position = d_pos, width = 0.5) +
+  stat_summary(aes(group = paste(c2_phonation, language)), fun = mean, position = d_pos, colour = "black") +
+  labs(
+    x = "Language", y = "Vowel duration"
+  ) +
+  theme(legend.position = "none")
+```
+
+???
+
+Is the effect of consonant voicing on vowel duration the same in Italian and Polish?
+
+To answer this question we need to include an interaction between consonant voicing and language.
+
+---
+
+```{r vdur-lm}
+vdur_lm <- lm(v1_duration ~ c2_phonation * language, data = dur_ita_pol)
+# NOTE: "c2_phonation * language" is a short-cut for
+# "c2_phonation + language + c2_phonation:language"
+
+tidy(vdur_lm)
 ```
 
 ---
 
-```{r}
-vdur_lm <- lm(v1_duration ~ c2_phonation + language, data = dur_ita_pol)
-
-summary(vdur_lm)
-```
-
----
-
-```{r}
-ggpredict(vdur_lm, terms = "c2_phonation")
-```
-
-```{r}
-ggpredict(vdur_lm, terms = "language")
-```
-
----
-
-```{r}
+```{r vdur-lm-pred}
 ggpredict(vdur_lm, terms = c("c2_phonation", "language"))
 ```
 
 ---
+
+```{r vdur-lm-pred-plot}
+ggpredict(vdur_lm, terms = c("c2_phonation", "language")) %>%
+  plot()
+```
+
+???
+
 
 ```{r}
 marginaleffects(vdur_lm, variables = "c2_phonation", by = "language")
@@ -240,25 +305,6 @@ marginaleffects(vdur_lm, variables = "c2_phonation", by = "language")
 
 
 ---
-
-# Without interaction term
-
-$$\text{v1_duration} = \beta_0 + \beta_1 \cdot \text{c2_phonation} + \beta_2 \cdot \text{language}$$
-
-<br>
-
---
-
-$$\text{v1_duration(voiced, Italian)} = \beta_0 + \beta_1 \cdot 0 + \beta_2 \cdot 0 = \beta_0$$
-
-$$\text{v1_duration(voiceless, Italian)} = \beta_0 + \beta_1 \cdot 1 + \beta_2 \cdot 0 = \beta_0 + \beta_1$$
-$$\text{v1_duration(voiced, Polish)} = \beta_0 + \beta_1 \cdot 0 + \beta_2 \cdot 1 = \beta_0 + \beta_2$$
-
-$$\text{v1_duration(voiceless, Polish)} = \beta_0 + \beta_1 \cdot 1 + \beta_2 \cdot 1 = \beta_0 + \beta_1 + \beta_2$$
-
----
-
-# With interaction term
 
 $$\text{v1_duration} = \beta_0 + \beta_1 \cdot \text{c2_phonation} + \beta_2 \cdot \text{language} + \beta_3 \cdot \text{c2_phonation} \cdot \text{language}$$
 
@@ -273,55 +319,55 @@ $$\text{v1_duration(voiced, Polish)} = \beta_0 + \beta_1 \cdot 0 + \beta_2 \cdot
 
 $$\text{v1_duration(voiceless, Polish)} = \beta_0 + \beta_1 \cdot 1 + \beta_2 \cdot 1 + \beta_3 \cdot 1 \cdot 1 = \beta_0 + \beta_1 + \beta_2 + \beta_3$$
 
+---
+
+layout: false
+class: center middle inverse
+
+# CENTERING AND SCALING
 
 ---
 
-# Interactions
+layout: true
 
-```{r lm-interaction, echo=TRUE}
-vdur_lm_2 <- lm(
-  v1_duration ~ 
-    c2_phonation + 
-    language + 
-    # interaction term
-    c2_phonation:language,
-  data = dur_ita_pol
-)
-
-summary(vdur_lm_2)
-```
-
----
-
-```{r}
-ggpredict(vdur_lm_2, terms = c("c2_phonation", "language"))
-```
-
----
-
-```{r}
-marginaleffects(vdur_lm_2, variables = "c2_phonation", by = "language")
-```
-
----
-
-```{r}
-ggpredict(vdur_lm_2, terms = c("c2_phonation", "language")) %>%
-  plot()
-```
+# Centering
 
 ---
 
 
-* Categorical predictors are .orange[dummy coded].
 
-* .orange[**Interactions**] model differences of the effects of the predictors on the outcome across groups/conditions.
 
 ---
 
 layout: false
+layout: true
 
-# Centering and scaling
+# Scaling (z-scores)
+
+
+---
+
+layout: false
+class: center middle inverse
+
+# SUM CODING
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ---
 
