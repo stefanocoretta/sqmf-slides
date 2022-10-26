@@ -217,7 +217,7 @@ Reporting of model
 layout: false
 layout: true
 
-# Vowel duration and consonant voicing: interactions
+# Vowel duration and consonant voicing
 
 ---
 
@@ -324,17 +324,152 @@ $$\text{v1_duration(voiceless, Polish)} = \beta_0 + \beta_1 \cdot 1 + \beta_2 \c
 layout: false
 class: center middle inverse
 
-# CENTERING AND SCALING
+# CENTRING AND SCALING
 
 ---
 
 layout: true
 
-# Centering
+# Centring
 
 ---
 
+```{r dur-ita}
+dur_ita <- dur_ita_pol %>%
+  filter(language == "Italian") %>%
+  mutate(
+    vowel = factor(vowel, levels = c("a", "o", "u"))
+  )
 
+dur_ita
+```
+
+---
+
+```{r dur-ita-plot}
+dur_ita %>%
+  ggplot(aes(c2_duration, v1_duration)) +
+  geom_point(alpha = 0.25) +
+  geom_smooth(aes(colour = vowel), method = "lm")
+```
+
+???
+
+There seems to be a positive effect of consonant duration on vowel duration: i.e. the longer the consonant the longer the vowel.
+
+But is the effect of consonant duration on vowel duration the same for the three vowels /a, o, u/?
+
+---
+
+```{r vdur-lm-2}
+vdur_lm_2 <- lm(v2_duration ~ c2_duration * vowel, data = dur_ita)
+
+tidy(vdur_lm_2)
+```
+
+---
+
+```{r vdur-lm-2-pred}
+ggpredict(vdur_lm_2, terms = c("c2_duration [0, 50, 100]", "vowel"))
+```
+
+???
+
+You can specify specific values for continuous predictors, like in `"c2_duration [0, 50, 100]"`.
+
+Here, I am asking `ggpredict()` to return predicted values for when `c2_duration` is 0, 50 and 100 ms.
+
+To learn more about how to specify values, check the documentation in `?ggpredict`.
+
+---
+
+```{r vdur-lm-2-pred-plot}
+ggpredict(vdur_lm_2, terms = c("c2_duration", "vowel")) %>%
+  plot()
+```
+
+???
+
+Note that for plotting you should not give specific values for the continuous predictor that goes into the *x*-axis, because this axis will include the entire range of values for that continuous predictor.
+
+---
+
+- The estimated coefficients of the intercept and the effects of `vowel` are relative to when `c2_duration` is 0 ms.
+
+- This is not very meaningful, because consonants cannot be 0 ms long (they would simply not be there!).
+
+- We can get more meaningful coefficients by applying a type of transformation to `c2_duration` before we fit the model.
+
+- This type of transformation is called **centring**.
+
+---
+
+**Centring simply consists of subtracting the mean of the variable from all the values.**
+
+```{r dur-ita-cent}
+dur_ita <- dur_ita %>%
+  mutate(
+    c2_duration_c = c2_duration - mean(c2_duration)
+  )
+
+dur_ita %>% select(vowel, v1_duration, c2_duration, c2_duration_c)
+```
+
+???
+
+Since the mean of `c2_duration` in the data is `r mean(dur_ita$c2_duration)`, `c2_duration_c = 0` corresponds to `c2_duration = 90.33`.
+
+The values of `c2_duration_c` are the difference between the value of `c2_duration` and the mean.
+
+---
+
+```{r c2-dur}
+dur_ita %>%
+  ggplot(aes(c2_duration)) + geom_density()
+```
+
+???
+
+This is the density plot of `c2_duration`.
+
+---
+
+```{r c2-dur-c}
+dur_ita %>%
+  ggplot(aes(c2_duration_c)) + geom_density()
+```
+
+???
+
+Here we plot `c2_duration_c`.
+
+You can notice that the shape of the density is the same as before, but now the *x*-axis is different.
+
+---
+
+```{r vdur-lm-2-c}
+vdur_lm_2_c <- lm(v2_duration ~ c2_duration_c * vowel, data = dur_ita)
+
+tidy(vdur_lm_2_c)
+```
+
+???
+
+Let's fit the model again, but now using `c2_duration_c`.
+
+Now the estimates of the intercept and of vowel = /o/ and vowel = /u/ are interpreted as the estimates when `c2_duration_c` is 0, meaning when `c2_duration` is at its mean, i.e. `r mean(dur_ita$c2_duration)`.
+
+---
+
+```{r}
+ggpredict(vdur_lm_2_c, terms = c("c2_duration_c", "vowel")) %>% plot()
+```
+
+???
+
+The overall results are the same as in the model without centring.
+
+What differs is just that the values of `c2_duration_c` now indicate the difference from the mean.
 
 
 ---

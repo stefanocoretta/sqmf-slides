@@ -301,7 +301,7 @@ Reporting of model
 layout: false
 layout: true
 
-# Vowel duration and consonant voicing: interactions
+# Vowel duration and consonant voicing
 
 ---
 
@@ -464,17 +464,264 @@ marginaleffects(vdur_lm, variables = "c2_phonation", by = "language")
 layout: false
 class: center middle inverse
 
-# CENTERING AND SCALING
+# CENTRING AND SCALING
 
 ---
 
 layout: true
 
-# Centering
+# Centring
 
 ---
 
 
+```r
+dur_ita &lt;- dur_ita_pol %&gt;%
+  filter(language == "Italian") %&gt;%
+  mutate(
+    vowel = factor(vowel, levels = c("a", "o", "u"))
+  )
+
+dur_ita
+```
+
+```
+## # A tibble: 879 × 57
+##    index speaker file  rec_d…¹ ipu   prompt word    time sente…² sente…³ word_…⁴
+##    &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+##  1     1 it01    it01… 29/11/… ipu_1 Dico … pugu   0.990   0.990    2.62   1.35 
+##  2     2 it01    it01… 29/11/… ipu_2 Dico … pada   3.62    0.502    2.10   0.842
+##  3     3 it01    it01… 29/11/… ipu_3 Dico … poco   6.13    0.697    2.36   1.02 
+##  4     4 it01    it01… 29/11/… ipu_4 Dico … pata   8.82    0.623    2.21   0.943
+##  5     5 it01    it01… 29/11/… ipu_5 Dico … boco  11.5     0.665    2.24   0.975
+##  6     6 it01    it01… 29/11/… ipu_6 Dico … podo  14.3     0.647    2.23   0.977
+##  7     7 it01    it01… 29/11/… ipu_7 Dico … boto  17.2     0.740    2.33   1.02 
+##  8     8 it01    it01… 29/11/… ipu_8 Dico … paca  19.7     0.502    2.09   0.832
+##  9     9 it01    it01… 29/11/… ipu_9 Dico … bodo  22.3     0.556    2.08   0.866
+## 10    10 it01    it01… 29/11/… ipu_… Dico … pucu  24.8     0.535    2.15   0.845
+## # … with 869 more rows, 46 more variables: word_off &lt;dbl&gt;, v1_ons &lt;dbl&gt;,
+## #   c2_ons &lt;dbl&gt;, v2_ons &lt;dbl&gt;, c1_rel &lt;dbl&gt;, c2_rel &lt;dbl&gt;,
+## #   voicing_start &lt;dbl&gt;, voicing_end &lt;dbl&gt;, voicing_duration &lt;dbl&gt;,
+## #   voiced_points &lt;dbl&gt;, GONS &lt;dbl&gt;, max &lt;dbl&gt;, NOFF &lt;dbl&gt;, NONS &lt;dbl&gt;,
+## #   peak1 &lt;dbl&gt;, peak2 &lt;dbl&gt;, c1_duration &lt;dbl&gt;, c1_clos_duration &lt;dbl&gt;,
+## #   c1_vot &lt;dbl&gt;, c1_rvoff &lt;dbl&gt;, v1_duration &lt;dbl&gt;, c2_duration &lt;dbl&gt;,
+## #   c2_clos_duration &lt;dbl&gt;, v2_duration &lt;dbl&gt;, v_v &lt;dbl&gt;, …
+```
+
+---
+
+
+```r
+dur_ita %&gt;%
+  ggplot(aes(c2_duration, v1_duration)) +
+  geom_point(alpha = 0.25) +
+  geom_smooth(aes(colour = vowel), method = "lm")
+```
+
+&lt;img src="index_files/figure-html/dur-ita-plot-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+
+???
+
+There seems to be a positive effect of consonant duration on vowel duration: i.e. the longer the consonant the longer the vowel.
+
+But is the effect of consonant duration on vowel duration the same for the three vowels /a, o, u/?
+
+---
+
+
+```r
+vdur_lm_2 &lt;- lm(v2_duration ~ c2_duration * vowel, data = dur_ita)
+
+tidy(vdur_lm_2)
+```
+
+```
+## # A tibble: 6 × 5
+##   term               estimate std.error statistic  p.value
+##   &lt;chr&gt;                 &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 (Intercept)         47.1       6.73       6.99  5.46e-12
+## 2 c2_duration          0.386     0.0745     5.18  2.80e- 7
+## 3 vowelo               4.85      9.31       0.522 6.02e- 1
+## 4 vowelu              18.1       9.85       1.84  6.65e- 2
+## 5 c2_duration:vowelo  -0.0959    0.100     -0.958 3.38e- 1
+## 6 c2_duration:vowelu  -0.119     0.105     -1.13  2.59e- 1
+```
+
+---
+
+
+```r
+ggpredict(vdur_lm_2, terms = c("c2_duration [0, 50, 100]", "vowel"))
+```
+
+```
+## # Predicted values of v2_duration
+## 
+## # vowel = a
+## 
+## c2_duration | Predicted |         95% CI
+## ----------------------------------------
+##           0 |     47.06 | [33.86, 60.25]
+##          50 |     66.34 | [59.77, 72.91]
+##         100 |     85.63 | [81.29, 89.97]
+## 
+## # vowel = o
+## 
+## c2_duration | Predicted |         95% CI
+## ----------------------------------------
+##           0 |     51.91 | [39.32, 64.51]
+##          50 |     66.41 | [59.73, 73.08]
+##         100 |     80.90 | [76.89, 84.90]
+## 
+## # vowel = u
+## 
+## c2_duration | Predicted |         95% CI
+## ----------------------------------------
+##           0 |     65.15 | [51.07, 79.23]
+##          50 |     78.50 | [71.09, 85.92]
+##         100 |     91.86 | [87.75, 95.97]
+```
+
+???
+
+You can specify specific values for continuous predictors, like in `"c2_duration [0, 50, 100]"`.
+
+Here, I am asking `ggpredict()` to return predicted values for when `c2_duration` is 0, 50 and 100 ms.
+
+To learn more about how to specify values, check the documentation in `?ggpredict`.
+
+---
+
+
+```r
+ggpredict(vdur_lm_2, terms = c("c2_duration", "vowel")) %&gt;%
+  plot()
+```
+
+&lt;img src="index_files/figure-html/vdur-lm-2-pred-plot-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+
+???
+
+Note that for plotting you should not give specific values for the continuous predictor that goes into the *x*-axis, because this axis will include the entire range of values for that continuous predictor.
+
+---
+
+- The estimated coefficients of the intercept and the effects of `vowel` are relative to when `c2_duration` is 0 ms.
+
+- This is not very meaningful, because consonants cannot be 0 ms long (they would simply not be there!).
+
+- We can get more meaningful coefficients by applying a type of transformation to `c2_duration` before we fit the model.
+
+- This type of transformation is called **centring**.
+
+---
+
+**Centring simply consists of subtracting the mean of the variable from all the values.**
+
+
+```r
+dur_ita &lt;- dur_ita %&gt;%
+  mutate(
+    c2_duration_c = c2_duration - mean(c2_duration)
+  )
+
+dur_ita %&gt;% select(vowel, v1_duration, c2_duration, c2_duration_c)
+```
+
+```
+## # A tibble: 879 × 4
+##    vowel v1_duration c2_duration c2_duration_c
+##    &lt;fct&gt;       &lt;dbl&gt;       &lt;dbl&gt;         &lt;dbl&gt;
+##  1 u            95.2        85.0         -5.36
+##  2 a           139.         75.2        -15.2 
+##  3 o           127.        103.          12.7 
+##  4 a           127.        100.           9.66
+##  5 o           132.        108.          17.3 
+##  6 o           125.         70.0        -20.3 
+##  7 o           134.        109.          18.6 
+##  8 a           119.         91.7          1.34
+##  9 o           130.         61.3        -29.0 
+## 10 u            99.1       124.          33.3 
+## # … with 869 more rows
+```
+
+???
+
+Since the mean of `c2_duration` in the data is 90.3399225, `c2_duration_c = 0` corresponds to `c2_duration = 90.33`.
+
+The values of `c2_duration_c` are the difference between the value of `c2_duration` and the mean.
+
+---
+
+
+```r
+dur_ita %&gt;%
+  ggplot(aes(c2_duration)) + geom_density()
+```
+
+&lt;img src="index_files/figure-html/c2-dur-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+
+???
+
+This is the density plot of `c2_duration`.
+
+---
+
+
+```r
+dur_ita %&gt;%
+  ggplot(aes(c2_duration_c)) + geom_density()
+```
+
+&lt;img src="index_files/figure-html/c2-dur-c-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+
+???
+
+Here we plot `c2_duration_c`.
+
+You can notice that the shape of the density is the same as before, but now the *x*-axis is different.
+
+---
+
+
+```r
+vdur_lm_2_c &lt;- lm(v2_duration ~ c2_duration_c * vowel, data = dur_ita)
+
+tidy(vdur_lm_2_c)
+```
+
+```
+## # A tibble: 6 × 5
+##   term                 estimate std.error statistic   p.value
+##   &lt;chr&gt;                   &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)           81.9       1.99      41.1   1.76e-206
+## 2 c2_duration_c          0.386     0.0745     5.18  2.80e-  7
+## 3 vowelo                -3.81      2.80      -1.36  1.75e-  1
+## 4 vowelu                 7.37      2.86       2.58  9.96e-  3
+## 5 c2_duration_c:vowelo  -0.0959    0.100     -0.958 3.38e-  1
+## 6 c2_duration_c:vowelu  -0.119     0.105     -1.13  2.59e-  1
+```
+
+???
+
+Let's fit the model again, but now using `c2_duration_c`.
+
+Now the estimates of the intercept and of vowel = /o/ and vowel = /u/ are interpreted as the estimates when `c2_duration_c` is 0, meaning when `c2_duration` is at its mean, i.e. 90.3399225.
+
+---
+
+
+```r
+ggpredict(vdur_lm_2_c, terms = c("c2_duration_c", "vowel")) %&gt;% plot()
+```
+
+&lt;img src="index_files/figure-html/unnamed-chunk-2-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+
+???
+
+The overall results are the same as in the model without centring.
+
+What differs is just that the values of `c2_duration_c` now indicate the difference from the mean.
 
 
 ---
