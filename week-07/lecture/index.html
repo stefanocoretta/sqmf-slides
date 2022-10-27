@@ -46,11 +46,17 @@ class: center middle inverse
 
 ---
 
-layout: true
-
-# Shallow morphological parsing
+# Interactions
 
 ---
+
+layout: true
+
+# Categorical + categorical: Example 1
+
+---
+
+Example 1: Shallow morphological parsing
 
 
 ```r
@@ -299,11 +305,13 @@ Reporting of model
 ---
 
 layout: false
-layout: true
+layour true:
 
-# Vowel duration and consonant voicing
+# Categorical + categorical: Example 2
 
 ---
+
+Example 2: Vowel duration and consonant voicing in Italian and Polish
 
 Details of study
 
@@ -462,15 +470,9 @@ marginaleffects(vdur_lm, variables = "c2_phonation", by = "language")
 ---
 
 layout: false
-class: center middle inverse
-
-# CENTRING AND SCALING
-
----
-
 layout: true
 
-# Centring
+# Categorical + continous
 
 ---
 
@@ -606,6 +608,80 @@ Note that for plotting you should not give specific values for the continuous pr
 
 ---
 
+layout: false
+layout: true
+
+# Continuous + continuous
+
+---
+
+
+```r
+dur_ita %&gt;%
+  ggplot(aes(c2_duration, v1_duration, colour = speech_rate)) +
+  geom_point(alpha = 0.5)
+```
+
+&lt;img src="index_files/figure-html/vdur-rate-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+
+???
+
+Let's disregard vowel for the time being (you will add vowel in in the tutorial).
+
+---
+
+
+```r
+vdur_lm_3 &lt;- lm(v1_duration ~ c2_duration * speech_rate, data = dur_ita)
+
+tidy(vdur_lm_3)
+```
+
+```
+## # A tibble: 4 × 5
+##   term                    estimate std.error statistic  p.value
+##   &lt;chr&gt;                      &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 (Intercept)              221.      19.0        11.6  4.61e-29
+## 2 c2_duration                0.730    0.197       3.71 2.24e- 4
+## 3 speech_rate              -14.3      3.60       -3.97 7.80e- 5
+## 4 c2_duration:speech_rate   -0.199    0.0392     -5.08 4.56e- 7
+```
+
+---
+
+
+```r
+ggpredict(vdur_lm_3, terms = c("c2_duration", "speech_rate [3, 5, 7]")) %&gt;%
+  plot()
+```
+
+&lt;img src="index_files/figure-html/vdur-lm-3-plot-1-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+```r
+ggpredict(vdur_lm_3, terms = c("speech_rate", "c2_duration [50, 100, 150]")) %&gt;%
+  plot()
+```
+
+&lt;img src="index_files/figure-html/vdur-lm-3-plot-2-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+
+---
+
+layout: false
+class: center middle inverse
+
+# CENTRING
+
+---
+
+layout: true
+
+# Centring
+
+---
+
 - The estimated coefficients of the intercept and the effects of `vowel` are relative to when `c2_duration` is 0 ms.
 
 - This is not very meaningful, because consonants cannot be 0 ms long (they would simply not be there!).
@@ -715,7 +791,7 @@ Now the estimates of the intercept and of vowel = /o/ and vowel = /u/ are interp
 ggpredict(vdur_lm_2_c, terms = c("c2_duration_c", "vowel")) %&gt;% plot()
 ```
 
-&lt;img src="index_files/figure-html/unnamed-chunk-2-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/vdur-lm-2-c-pred-plot-1.png" height="500px" style="display: block; margin: auto;" /&gt;
 
 ???
 
@@ -723,13 +799,7 @@ The overall results are the same as in the model without centring.
 
 What differs is just that the values of `c2_duration_c` now indicate the difference from the mean.
 
-
----
-
-layout: false
-layout: true
-
-# Scaling (z-scores)
+Centring is used mostly to make the interpretation of the coefficient in a model more meaningful.
 
 
 ---
@@ -737,188 +807,8 @@ layout: true
 layout: false
 class: center middle inverse
 
-# SUM CODING
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
----
-
-# Exercise 1
-
-
-```r
-art_lm_1 &lt;- lm(articulation_rate ~ attitude * musicstudent, data = polite)
-
-summary(art_lm_1)
-```
-
-```
-## 
-## Call:
-## lm(formula = articulation_rate ~ attitude * musicstudent, data = polite)
-## 
-## Residuals:
-##     Min      1Q  Median      3Q     Max 
-## -3.0869 -0.6740 -0.1004  0.6252  5.8252 
-## 
-## Coefficients:
-##                             Estimate Std. Error t value Pr(&gt;|t|)
-## (Intercept)                   7.1348     0.1349  52.898  &lt; 2e-16
-## attitudepol                  -0.5741     0.1907  -3.010  0.00292
-## musicstudentyes              -0.6675     0.2203  -3.030  0.00273
-## attitudepol:musicstudentyes   0.4409     0.3115   1.415  0.15839
-## 
-## Residual standard error: 1.128 on 220 degrees of freedom
-## Multiple R-squared:  0.07404,	Adjusted R-squared:  0.06141 
-## F-statistic: 5.864 on 3 and 220 DF,  p-value: 0.0007197
-```
-
----
-
-# Exercise 1
-
-
-```r
-ggpredict(art_lm_1, terms = c("musicstudent", "attitude")) %&gt;%
-  plot() +
-  theme(text = element_text(size = 20))
-```
-
-&lt;img src="index_files/figure-html/art-rate-plot-1.png" height="500px" style="display: block; margin: auto;" /&gt;
-
----
-
-# Exercise 2
-
-
-```r
-f0_lm_1 &lt;- lm(f0mn ~ attitude * months_ger, data = polite)
-
-summary(f0_lm_1)
-```
-
-```
-## 
-## Call:
-## lm(formula = f0mn ~ attitude * months_ger, data = polite)
-## 
-## Residuals:
-##      Min       1Q   Median       3Q      Max 
-## -107.269  -63.455    5.143   47.519  221.929 
-## 
-## Coefficients:
-##                        Estimate Std. Error t value Pr(&gt;|t|)
-## (Intercept)            197.4612     7.8791  25.061   &lt;2e-16
-## attitudepol            -14.7880    11.1248  -1.329    0.185
-## months_ger               0.1752     0.1066   1.644    0.102
-## attitudepol:months_ger   0.0496     0.1502   0.330    0.742
-## 
-## Residual standard error: 68.68 on 208 degrees of freedom
-##   (12 observations deleted due to missingness)
-## Multiple R-squared:  0.04159,	Adjusted R-squared:  0.02776 
-## F-statistic: 3.008 on 3 and 208 DF,  p-value: 0.03127
-```
-
----
-
-# Exercise 2
-
-
-```r
-ggpredict(f0_lm_1, terms = c("attitude", "months_ger [1,12,24,48]")) %&gt;%
-  plot() +
-  theme(text = element_text(size = 20))
-```
-
-&lt;img src="index_files/figure-html/f0-plot-1.png" height="500px" style="display: block; margin: auto;" /&gt;
-
----
-
-# Exercise 3
-
-
-```r
-ct_lm_1 &lt;- lm(ct ~ count * gesture * background, data = gestures)
-
-summary(ct_lm_1)
-```
-
-```
-## 
-## Call:
-## lm(formula = ct ~ count * gesture * background, data = gestures)
-## 
-## Residuals:
-##     Min      1Q  Median      3Q     Max 
-## -6.4081 -0.0543 -0.0096  0.0443  6.4612 
-## 
-## Coefficients:
-##                                      Estimate Std. Error t value Pr(&gt;|t|)
-## (Intercept)                           0.04250    0.05389   0.789 0.430459
-## count                                 0.05316    0.01203   4.419 1.06e-05
-## gesturepoint                         -0.03288    0.07241  -0.454 0.649844
-## gesturereach                         -0.05245    0.07447  -0.704 0.481323
-## backgroundChinese                     0.01182    0.07391   0.160 0.872987
-## backgroundEnglish                    -0.04188    0.07418  -0.565 0.572416
-## count:gesturepoint                    0.08521    0.02285   3.729 0.000199
-## count:gesturereach                    0.03875    0.02185   1.773 0.076353
-## count:backgroundChinese               0.01143    0.01508   0.758 0.448524
-## count:backgroundEnglish               0.19619    0.02532   7.747 1.67e-14
-## gesturepoint:backgroundChinese       -0.03705    0.10101  -0.367 0.713811
-## gesturereach:backgroundChinese       -0.04620    0.10355  -0.446 0.655506
-## gesturepoint:backgroundEnglish       -0.07564    0.10082  -0.750 0.453208
-## gesturereach:backgroundEnglish        0.09170    0.10280   0.892 0.372491
-## count:gesturepoint:backgroundChinese  0.22048    0.02898   7.608 4.75e-14
-## count:gesturereach:backgroundChinese  0.22901    0.03409   6.718 2.56e-11
-## count:gesturepoint:backgroundEnglish  0.20844    0.03289   6.337 3.06e-10
-## count:gesturereach:backgroundEnglish -0.16156    0.03888  -4.156 3.42e-05
-## 
-## Residual standard error: 0.617 on 1575 degrees of freedom
-##   (27 observations deleted due to missingness)
-## Multiple R-squared:  0.7891,	Adjusted R-squared:  0.7868 
-## F-statistic: 346.7 on 17 and 1575 DF,  p-value: &lt; 2.2e-16
-```
-
----
-
-# Exercise 3
-
-
-```r
-ggpredict(ct_lm_1, terms = c("count", "gesture", "background")) %&gt;%
-  plot() +
-  theme(text = element_text(size = 20))
-```
-
-&lt;img src="index_files/figure-html/ct-plot-1.png" height="500px" style="display: block; margin: auto;" /&gt;
-
----
-
-# Do you notice something weird?
-
-
-```r
-ggpredict(ct_lm_1, terms = c("count", "gesture", "background")) %&gt;%
-  plot() +
-  theme(text = element_text(size = 20))
-```
-
-&lt;img src="index_files/figure-html/ct-plot-2-1.png" height="500px" style="display: block; margin: auto;" /&gt;
 
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>

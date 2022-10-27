@@ -54,11 +54,17 @@ class: center middle inverse
 
 ---
 
-layout: true
-
-# Shallow morphological parsing
+# Interactions
 
 ---
+
+layout: true
+
+# Categorical + categorical: Example 1
+
+---
+
+Example 1: Shallow morphological parsing
 
 ```{r shallow}
 shallow %>% select(ID, Group, Target, Relation_type, Branching, accuracy)
@@ -215,11 +221,13 @@ Reporting of model
 ---
 
 layout: false
-layout: true
+layout true:
 
-# Vowel duration and consonant voicing
+# Categorical + categorical: Example 2
 
 ---
+
+Example 2: Vowel duration and consonant voicing in Italian and Polish
 
 Details of study
 
@@ -322,15 +330,9 @@ $$\text{v1_duration(voiceless, Polish)} = \beta_0 + \beta_1 \cdot 1 + \beta_2 \c
 ---
 
 layout: false
-class: center middle inverse
-
-# CENTRING AND SCALING
-
----
-
 layout: true
 
-# Centring
+# Categorical + continous
 
 ---
 
@@ -394,183 +396,53 @@ Note that for plotting you should not give specific values for the continuous pr
 
 ---
 
-- The estimated coefficients of the intercept and the effects of `vowel` are relative to when `c2_duration` is 0 ms.
-
-- This is not very meaningful, because consonants cannot be 0 ms long (they would simply not be there!).
-
-- We can get more meaningful coefficients by applying a type of transformation to `c2_duration` before we fit the model.
-
-- This type of transformation is called **centring**.
-
----
-
-**Centring simply consists of subtracting the mean of the variable from all the values.**
-
-```{r dur-ita-cent}
-dur_ita <- dur_ita %>%
-  mutate(
-    c2_duration_c = c2_duration - mean(c2_duration)
-  )
-
-dur_ita %>% select(vowel, v1_duration, c2_duration, c2_duration_c)
-```
-
-???
-
-Since the mean of `c2_duration` in the data is `r mean(dur_ita$c2_duration)`, `c2_duration_c = 0` corresponds to `c2_duration = 90.33`.
-
-The values of `c2_duration_c` are the difference between the value of `c2_duration` and the mean.
-
----
-
-```{r c2-dur}
-dur_ita %>%
-  ggplot(aes(c2_duration)) + geom_density()
-```
-
-???
-
-This is the density plot of `c2_duration`.
-
----
-
-```{r c2-dur-c}
-dur_ita %>%
-  ggplot(aes(c2_duration_c)) + geom_density()
-```
-
-???
-
-Here we plot `c2_duration_c`.
-
-You can notice that the shape of the density is the same as before, but now the *x*-axis is different.
-
----
-
-```{r vdur-lm-2-c}
-vdur_lm_2_c <- lm(v2_duration ~ c2_duration_c * vowel, data = dur_ita)
-
-tidy(vdur_lm_2_c)
-```
-
-???
-
-Let's fit the model again, but now using `c2_duration_c`.
-
-Now the estimates of the intercept and of vowel = /o/ and vowel = /u/ are interpreted as the estimates when `c2_duration_c` is 0, meaning when `c2_duration` is at its mean, i.e. `r mean(dur_ita$c2_duration)`.
-
----
-
-```{r}
-ggpredict(vdur_lm_2_c, terms = c("c2_duration_c", "vowel")) %>% plot()
-```
-
-???
-
-The overall results are the same as in the model without centring.
-
-What differs is just that the values of `c2_duration_c` now indicate the difference from the mean.
-
-
----
-
 layout: false
 layout: true
 
-# Scaling (z-scores)
+# Continuous + continuous
 
+---
+
+```{r vdur-rate}
+dur_ita %>%
+  ggplot(aes(c2_duration, v1_duration, colour = speech_rate)) +
+  geom_point(alpha = 0.5)
+```
+
+???
+
+Let's disregard vowel for the time being (you will add vowel in in the tutorial).
+
+---
+
+```{r vdur-lm-3}
+vdur_lm_3 <- lm(v1_duration ~ c2_duration * speech_rate, data = dur_ita)
+
+tidy(vdur_lm_3)
+```
+
+---
+
+```{r vdur-lm-3-plot-1}
+ggpredict(vdur_lm_3, terms = c("c2_duration", "speech_rate [3, 5, 7]")) %>%
+  plot()
+```
+
+---
+
+```{r vdur-lm-3-plot-2}
+ggpredict(vdur_lm_3, terms = c("speech_rate", "c2_duration [50, 100, 150]")) %>%
+  plot()
+```
 
 ---
 
 layout: false
 class: center middle inverse
 
-# SUM CODING
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# CENTRING
 
 ---
 
-# Exercise 1
-
-```{r art-rate}
-art_lm_1 <- lm(articulation_rate ~ attitude * musicstudent, data = polite)
-
-summary(art_lm_1)
-```
-
----
-
-# Exercise 1
-
-```{r art-rate-plot}
-ggpredict(art_lm_1, terms = c("musicstudent", "attitude")) %>%
-  plot() +
-  theme(text = element_text(size = 20))
-```
-
----
-
-# Exercise 2
-
-```{r f0}
-f0_lm_1 <- lm(f0mn ~ attitude * months_ger, data = polite)
-
-summary(f0_lm_1)
-```
-
----
-
-# Exercise 2
-
-```{r f0-plot}
-ggpredict(f0_lm_1, terms = c("attitude", "months_ger [1,12,24,48]")) %>%
-  plot() +
-  theme(text = element_text(size = 20))
-```
-
----
-
-# Exercise 3
-
-```{r ct}
-ct_lm_1 <- lm(ct ~ count * gesture * background, data = gestures)
-
-summary(ct_lm_1)
-```
-
----
-
-# Exercise 3
-
-```{r ct-plot}
-ggpredict(ct_lm_1, terms = c("count", "gesture", "background")) %>%
-  plot() +
-  theme(text = element_text(size = 20))
-```
-
----
-
-# Do you notice something weird?
-
-```{r ct-plot-2}
-ggpredict(ct_lm_1, terms = c("count", "gesture", "background")) %>%
-  plot() +
-  theme(text = element_text(size = 20))
-```
+layout: true
 
