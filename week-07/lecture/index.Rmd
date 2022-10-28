@@ -54,13 +54,9 @@ class: center middle inverse
 
 ---
 
-# Interactions
-
----
-
 layout: true
 
-# Categorical + categorical: Example 1
+# Motivating interactions
 
 ---
 
@@ -93,6 +89,8 @@ shallow %>%
 ```
 
 ---
+
+Let's try first with no interaction.
 
 ```{r shallow-lm}
 shallow_lm <- glm(accuracy ~ Relation_type + Branching, data = shallow, family = binomial())
@@ -154,10 +152,15 @@ shallow %>%
   facet_grid(~ Branching)
 ```
 
+---
 
+layout: false
+layout: true
 
+# Categorical + categorical: Example 1
 
 ---
+
 
 Let's add an interaction term between `Relation_type` and `Branching`.
 
@@ -221,7 +224,7 @@ Reporting of model
 ---
 
 layout: false
-layout true:
+layout: true
 
 # Categorical + categorical: Example 2
 
@@ -229,7 +232,18 @@ layout true:
 
 Example 2: Vowel duration and consonant voicing in Italian and Polish
 
-Details of study
+- CVCV words where V1 = /a, o, u/ and C2 = /t, d, k, ɡ/.
+
+- Investigate the effect of voicing of C2 (voiceless /t, k/, voiced /d, g/) on V1 duration.
+
+- Data from Italian and Polish speakers.
+
+---
+
+```{r vdur}
+dur_ita_pol %>% select(speaker, word, vowel, v1_duration, c2_phonation)
+```
+
 
 ---
 
@@ -287,7 +301,25 @@ To answer this question we need to include an interaction between consonant voic
 vdur_lm <- lm(v1_duration ~ c2_phonation * language, data = dur_ita_pol)
 # NOTE: "c2_phonation * language" is a short-cut for
 # "c2_phonation + language + c2_phonation:language"
+```
 
+$$\text{v1_duration} = \beta_0 + \beta_1 \cdot \text{c2_phonation} + \beta_2 \cdot \text{language} + \beta_3 \cdot \text{c2_phonation} \cdot \text{language}$$
+
+<br>
+
+--
+
+$$\text{v1_duration(voiced, Italian)} = \beta_0 + \beta_1 \cdot 0 + \beta_2 \cdot 0 + \beta_3 \cdot 0 \cdot 0= \beta_0$$
+
+$$\text{v1_duration(voiceless, Italian)} = \beta_0 + \beta_1 \cdot 1 + \beta_2 \cdot 0 + \beta_3 \cdot 1 \cdot 0 = \beta_0 + \beta_1$$
+
+$$\text{v1_duration(voiced, Polish)} = \beta_0 + \beta_1 \cdot 0 + \beta_2 \cdot 1 + \beta_3 \cdot 0 \cdot 1 = \beta_0 + \beta_2$$
+
+$$\text{v1_duration(voiceless, Polish)} = \beta_0 + \beta_1 \cdot 1 + \beta_2 \cdot 1 + \beta_3 \cdot 1 \cdot 1 = \beta_0 + \beta_1 + \beta_2 + \beta_3$$
+
+---
+
+```{r}
 tidy(vdur_lm)
 ```
 
@@ -314,21 +346,6 @@ marginaleffects(vdur_lm, variables = "c2_phonation", by = "language")
 
 ---
 
-$$\text{v1_duration} = \beta_0 + \beta_1 \cdot \text{c2_phonation} + \beta_2 \cdot \text{language} + \beta_3 \cdot \text{c2_phonation} \cdot \text{language}$$
-
-<br>
-
---
-
-$$\text{v1_duration(voiced, Italian)} = \beta_0 + \beta_1 \cdot 0 + \beta_2 \cdot 0 + \beta_3 \cdot 0 \cdot 0= \beta_0$$
-
-$$\text{v1_duration(voiceless, Italian)} = \beta_0 + \beta_1 \cdot 1 + \beta_2 \cdot 0 + \beta_3 \cdot 1 \cdot 0 = \beta_0 + \beta_1$$
-$$\text{v1_duration(voiced, Polish)} = \beta_0 + \beta_1 \cdot 0 + \beta_2 \cdot 1 + \beta_3 \cdot 0 \cdot 1 = \beta_0 + \beta_2$$
-
-$$\text{v1_duration(voiceless, Polish)} = \beta_0 + \beta_1 \cdot 1 + \beta_2 \cdot 1 + \beta_3 \cdot 1 \cdot 1 = \beta_0 + \beta_1 + \beta_2 + \beta_3$$
-
----
-
 layout: false
 layout: true
 
@@ -343,7 +360,7 @@ dur_ita <- dur_ita_pol %>%
     vowel = factor(vowel, levels = c("a", "o", "u"))
   )
 
-dur_ita
+dur_ita %>% select(word, vowel, v1_duration, c2_duration)
 ```
 
 ---
@@ -364,8 +381,38 @@ But is the effect of consonant duration on vowel duration the same for the three
 ---
 
 ```{r vdur-lm-2}
-vdur_lm_2 <- lm(v2_duration ~ c2_duration * vowel, data = dur_ita)
+vdur_lm_2 <- lm(v1_duration ~ c2_duration * vowel, data = dur_ita)
+```
 
+$$\text{v1_duration} = \beta_0 + \beta_1 \cdot \text{c2_duration} + \beta_2 \cdot \text{vowel_o} + \beta_3 \cdot + \text{vowel_u} + \beta_4 \cdot \text{c2_duration} \cdot \text{vowel_o} + \beta_5 \cdot \text{c2_duration} \cdot \text{vowel_u}$$
+
+<br>
+
+--
+
+$$\text{v1_duration(c2_dur = 0, a)} = \beta_0 + \beta_1 \cdot 0 + \beta_2 \cdot 0 + \beta_3 \cdot 0 \cdot 0= \beta_0$$
+
+$$\text{v1_duration(c2_dur = 0, o)} = \beta_0 + \beta_1 \cdot 0 + \beta_2 \cdot 1 + \beta_3 \cdot 0 + \beta_4 \cdot 0 \cdot 1 + \beta_5 \cdot 0 \cdot 0 = \beta_0 + \beta_2$$
+
+$$\text{v1_duration(c2_dur = 0, u)} = \beta_0 + \beta_1 \cdot 0 + \beta_2 \cdot 0 + \beta_3 \cdot 1 + \beta_4 \cdot 0 \cdot 0 + \beta_5 \cdot 0 \cdot 1 = \beta_0 + \beta_3$$
+
+---
+
+$$\text{v1_duration} = \beta_0 + \beta_1 \cdot \text{c2_duration} + \beta_2 \cdot \text{vowel_o} + \beta_3 \cdot + \text{vowel_u} + \beta_4 \cdot \text{c2_duration} \cdot \text{vowel_o} + \beta_5 \cdot \text{c2_duration} \cdot \text{vowel_u}$$
+
+<br>
+
+--
+
+$$\text{v1_duration(c2_dur = 1, a)} = \beta_0 + \beta_1 \cdot 1 + \beta_2 \cdot 0 + \beta_3 \cdot 0 \cdot 0= \beta_0 + \beta_1$$
+
+$$\text{v1_duration(c2_dur = 1, o)} = \beta_0 + \beta_1 \cdot 1 + \beta_2 \cdot 1 + \beta_3 \cdot 0 + \beta_4 \cdot 1 \cdot 1 + \beta_5 \cdot 1 \cdot 0 = \beta_0 + \beta_1 + \beta_2 + \beta_4$$
+
+$$\text{v1_duration(c2_dur = 1, u)} = \beta_0 + \beta_1 \cdot 1 + \beta_2 \cdot 0 + \beta_3 \cdot 1 + \beta_4 \cdot 1 \cdot 0 + \beta_5 \cdot 1 \cdot 1 = \beta_0 + \beta_1 + \beta_3 + \beta_5$$
+
+---
+
+```{r vdur-lm-2-tidy}
 tidy(vdur_lm_2)
 ```
 
@@ -434,15 +481,4 @@ ggpredict(vdur_lm_3, terms = c("c2_duration", "speech_rate [3, 5, 7]")) %>%
 ggpredict(vdur_lm_3, terms = c("speech_rate", "c2_duration [50, 100, 150]")) %>%
   plot()
 ```
-
----
-
-layout: false
-class: center middle inverse
-
-# CENTRING
-
----
-
-layout: true
 
