@@ -529,6 +529,18 @@ marginaleffects(vdur_lm, variables = "c2_phonation", by = "language")
 ## 2 -2.858149 4.261203e-03 -13.05388 -2.433484   Polish
 ```
 
+---
+
+### Reporting the model and results
+
+We fitted a linear model with a Gaussian family to vowel duration with the following predictors: C2 voicing (voiced vs voiceless) and language (Italian vs Polish).
+We also included an interaction between voicing type and language.
+Both predictors were coded with treatment contrasts and the first level listed above was set as the reference level.
+
+According to the model, vowels followed by a voiced consonant are 124 ms long in Italian (SE = 1.38).
+In Polish, vowels followed by a voiced consonant are 83 ms long ($\beta$ = -41, SE = 2).
+Italian vowels followed by a voiceless consonant are 13 ms shorter (SE = 1.9) than vowels followed by a voiced consonant.
+According to the interaction, the effect of voicing (i.e. consonant being voiceless) in Polish is 5 ms smaller than the effect in Italian ($\beta$ = 5.7, SE = 3.3).
 
 ---
 
@@ -717,6 +729,29 @@ Note that for plotting you should not give specific values for the continuous pr
 
 ---
 
+### Reporting the model and results
+
+We fitted a linear model with a Gaussian family to Italian vowel duration with the following predictors: C2 duration and vowel (/a/, /o/, /u/).
+We also included an interaction between C2 duration and vowel.
+Vowel was coded with treatment contrasts using /a/ as the reference level.
+
+According to the model, /a/ is 102 ms long (SE = 6) when C2 duration is 0 ms.
+When C2 duration is 0, the duration of /o/ is virtually the same as that of /a/ ($\beta$ = -2, SE = 8.42).
+On the other hand, the model suggests that /u/ is 13 ms shorter than /a/ (SE = 8.9) when C2 duration is 0.
+For each unit increase of C2 duration, /a/ increases by 0.3 ms (SE = 0.06).
+In other words, for every 10 ms increase in C2 duration there is a corresponding 3 ms increase in the duration of /a/.
+The interaction between C2 duration and vowel indicates that for each unit increase of C2 duration, the expected C2 duration effect for /o/ is 0.1 ms smaller than that of /a/ ($\beta$ = -0.1, SE = 0.09) while the effect for /u/ is 0.2 ms smaller than that of /a/ ($\beta$ = -0.2, SE = 0.09).
+In other words, for each 10 ms increase of C2 duration, /o/ increases by 2 ms and /u/ increases by 1 ms.
+Overall, the model suggest that the effect of C2 duration decreases from /a/ to /o/ to /u/, albeit by a small margin.
+
+???
+
+Now the question is: *Is a 1 ms difference in vowel duration meaningful?*.
+
+This is a question that pertains to linguistics, rather than quantitative data analysis or statistics, so I will leave it at that (but if you are curious come to my office hours and I can tell you about my PhD thesis).
+
+---
+
 layout: false
 layout: true
 
@@ -776,6 +811,40 @@ ggpredict(vdur_lm_3, terms = c("speech_rate", "c2_duration [50, 100, 150]")) %&g
 
 &lt;img src="index_files/figure-html/vdur-lm-3-plot-2-1.png" height="400px" style="display: block; margin: auto;" /&gt;
 
+---
+
+
+```r
+bi_pred &lt;- ggpredict(vdur_lm_3, terms = c("c2_duration [0:200]", "speech_rate [0:8 by=0.25]")) %&gt;%
+  mutate(group = as.numeric(as.character(group)))
+
+bi_pred_plot &lt;- bi_pred %&gt;%
+  ggplot(aes(x, group, fill = predicted)) +
+  geom_raster() +
+  scale_fill_distiller(direction = 1, palette = "YlGnBu") +
+  labs(
+    x = "C2 duration (ms)", y = "Speech rate (syl/s)",
+    fill = "Vowel\nduration"
+  )
+```
+
+---
+
+&lt;img src="index_files/figure-html/bi-pred-plot-1.png" width="500px" height="400px" style="display: block; margin: auto;" /&gt;
+
+
+
+---
+
+### Reporting the model and results
+
+We fitted a linear model with a Gaussian family to vowel duration, with C2 duration and speech rate (as syllables per second), including an interaction between the two.
+
+The model suggests that, when C2 duration and speech rate are at 0, Italian vowels are on average 220 ms long (SE = 19).
+The effect of C2 duration (when speech rate is 0) is 0.72 ms (SE = 0.2) while the effect of speech rate (when C2 duration is 0) is -14 ms (SE = 3.6).
+The interaction of C2 duration and speech rate indicates that 
+the effect of C2 duration on vowel duration decreases by 0.19 ms (SE = 0.04) for each unit increase of speech rate (i.e. +1 syl/s).
+Equivalently, the effect of speech rate on vowel duration increases by 0.19 ms for each unit increase (i.e. +1 ms) of C2 duration.
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
