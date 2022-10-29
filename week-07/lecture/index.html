@@ -90,7 +90,11 @@ shallow &lt;- shallow %&gt;%
   )
 ```
 
+Let's filter the data to exclude `"NonConstituent"` from `Relation_type` and let's change character columns to factor columns.
+
 ---
+
+.pull-left[
 
 
 ```r
@@ -100,7 +104,13 @@ shallow %&gt;%
   facet_grid(~ Branching)
 ```
 
-&lt;img src="index_files/figure-html/shallow-plot-2-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+
+![](index_files/figure-html/shallow-plot-2-1.png)
+
+]
 
 ---
 
@@ -151,6 +161,8 @@ tidy(shallow_lm)
 
 --
 
+&lt;br&gt;
+
 |                | Left  | Right |
 |----------------|-------|-------|
 | Unrelated      | 0.888 | 2.404 |
@@ -188,7 +200,7 @@ ggpredict(shallow_lm, terms = c("Relation_type", "Branching"))
 ggpredict(shallow_lm, terms = c("Branching", "Relation_type")) %&gt;% plot()
 ```
 
-&lt;img src="index_files/figure-html/shallow-preds-plot-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/shallow-preds-plot-1.png" height="400px" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -200,7 +212,7 @@ shallow %&gt;%
   facet_grid(~ Branching)
 ```
 
-&lt;img src="index_files/figure-html/shallow-plot-2-2-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/shallow-plot-2-2-1.png" height="400px" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -262,6 +274,8 @@ tidy(shallow_lm_2)
 
 --
 
+&lt;br&gt;
+
 |             | Left  | Right |
 |-------------|-------|-------|
 | Unrelated   | 0.822 | 2.597 |
@@ -299,11 +313,21 @@ ggpredict(shallow_lm_2, terms = c("Relation_type", "Branching"))
 ggpredict(shallow_lm_2, terms = c("Branching", "Relation_type")) %&gt;% plot()
 ```
 
-&lt;img src="index_files/figure-html/shallow-preds-plot-2-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/shallow-preds-plot-2-1.png" height="400px" style="display: block; margin: auto;" /&gt;
 
 ---
 
-Reporting of model
+### Reporting the model and results
+
+We fitted a linear model with a Bernoulli family to accuracy (incorrect vs correct) with the following predictors: relation type (unrelated vs constituent) and branching (left vs right).
+We also included an interaction between relation type and branching.
+Both predictors were coded with treatment contrasts and the first level listed above was set as the reference level.
+We report in the following paragraph the results as probabilities (the model's estimates in log-odds are reported between parenthesis with standard errors).
+
+According to the model, there is a 69% probability of obtaining a correct response when the relation type is unrelated and the word is left-branching ($\beta$ = 0.822, SE = 0.109).
+When relation type is constituent and the word is left-branching, there probability increases to 81% ($\beta$ = 0.628, SE = 0.169).
+When the word is right-branching and the relation type is unrelated, there is a 93% probability of obtaining a correct response ($\beta$ = 1.775, SE = 0.227).
+The interaction term between relation type and branching indicates that when the word is right-branching and relation type is constituent there is a negligible difference in probability relative to relation type unrelated ($\beta$ = -0.588, SE = 0.331), so that in the right-branching condition relation type does not really affects the probability of getting a correct response.
 
 ---
 
@@ -353,7 +377,7 @@ dur_ita_pol %&gt;% select(speaker, word, vowel, v1_duration, c2_phonation)
 ```r
 d_pos &lt;- position_dodge(width = 0.8)
 
-ggplot(dur_ita_pol, aes(c2_phonation, v1_duration)) +
+vdur_voi_plot &lt;- ggplot(dur_ita_pol, aes(c2_phonation, v1_duration)) +
   geom_jitter(size = 1, alpha = 0.25, width = 0.2) +
   geom_violin(aes(fill = c2_phonation), width = 0.25) +
   stat_summary(fun = mean, position = d_pos, colour = "black") +
@@ -363,13 +387,15 @@ ggplot(dur_ita_pol, aes(c2_phonation, v1_duration)) +
   theme(legend.position = "none")
 ```
 
-&lt;img src="index_files/figure-html/vdur-voi-plot-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+---
+
+&lt;img src="index_files/figure-html/vdur-voi-plot-2-1.png" height="500px" style="display: block; margin: auto;" /&gt;
 
 ---
 
 
 ```r
-ggplot(dur_ita_pol, aes(language, v1_duration)) +
+vdur_lang_plot &lt;- ggplot(dur_ita_pol, aes(language, v1_duration)) +
   geom_jitter(size = 1, alpha = 0.25, width = 0.2) +
   geom_violin(aes(fill = language), width = 0.25) +
   stat_summary(fun = mean, position = d_pos, colour = "black") +
@@ -379,11 +405,9 @@ ggplot(dur_ita_pol, aes(language, v1_duration)) +
   theme(legend.position = "none")
 ```
 
-```
-## Warning: Removed 2 rows containing missing values (geom_segment).
-```
+---
 
-&lt;img src="index_files/figure-html/vdur-lang-plot-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/vdur-lang-plot-2-1.png" height="500px" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -392,7 +416,7 @@ ggplot(dur_ita_pol, aes(language, v1_duration)) +
 jd_pos &lt;- position_jitterdodge(dodge.width = 0.8, jitter.width = 0.3)
 d_pos &lt;- position_dodge(width = 0.8)
 
-ggplot(dur_ita_pol, aes(language, v1_duration)) +
+vdur_plot &lt;- ggplot(dur_ita_pol, aes(language, v1_duration)) +
   geom_jitter(aes(colour = c2_phonation), size = 1, alpha = 0.25, position = jd_pos) +
   geom_violin(aes(fill = c2_phonation), position = d_pos, width = 0.5) +
   stat_summary(aes(group = paste(c2_phonation, language)), fun = mean, position = d_pos, colour = "black") +
@@ -402,7 +426,10 @@ ggplot(dur_ita_pol, aes(language, v1_duration)) +
   theme(legend.position = "none")
 ```
 
-&lt;img src="index_files/figure-html/vdur-voi-lang-plot-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+---
+
+&lt;img src="index_files/figure-html/vdur-voi-lang-plot-2-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+
 
 ???
 
@@ -483,7 +510,7 @@ ggpredict(vdur_lm, terms = c("c2_phonation", "language")) %&gt;%
   plot()
 ```
 
-&lt;img src="index_files/figure-html/vdur-lm-pred-plot-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/vdur-lm-pred-plot-1.png" height="400px" style="display: block; margin: auto;" /&gt;
 
 ???
 
@@ -550,7 +577,7 @@ dur_ita %&gt;%
   geom_smooth(aes(colour = vowel), method = "lm")
 ```
 
-&lt;img src="index_files/figure-html/dur-ita-plot-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/dur-ita-plot-1.png" height="400px" style="display: block; margin: auto;" /&gt;
 
 ???
 
@@ -565,7 +592,12 @@ But is the effect of consonant duration on vowel duration the same for the three
 vdur_lm_2 &lt;- lm(v1_duration ~ c2_duration * vowel, data = dur_ita)
 ```
 
-`$$\text{v1_duration} = \beta_0 + \beta_1 \cdot \text{c2_duration} + \beta_2 \cdot \text{vowel_o} + \beta_3 \cdot + \text{vowel_u} + \beta_4 \cdot \text{c2_duration} \cdot \text{vowel_o} + \beta_5 \cdot \text{c2_duration} \cdot \text{vowel_u}$$`
+$$
+`\begin{align}
+\text{v1_duration} = &amp; \beta_0 + \beta_1 \cdot \text{c2_duration} + \beta_2 \cdot \text{vowel_o} + \beta_3 \cdot + \text{vowel_u} \\
+&amp; + \beta_4 \cdot \text{c2_duration} \cdot \text{vowel_o} + \beta_5 \cdot \text{c2_duration} \cdot \text{vowel_u}
+\end{align}`
+$$
 
 &lt;br&gt;
 
@@ -579,7 +611,12 @@ vdur_lm_2 &lt;- lm(v1_duration ~ c2_duration * vowel, data = dur_ita)
 
 ---
 
-`$$\text{v1_duration} = \beta_0 + \beta_1 \cdot \text{c2_duration} + \beta_2 \cdot \text{vowel_o} + \beta_3 \cdot + \text{vowel_u} + \beta_4 \cdot \text{c2_duration} \cdot \text{vowel_o} + \beta_5 \cdot \text{c2_duration} \cdot \text{vowel_u}$$`
+$$
+`\begin{align}
+\text{v1_duration} = &amp; \beta_0 + \beta_1 \cdot \text{c2_duration} + \beta_2 \cdot \text{vowel_o} + \beta_3 \cdot + \text{vowel_u} \\
+&amp; + \beta_4 \cdot \text{c2_duration} \cdot \text{vowel_o} + \beta_5 \cdot \text{c2_duration} \cdot \text{vowel_u}
+\end{align}`
+$$
 
 &lt;br&gt;
 
@@ -612,10 +649,20 @@ tidy(vdur_lm_2)
 
 ---
 
+.pull-left[
 
 ```r
-ggpredict(vdur_lm_2, terms = c("c2_duration [0, 50, 100]", "vowel"))
+ggpredict(
+  vdur_lm_2, 
+  terms = c(
+    "c2_duration [0, 50, 100]",
+    "vowel"
+  )
+)
 ```
+]
+
+.pull-right[
 
 ```
 ## # Predicted values of v1_duration
@@ -644,6 +691,7 @@ ggpredict(vdur_lm_2, terms = c("c2_duration [0, 50, 100]", "vowel"))
 ##          50 |     94.56 | [87.85, 101.28]
 ##         100 |     99.54 | [95.82, 103.26]
 ```
+]
 
 ???
 
@@ -661,7 +709,7 @@ ggpredict(vdur_lm_2, terms = c("c2_duration", "vowel")) %&gt;%
   plot()
 ```
 
-&lt;img src="index_files/figure-html/vdur-lm-2-pred-plot-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/vdur-lm-2-pred-plot-1.png" height="400px" style="display: block; margin: auto;" /&gt;
 
 ???
 
@@ -683,7 +731,7 @@ dur_ita %&gt;%
   geom_point(alpha = 0.5)
 ```
 
-&lt;img src="index_files/figure-html/vdur-rate-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/vdur-rate-1.png" height="400px" style="display: block; margin: auto;" /&gt;
 
 ???
 
@@ -716,7 +764,7 @@ ggpredict(vdur_lm_3, terms = c("c2_duration", "speech_rate [3, 5, 7]")) %&gt;%
   plot()
 ```
 
-&lt;img src="index_files/figure-html/vdur-lm-3-plot-1-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/vdur-lm-3-plot-1-1.png" height="400px" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -726,18 +774,7 @@ ggpredict(vdur_lm_3, terms = c("speech_rate", "c2_duration [50, 100, 150]")) %&g
   plot()
 ```
 
-&lt;img src="index_files/figure-html/vdur-lm-3-plot-2-1.png" height="500px" style="display: block; margin: auto;" /&gt;
-
----
-
-layout: false
-class: center middle inverse
-
-# CENTRING
-
----
-
-layout: true
+&lt;img src="index_files/figure-html/vdur-lm-3-plot-2-1.png" height="400px" style="display: block; margin: auto;" /&gt;
 
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
