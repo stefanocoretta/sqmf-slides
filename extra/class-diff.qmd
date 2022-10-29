@@ -104,5 +104,5 @@ class_counts_2 %>%
   ylim(-2.5, 3.5) +
   theme(axis.text.y = element_blank())
 
-ggsave(here("img/class-ratings.png"), width = 7, height = 3)
+ggsave(here("img/class-ratings.png"), width = 7, height = 4)
 ```
