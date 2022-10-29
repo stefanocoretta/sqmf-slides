@@ -242,10 +242,10 @@ We also included an interaction between relation type and branching.
 Both predictors were coded with treatment contrasts and the first level listed above was set as the reference level.
 We report in the following paragraph the results as probabilities (the model's estimates in log-odds are reported between parenthesis with standard errors).
 
-According to the model, there is a 69% probability of obtaining a correct response when the relation type is unrelated and the word is left-branching ($\beta$ = 0.822, SE = 0.109).
-When relation type is constituent and the word is left-branching, there probability increases to 81% ($\beta$ = 0.628, SE = 0.169).
-When the word is right-branching and the relation type is unrelated, there is a 93% probability of obtaining a correct response ($\beta$ = 1.775, SE = 0.227).
-The interaction term between relation type and branching indicates that when the word is right-branching and relation type is constituent there is a negligible difference in probability relative to relation type unrelated ($\beta$ = -0.588, SE = 0.331), so that in the right-branching condition relation type does not really affects the probability of getting a correct response.
+According to the model, there is a 69% probability of obtaining a correct response when the relation type is unrelated and the word is left-branching (`\(\beta\)` = 0.822, SE = 0.109).
+When relation type is constituent and the word is left-branching, there probability increases to 81% (`\(\beta\)` = 0.628, SE = 0.169).
+When the word is right-branching and the relation type is unrelated, there is a 93% probability of obtaining a correct response (`\(\beta\)` = 1.775, SE = 0.227).
+The interaction term between relation type and branching indicates that when the word is right-branching and relation type is constituent there is a negligible difference in probability relative to relation type unrelated (`\(\beta\)` = -0.588, SE = 0.331), so that in the right-branching condition relation type does not really affects the probability of getting a correct response.
 
 ---
 
@@ -397,9 +397,9 @@ We also included an interaction between voicing type and language.
 Both predictors were coded with treatment contrasts and the first level listed above was set as the reference level.
 
 According to the model, vowels followed by a voiced consonant are 124 ms long in Italian (SE = 1.38).
-In Polish, vowels followed by a voiced consonant are 83 ms long ($\beta$ = -41, SE = 2).
+In Polish, vowels followed by a voiced consonant are 83 ms long (`\(\beta\)` = -41, SE = 2).
 Italian vowels followed by a voiceless consonant are 13 ms shorter (SE = 1.9) than vowels followed by a voiced consonant.
-According to the interaction, the effect of voicing (i.e. consonant being voiceless) in Polish is 5 ms smaller than the effect in Italian ($\beta$ = 5.7, SE = 3.3).
+According to the interaction, the effect of voicing (i.e. consonant being voiceless) in Polish is 5 ms smaller than the effect in Italian (`\(\beta\)` = 5.7, SE = 3.3).
 
 ---
 
@@ -531,11 +531,11 @@ We also included an interaction between C2 duration and vowel.
 Vowel was coded with treatment contrasts using /a/ as the reference level.
 
 According to the model, /a/ is 102 ms long (SE = 6) when C2 duration is 0 ms.
-When C2 duration is 0, the duration of /o/ is virtually the same as that of /a/ ($\beta$ = -2, SE = 8.42).
+When C2 duration is 0, the duration of /o/ is virtually the same as that of /a/ (`\(\beta\)` = -2, SE = 8.42).
 On the other hand, the model suggests that /u/ is 13 ms shorter than /a/ (SE = 8.9) when C2 duration is 0.
 For each unit increase of C2 duration, /a/ increases by 0.3 ms (SE = 0.06).
 In other words, for every 10 ms increase in C2 duration there is a corresponding 3 ms increase in the duration of /a/.
-The interaction between C2 duration and vowel indicates that for each unit increase of C2 duration, the expected C2 duration effect for /o/ is 0.1 ms smaller than that of /a/ ($\beta$ = -0.1, SE = 0.09) while the effect for /u/ is 0.2 ms smaller than that of /a/ ($\beta$ = -0.2, SE = 0.09).
+The interaction between C2 duration and vowel indicates that for each unit increase of C2 duration, the expected C2 duration effect for /o/ is 0.1 ms smaller than that of /a/ (`\(\beta\)` = -0.1, SE = 0.09) while the effect for /u/ is 0.2 ms smaller than that of /a/ (`\(\beta\)` = -0.2, SE = 0.09).
 In other words, for each 10 ms increase of C2 duration, /o/ increases by 2 ms and /u/ increases by 1 ms.
 Overall, the model suggest that the effect of C2 duration decreases from /a/ to /o/ to /u/, albeit by a small margin.
 
