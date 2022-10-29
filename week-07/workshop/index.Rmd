@@ -45,10 +45,10 @@ class: center middle inverse
 
 # Instructions
 
-1. Download an unzip the `week5-tutorial-files.zip` archive from [here](https://drive.google.com/drive/folders/1h5YAoabIk0vhBGpcU8cQdUmNZYNPuh3z?usp=sharing).
+1. Download an unzip the `week-7-tutorial-files.zip` archive from [here](https://drive.google.com/drive/folders/1h5YAoabIk0vhBGpcU8cQdUmNZYNPuh3z?usp=sharing).
 
-3. Move `05_glm.Rmd` into the `code` folder in your RStudio Project.
+3. Move `07_interactions.Rmd` into the `code` folder in your RStudio Project.
 
-4. Move `shallow.csv` to the `data` folder in your RStudio project.
+4. Move `dur-ita-pol.csv` to the `data` folder in your RStudio project.
 
-5. Open `05_glm.Rmd` in RStudio and go through the tutorial.
+5. Open `07_interactions.Rmd` in RStudio and go through the tutorial.
