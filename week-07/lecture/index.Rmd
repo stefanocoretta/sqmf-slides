@@ -614,7 +614,7 @@ bi_pred_plot
 
 ### Reporting the model and results
 
-We fitted a linear model with a Gaussian family to vowel duration, with C2 duration and speech rate (as syllables per second), including an interaction between the two.
+We fitted a linear model with a Gaussian family to vowel duration, with C2 duration and speech rate (as syllables per second) as predictors, including an interaction between the two.
 
 The model suggests that, when C2 duration and speech rate are at 0, Italian vowels are on average 220 ms long (SE = 19).
 The effect of C2 duration (when speech rate is 0) is 0.72 ms (SE = 0.2) while the effect of speech rate (when C2 duration is 0) is -14 ms (SE = 3.6).
