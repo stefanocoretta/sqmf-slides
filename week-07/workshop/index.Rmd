@@ -43,7 +43,7 @@ style_mono_light(
 .center[
 <https://forms.office.com/r/p5MH2QzcwL>
 
-![:scale 40%](../../img/QR-SQM-attendance.png)
+![](../../img/QR-SQM-attendance.png)
 ]
 
 ---
