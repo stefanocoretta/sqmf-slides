@@ -37,6 +37,17 @@ style_mono_light(
 )
 ```
 
+
+# SQMF workshop attendance
+
+.center[
+<https://forms.office.com/r/p5MH2QzcwL>
+
+![:scale 40%](../../img/QR-SQM-attendance.png)
+]
+
+---
+
 class: center middle inverse
 
 # R MARKDOWN TUTORIAL
