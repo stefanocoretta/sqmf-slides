@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Statistics and Quantitative Methods (S1)</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Dr Stefano Coretta" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
+    <link href="libs/tachyons/tachyons.min.css" rel="stylesheet" />
+    <link href="libs/panelset/panelset.css" rel="stylesheet" />
+    <script src="libs/panelset/panelset.js"></script>
+    <script src="libs/freezeframe/freezeframe.min.js"></script>
+    <script src="libs/xaringanExtra-freezeframe/freezeframe-init.js"></script>
+    <script id="xaringanExtra-freezeframe-options" type="application/json">{"selector":"img[src$=\"gif\"]","trigger":"click","overlay":false,"responsive":true,"warnings":true}</script>
+    <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+.title[
+# Statistics and Quantitative Methods (S1)
+]
+.subtitle[
+## Week 8
+]
+.author[
+### Dr Stefano Coretta
+]
+.institute[
+### University of Edinburgh
+]
+.date[
+### 2022/11/08
+]
+
+---
+
+
+
+
+
+
+class: center middle
+
+.f1.link.dim.br3.ph3.pv2.mb2.dib.white.bg-purple[
+[.white[Linear models illustrated]](https://stefanocoretta.shinyapps.io/lines/)
+]
+
+---
+
+layout: true
+
+## Repeated measures: Multiple subjects
+
+---
+
+
+```r
+mald_1_1
+```
+
+```
+## # A tibble: 5,000 × 7
+##    Subject Item        IsWord PhonLev    RT ACC     RT_log
+##    &lt;chr&gt;   &lt;chr&gt;       &lt;fct&gt;    &lt;dbl&gt; &lt;int&gt; &lt;fct&gt;    &lt;dbl&gt;
+##  1 15308   acreage     TRUE      6.01   617 correct   6.42
+##  2 15308   maxraezaxr  FALSE     6.78  1198 correct   7.09
+##  3 15308   prognosis   TRUE      8.14   954 correct   6.86
+##  4 15308   giggles     TRUE      6.22   579 correct   6.36
+##  5 15308   baazh       FALSE     6.13  1011 correct   6.92
+##  6 15308   unflagging  TRUE      7.66  1402 correct   7.25
+##  7 15308   ihnpaykaxrz FALSE     7.47  1059 correct   6.97
+##  8 15308   hawk        TRUE      6.09   739 correct   6.61
+##  9 15308   assessing   TRUE      6.37   789 correct   6.67
+## 10 15308   mehlaxl     FALSE     5.80   926 correct   6.83
+## # … with 4,990 more rows
+```
+
+---
+
+
+```r
+mald_1_1 %&gt;%
+  mutate(ACC_num = ifelse(ACC == "correct", 1, 0)) %&gt;%
+  ggplot(aes(PhonLev, ACC_num, colour = IsWord)) +
+  geom_point() +
+  geom_smooth(method = "glm", method.args = list(family = "binomial"))
+```
+
+&lt;img src="index_files/figure-html/mald-acc-1.png" height="400px" style="display: block; margin: auto;" /&gt;
+
+---
+
+layout: false
+
+class: center middle
+
+.f1.link.dim.br3.ph3.pv2.mb2.dib.white.bg-purple[
+[.white[Linear models illustrated]](https://stefanocoretta.shinyapps.io/lines/)
+]
+
+---
+
+layout: true
+
+## Random effects: varying intercept
+
+---
+
+
+```r
+mald_lm &lt;- glm(ACC ~ IsWord * PhonLev, data = mald_1_1, family = binomial())
+
+tidy(mald_lm)
+```
+
+```
+## # A tibble: 4 × 5
+##   term                estimate std.error statistic    p.value
+##   &lt;chr&gt;                  &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;
+## 1 (Intercept)           1.59      0.368       4.31 0.0000162 
+## 2 IsWordFALSE          -2.77      0.591      -4.68 0.00000285
+## 3 PhonLev               0.0719    0.0520      1.38 0.167     
+## 4 IsWordFALSE:PhonLev   0.385     0.0861      4.47 0.00000784
+```
+
+---
+
+
+```r
+mald_lm_p &lt;- ggpredict(mald_lm, terms = c("PhonLev [all]", "IsWord")) %&gt;% plot(limits = c(0.75, 1))
+mald_lm_p
+```
+
+&lt;img src="index_files/figure-html/mald-lm-p-1.png" height="400px" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+```r
+subjs &lt;- sample(mald_1_1$Subject, 9)
+mald_1_1 %&gt;%
+  filter(Subject %in% subjs) %&gt;%
+  ggplot(aes(Subject, fill = ACC)) +
+  geom_bar(position = "fill")
+```
+
+&lt;img src="index_files/figure-html/mald-subj-1.png" height="400px" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+```r
+library(lme4)
+mald_lm_2 &lt;- glmer(ACC ~ IsWord * PhonLev + (1 | Subject), data = mald_1_1, family = binomial())
+
+summary(mald_lm_2)
+```
+
+```
+## Generalized linear mixed model fit by maximum likelihood (Laplace
+##   Approximation) [glmerMod]
+##  Family: binomial  ( logit )
+## Formula: ACC ~ IsWord * PhonLev + (1 | Subject)
+##    Data: mald_1_1
+## 
+##      AIC      BIC   logLik deviance df.resid 
+##   3535.5   3568.0  -1762.7   3525.5     4995 
+## 
+## Scaled residuals: 
+##     Min      1Q  Median      3Q     Max 
+## -7.9498  0.2910  0.3418  0.3879  0.6229 
+## 
+## Random effects:
+##  Groups  Name        Variance Std.Dev.
+##  Subject (Intercept) 0.09121  0.302   
+## Number of obs: 5000, groups:  Subject, 50
+## 
+## Fixed effects:
+##                     Estimate Std. Error z value Pr(&gt;|z|)
+## (Intercept)          1.61126    0.37304   4.319 1.57e-05
+## IsWordFALSE         -2.77650    0.59261  -4.685 2.80e-06
+## PhonLev              0.07383    0.05234   1.410    0.158
+## IsWordFALSE:PhonLev  0.38557    0.08629   4.469 7.88e-06
+## 
+## Correlation of Fixed Effects:
+##             (Intr) IsWFALSE PhonLv
+## IsWordFALSE -0.621                
+## PhonLev     -0.978  0.615         
+## IsWFALSE:PL  0.594 -0.988   -0.606
+```
+
+---
+
+
+```r
+mald_lm_2_p &lt;- ggpredict(mald_lm_2, terms = c("PhonLev [all]", "IsWord")) %&gt;% plot(limits = c(0.75, 1))
+mald_lm_2_p
+```
+
+&lt;img src="index_files/figure-html/mald-lm-2-p-1.png" height="400px" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+```r
+# library(patchwork)
+mald_lm_p + mald_lm_2_p + plot_layout(nrow = 2, guides = "collect")
+```
+
+&lt;img src="index_files/figure-html/mald-lm-lm-p-1.png" height="400px" style="display: block; margin: auto;" /&gt;
+
+---
+
+Let's check the **conditional means**
+
+
+```r
+mald_lm_2_r &lt;- ranef(mald_lm_2) %&gt;% as_tibble()
+mald_lm_2_r
+```
+
+```
+## # A tibble: 50 × 5
+##    grpvar  term        grp    condval condsd
+##    &lt;chr&gt;   &lt;fct&gt;       &lt;fct&gt;    &lt;dbl&gt;  &lt;dbl&gt;
+##  1 Subject (Intercept) 15308  0.450    0.234
+##  2 Subject (Intercept) 15345  0.0591   0.221
+##  3 Subject (Intercept) 15373 -0.0208   0.217
+##  4 Subject (Intercept) 15384 -0.392    0.201
+##  5 Subject (Intercept) 15388  0.00308  0.216
+##  6 Subject (Intercept) 15540 -0.388    0.204
+##  7 Subject (Intercept) 15739 -0.147    0.215
+##  8 Subject (Intercept) 15903 -0.251    0.208
+##  9 Subject (Intercept) 16018 -0.260    0.209
+## 10 Subject (Intercept) 16054 -0.402    0.205
+## # … with 40 more rows
+```
+
+---
+
+
+```r
+mald_lm_2_r %&gt;%
+  ggplot(aes(condval, grp)) +
+  geom_vline(xintercept = 0, colour = "#7fc97f") +
+  geom_pointrange(
+    aes(xmin = condval + 1.96 * condsd, xmax = condval - 1.96 * condsd),
+    alpha = 0.7
+  )
+```
+
+&lt;img src="index_files/figure-html/mald-lm-2-r-p-1.png" height="400px" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+```r
+ggpredict(mald_lm_2, terms = c("PhonLev [all]", "IsWord", "Subject [sample=8]"), type = "re") %&gt;% plot()
+```
+
+&lt;img src="index_files/figure-html/mald-lm-2-pred-r-1.png" height="400px" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+layout: false
+
+class: center middle
+
+.f1.link.dim.br3.ph3.pv2.mb2.dib.white.bg-purple[
+[.white[Linear models illustrated]](https://stefanocoretta.shinyapps.io/lines/)
+]
+
+---
+
+layout: true
+
+## Random effects: varying slopes
+
+---
+
+
+```r
+mald_1_1 %&gt;%
+  filter(Subject %in% sample(mald_1_1$Subject, 9)) %&gt;%
+  mutate(ACC_num = ifelse(ACC == "correct", 1, 0)) %&gt;%
+  ggplot(aes(PhonLev, ACC_num, colour = IsWord)) +
+  geom_point() +
+  geom_smooth(method = "glm", method.args = list(family = "binomial")) +
+  facet_wrap(~ Subject)
+```
+
+&lt;img src="index_files/figure-html/mald-subj-2-1.png" height="400px" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+```r
+mald_lm_3 &lt;- glmer(ACC ~ IsWord * PhonLev + (IsWord | Subject), data = mald_1_1, family = binomial())
+
+summary(mald_lm_3)
+```
+
+```
+## Generalized linear mixed model fit by maximum likelihood (Laplace
+##   Approximation) [glmerMod]
+##  Family: binomial  ( logit )
+## Formula: ACC ~ IsWord * PhonLev + (IsWord | Subject)
+##    Data: mald_1_1
+## 
+##      AIC      BIC   logLik deviance df.resid 
+##   3447.0   3492.6  -1716.5   3433.0     4993 
+## 
+## Scaled residuals: 
+##     Min      1Q  Median      3Q     Max 
+## -9.3069  0.2351  0.3066  0.3798  0.9709 
+## 
+## Random effects:
+##  Groups  Name        Variance Std.Dev. Corr 
+##  Subject (Intercept) 0.3114   0.558         
+##          IsWordFALSE 1.4020   1.184    -0.89
+## Number of obs: 5000, groups:  Subject, 50
+## 
+## Fixed effects:
+##                     Estimate Std. Error z value Pr(&gt;|z|)
+## (Intercept)          1.66918    0.38633   4.321 1.56e-05
+## IsWordFALSE         -2.83255    0.63037  -4.493 7.01e-06
+## PhonLev              0.07740    0.05336   1.451    0.147
+## IsWordFALSE:PhonLev  0.40460    0.08849   4.572 4.82e-06
+## 
+## Correlation of Fixed Effects:
+##             (Intr) IsWFALSE PhonLv
+## IsWordFALSE -0.636                
+## PhonLev     -0.961  0.589         
+## IsWFALSE:PL  0.579 -0.950   -0.603
+```
+
+---
+
+
+```r
+mald_lm_3_p &lt;- ggpredict(mald_lm_3, terms = c("PhonLev [all]", "IsWord")) %&gt;% plot(limits = c(0.75, 1))
+mald_lm_3_p
+```
+
+&lt;img src="index_files/figure-html/mald-lm-3-p-1.png" height="400px" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+```r
+mald_lm_p + mald_lm_3_p + plot_layout(nrow = 2, guides = "collect")
+```
+
+&lt;img src="index_files/figure-html/mald-lm-lm-3-p-1.png" height="400px" style="display: block; margin: auto;" /&gt;
+
+---
+
+Let's check the **conditional means**
+
+
+```r
+mald_lm_3_r &lt;- ranef(mald_lm_3) %&gt;% as_tibble()
+mald_lm_3_r
+```
+
+```
+## # A tibble: 100 × 5
+##    grpvar  term        grp   condval condsd
+##    &lt;chr&gt;   &lt;fct&gt;       &lt;fct&gt;   &lt;dbl&gt;  &lt;dbl&gt;
+##  1 Subject (Intercept) 15308  0.124   0.340
+##  2 Subject (Intercept) 15345  0.714   0.358
+##  3 Subject (Intercept) 15373 -0.0677  0.321
+##  4 Subject (Intercept) 15384  0.380   0.350
+##  5 Subject (Intercept) 15388  0.229   0.349
+##  6 Subject (Intercept) 15540 -0.415   0.297
+##  7 Subject (Intercept) 15739 -0.689   0.294
+##  8 Subject (Intercept) 15903  0.920   0.367
+##  9 Subject (Intercept) 16018  0.0954  0.329
+## 10 Subject (Intercept) 16054  0.967   0.372
+## # … with 90 more rows
+```
+
+---
+
+
+```r
+mald_lm_3_r %&gt;%
+  filter(term == "IsWordFALSE") %&gt;%
+  ggplot(aes(condval, reorder(grp, condval))) +
+  geom_vline(xintercept = 0, colour = "#7fc97f") +
+  geom_pointrange(
+    aes(xmin = condval + 1.96 * condsd, xmax = condval - 1.96 * condsd),
+    alpha = 0.7
+  )
+```
+
+&lt;img src="index_files/figure-html/mald-lm-3-r-p-1.png" height="400px" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+```r
+ggpredict(mald_lm_3, terms = c("PhonLev [all]", "IsWord", "Subject [sample=9]"), type = "re") %&gt;% plot()
+```
+
+&lt;img src="index_files/figure-html/mald-lm-3-pred-r-1.png" height="400px" style="display: block; margin: auto;" /&gt;
+
+---
+
+layout: false
+layout: true
+
+## Repeated measures: Multiple subjects and words
+
+---
+
+
+```r
+shallow_filt &lt;- shallow %&gt;%
+  filter(Branching == "Left")
+
+shallow_filt
+```
+
+```
+## # A tibble: 1,170 × 11
+##    Group ID    List  Target    RT RT_log Criti…¹ Word_…² Relat…³ Branc…⁴ accur…⁵
+##    &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;fct&gt;   &lt;chr&gt;   &lt;chr&gt;  
+##  1 L1    L1_01 A     unawa…   603   6.40 Critic… Word    Unrela… Left    correct
+##  2 L1    L1_01 A     unhol…   739   6.61 Critic… Word    Consti… Left    correct
+##  3 L1    L1_01 A     unhap…   370   5.91 Critic… Word    Unrela… Left    correct
+##  4 L1    L1_01 A     unsha…   821   6.71 Critic… Word    Consti… Left    correct
+##  5 L1    L1_01 A     unrip…  1035   6.94 Critic… Word    Unrela… Left    incorr…
+##  6 L1    L1_01 A     unkin…   498   6.21 Critic… Word    NonCon… Left    correct
+##  7 L1    L1_01 A     unwar…  1133   7.03 Critic… Word    NonCon… Left    correct
+##  8 L1    L1_01 A     uncle…   513   6.24 Critic… Word    Consti… Left    correct
+##  9 L1    L1_01 A     reobt…   964   6.87 Critic… Word    NonCon… Left    incorr…
+## 10 L1    L1_01 A     resea…   709   6.56 Critic… Word    Unrela… Left    correct
+## # … with 1,160 more rows, and abbreviated variable names ¹​Critical_Filler,
+## #   ²​Word_Nonword, ³​Relation_type, ⁴​Branching, ⁵​accuracy
+```
+
+---
+
+
+```r
+unique(shallow_filt$ID)
+```
+
+```
+##  [1] "L1_01" "L1_02" "L1_03" "L1_05" "L1_06" "L1_07" "L1_08" "L1_09" "L1_10"
+## [10] "L1_11" "L1_12" "L1_13" "L1_14" "L1_15" "L1_16" "L1_17" "L1_18" "L1_19"
+## [19] "L1_20" "L1_21" "L1_22" "L1_23" "L1_24" "L1_25" "L1_26" "L1_27" "L1_28"
+## [28] "L1_29" "L1_30" "L2_01" "L2_02" "L2_03" "L2_04" "L2_05" "L2_06" "L2_07"
+## [37] "L2_08" "L2_10" "L2_11" "L2_12" "L2_13" "L2_14" "L2_16" "L2_17" "L2_18"
+## [46] "L2_19" "L2_20" "L2_21" "L2_22" "L2_23" "L2_24" "L2_25" "L2_26" "L2_27"
+## [55] "L2_28" "L2_29" "L2_30" "L2_31" "L2_32" "L2_33" "L2_34" "L2_35" "L2_36"
+## [64] "L2_37" "L2_38"
+```
+
+```r
+unique(shallow_filt$Target)
+```
+
+```
+##  [1] "unawareness"  "unholiness"   "unhappiness"  "unsharpness"  "unripeness"  
+##  [6] "unkindness"   "unwariness"   "unclearness"  "reobtainable" "resealable"  
+## [11] "recomputable" "readjustable" "reattachable" "resellable"   "reclosable"  
+## [16] "uncleverness" "reusable"     "rehydratable"
+```
+
+--
+
+`ID` and `Target` are crossed, i.e. each subject has seen all the targets and each target has been seen by each subject.
+
+We talk about **crossed random effects**.
+
+---
+
+
+```r
+shal_lm &lt;- lmer(
+  RT ~
+    Relation_type * Group +
+    (1 | ID) + (1 | Target),
+  data = shallow_filt
+)
+
+summary(shal_lm)
+```
+
+```
+## Linear mixed model fit by REML ['lmerMod']
+## Formula: RT ~ Relation_type * Group + (1 | ID) + (1 | Target)
+##    Data: shallow_filt
+## 
+## REML criterion at convergence: 16712.8
+## 
+## Scaled residuals: 
+##     Min      1Q  Median      3Q     Max 
+## -4.5194 -0.5081 -0.0778  0.4561  3.5303 
+## 
+## Random effects:
+##  Groups   Name        Variance Std.Dev.
+##  ID       (Intercept) 21495    146.61  
+##  Target   (Intercept)  7928     89.04  
+##  Residual             86941    294.86  
+## Number of obs: 1170, groups:  ID, 65; Target, 18
+## 
+## Fixed effects:
+##                                     Estimate Std. Error t value
+## (Intercept)                          897.788     41.005  21.894
+## Relation_typeConstituent             -95.502     31.619  -3.020
+## Relation_typeNonConstituent          -18.350     31.619  -0.580
+## GroupL2                              160.338     47.336   3.387
+## Relation_typeConstituent:GroupL2       4.362     42.488   0.103
+## Relation_typeNonConstituent:GroupL2  -45.018     42.488  -1.060
+## 
+## Correlation of Fixed Effects:
+##             (Intr) Rltn_C Rlt_NC GropL2 R_C:GL
+## Rltn_typCns -0.386                            
+## Rltn_typNnC -0.386  0.500                     
+## GroupL2     -0.639  0.334  0.334              
+## Rltn_tC:GL2  0.287 -0.743 -0.372 -0.449       
+## Rltn_NC:GL2  0.287 -0.372 -0.743 -0.449  0.500
+```
+
+---
+
+
+```r
+shal_lm_p &lt;- ggpredict(shal_lm, terms = c("Group", "Relation_type")) %&gt;% plot()
+shal_lm_p
+```
+
+&lt;img src="index_files/figure-html/shal-lm-p-1.png" height="400px" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+```r
+shal_lm_r &lt;- ranef(shal_lm) %&gt;% as_tibble()
+shal_lm_r
+```
+
+```
+## # A tibble: 83 × 5
+##    grpvar term        grp   condval condsd
+##    &lt;chr&gt;  &lt;fct&gt;       &lt;fct&gt;   &lt;dbl&gt;  &lt;dbl&gt;
+##  1 ID     (Intercept) L1_01  -106.    63.9
+##  2 ID     (Intercept) L1_02    13.9   63.9
+##  3 ID     (Intercept) L1_03   -12.6   63.9
+##  4 ID     (Intercept) L1_05   164.    63.9
+##  5 ID     (Intercept) L1_06   -83.9   63.9
+##  6 ID     (Intercept) L1_07   -55.3   63.9
+##  7 ID     (Intercept) L1_08   -16.9   63.9
+##  8 ID     (Intercept) L1_09  -101.    63.9
+##  9 ID     (Intercept) L1_10    29.2   63.9
+## 10 ID     (Intercept) L1_11  -167.    63.9
+## # … with 73 more rows
+```
+
+---
+
+
+```r
+shal_lm_r %&gt;%
+  filter(grpvar == "ID") %&gt;%
+  ggplot(aes(condval, reorder(grp, condval))) +
+  geom_vline(xintercept = 0, colour = "#7fc97f") +
+  geom_pointrange(
+    aes(xmin = condval + 1.96 * condsd, xmax = condval - 1.96 * condsd),
+    alpha = 0.7
+  )
+```
+
+&lt;img src="index_files/figure-html/shal-lm-r-p-1.png" height="400px" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+```r
+shal_lm_r %&gt;%
+  filter(grpvar == "Target") %&gt;%
+  ggplot(aes(condval, reorder(grp, condval))) +
+  geom_vline(xintercept = 0, colour = "#7fc97f") +
+  geom_pointrange(
+    aes(xmin = condval + 1.96 * condsd, xmax = condval - 1.96 * condsd),
+    alpha = 0.7
+  )
+```
+
+&lt;img src="index_files/figure-html/shal-lm-r-p-2-1.png" height="400px" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+```r
+ggpredict(shal_lm, terms = c("ID [sample=6]", "Relation_type"), type = "re") %&gt;% plot()
+```
+
+&lt;img src="index_files/figure-html/shal-lm-pred-r-id-1.png" height="400px" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+```r
+ggpredict(shal_lm, terms = c("Target [sample=6]", "Relation_type"), type = "re") %&gt;% plot()
+```
+
+&lt;img src="index_files/figure-html/shal-lm-pred-r-target-1.png" height="400px" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+```r
+shal_lm_2 &lt;- lmer(
+  RT ~
+    Relation_type * Group +
+    (Relation_type | ID) + (Relation_type | Target),
+  data = shallow_filt
+)
+
+summary(shal_lm_2)
+```
+
+```
+## Linear mixed model fit by REML ['lmerMod']
+## Formula: RT ~ Relation_type * Group + (Relation_type | ID) + (Relation_type |  
+##     Target)
+##    Data: shallow_filt
+## 
+## REML criterion at convergence: 16710.1
+## 
+## Scaled residuals: 
+##     Min      1Q  Median      3Q     Max 
+## -4.5842 -0.5098 -0.0802  0.4641  3.6196 
+## 
+## Random effects:
+##  Groups   Name                        Variance Std.Dev. Corr       
+##  ID       (Intercept)                 24923.06 157.870             
+##           Relation_typeConstituent      517.75  22.754  -0.93      
+##           Relation_typeNonConstituent   837.73  28.944  -0.46  0.76
+##  Target   (Intercept)                  7220.07  84.971             
+##           Relation_typeConstituent       70.07   8.371  -1.00      
+##           Relation_typeNonConstituent   468.28  21.640   1.00 -1.00
+##  Residual                             86554.56 294.202             
+## Number of obs: 1170, groups:  ID, 65; Target, 18
+## 
+## Fixed effects:
+##                                     Estimate Std. Error t value
+## (Intercept)                          897.854     41.930  21.413
+## Relation_typeConstituent             -95.618     31.890  -2.998
+## Relation_typeNonConstituent          -18.300     32.409  -0.565
+## GroupL2                              160.432     49.499   3.241
+## Relation_typeConstituent:GroupL2       4.199     42.770   0.098
+## Relation_typeNonConstituent:GroupL2  -44.949     43.006  -1.045
+## 
+## Correlation of Fixed Effects:
+##             (Intr) Rltn_C Rlt_NC GropL2 R_C:GL
+## Rltn_typCns -0.487                            
+## Rltn_typNnC -0.344  0.488                     
+## GroupL2     -0.654  0.388  0.355              
+## Rltn_tC:GL2  0.341 -0.742 -0.371 -0.522       
+## Rltn_NC:GL2  0.316 -0.375 -0.734 -0.483  0.505
+## optimizer (nloptwrap) convergence code: 0 (OK)
+## boundary (singular) fit: see help('isSingular')
+```
+
+---
+
+
+```r
+shal_lm_2_p &lt;- ggpredict(shal_lm_2, terms = c("Group", "Relation_type")) %&gt;% plot()
+shal_lm_2_p
+```
+
+&lt;img src="index_files/figure-html/shal-lm-2-p-1.png" height="400px" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+
+```r
+ggpredict(shal_lm_2, terms = c("ID [sample=10]", "Relation_type"), type = "re") %&gt;% plot()
+```
+
+&lt;img src="index_files/figure-html/shal-lm-2-pred-r-id-1.png" height="400px" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+```r
+ggpredict(shal_lm_2, terms = c("Target [sample=6]", "Relation_type"), type = "re") %&gt;% plot()
+```
+
+&lt;img src="index_files/figure-html/shal-lm-2-pred-r-target-1.png" height="400px" style="display: block; margin: auto;" /&gt;
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script src="../../assets/macros.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

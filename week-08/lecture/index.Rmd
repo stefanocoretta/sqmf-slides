@@ -39,7 +39,6 @@ data("dur_ita_pol")
 dur_ita_pol %<>% drop_na(f1, v1_duration)
 library(lme4)
 library(patchwork)
-library(sjPlot)
 ```
 
 ```{r xaringan-themer, include=FALSE, warning=FALSE}
@@ -83,9 +82,18 @@ mald_1_1 %>%
 ---
 
 layout: false
+
+class: center middle
+
+.f1.link.dim.br3.ph3.pv2.mb2.dib.white.bg-purple[
+[.white[Linear models illustrated]](https://stefanocoretta.shinyapps.io/lines/)
+]
+
+---
+
 layout: true
 
-# Random effects: varying intercept
+## Random effects: varying intercept
 
 ---
 
@@ -139,24 +147,49 @@ mald_lm_p + mald_lm_2_p + plot_layout(nrow = 2, guides = "collect")
 
 Let's check the **conditional means**
 
-```{r}
-ranef(mald_lm_2)
+```{r mald-lm-2-r}
+mald_lm_2_r <- ranef(mald_lm_2) %>% as_tibble()
+mald_lm_2_r
 ```
 
 ---
 
+```{r mald-lm-2-r-p}
+mald_lm_2_r %>%
+  ggplot(aes(condval, grp)) +
+  geom_vline(xintercept = 0, colour = "#7fc97f") +
+  geom_pointrange(
+    aes(xmin = condval + 1.96 * condsd, xmax = condval - 1.96 * condsd),
+    alpha = 0.7
+  )
+```
+
+---
+
+```{r mald-lm-2-pred-r}
+ggpredict(mald_lm_2, terms = c("PhonLev [all]", "IsWord", "Subject [sample=8]"), type = "re") %>% plot()
+```
 
 
 ---
 
 layout: false
+
+class: center middle
+
+.f1.link.dim.br3.ph3.pv2.mb2.dib.white.bg-purple[
+[.white[Linear models illustrated]](https://stefanocoretta.shinyapps.io/lines/)
+]
+
+---
+
 layout: true
 
 ## Random effects: varying slopes
 
 ---
 
-```{r warning=FALSE}
+```{r mald-subj-2, warning=FALSE}
 mald_1_1 %>%
   filter(Subject %in% sample(mald_1_1$Subject, 9)) %>%
   mutate(ACC_num = ifelse(ACC == "correct", 1, 0)) %>%
@@ -168,7 +201,7 @@ mald_1_1 %>%
 
 ---
 
-```{r}
+```{r mald-lm-3}
 mald_lm_3 <- glmer(ACC ~ IsWord * PhonLev + (IsWord | Subject), data = mald_1_1, family = binomial())
 
 summary(mald_lm_3)
@@ -176,13 +209,170 @@ summary(mald_lm_3)
 
 ---
 
-```{r}
+```{r mald-lm-3-p}
 mald_lm_3_p <- ggpredict(mald_lm_3, terms = c("PhonLev [all]", "IsWord")) %>% plot(limits = c(0.75, 1))
 mald_lm_3_p
 ```
 
 ---
 
-```{r}
+```{r mald-lm-lm-3-p}
 mald_lm_p + mald_lm_3_p + plot_layout(nrow = 2, guides = "collect")
 ```
+
+---
+
+Let's check the **conditional means**
+
+```{r mald-lm-3-r}
+mald_lm_3_r <- ranef(mald_lm_3) %>% as_tibble()
+mald_lm_3_r
+```
+
+---
+
+```{r mald-lm-3-r-p}
+mald_lm_3_r %>%
+  filter(term == "IsWordFALSE") %>%
+  ggplot(aes(condval, reorder(grp, condval))) +
+  geom_vline(xintercept = 0, colour = "#7fc97f") +
+  geom_pointrange(
+    aes(xmin = condval + 1.96 * condsd, xmax = condval - 1.96 * condsd),
+    alpha = 0.7
+  )
+```
+
+---
+
+```{r mald-lm-3-pred-r}
+ggpredict(mald_lm_3, terms = c("PhonLev [all]", "IsWord", "Subject [sample=9]"), type = "re") %>% plot()
+```
+
+---
+
+layout: false
+layout: true
+
+## Repeated measures: Multiple subjects and words
+
+---
+
+```{r shallow}
+shallow_filt <- shallow %>%
+  filter(Branching == "Left")
+
+shallow_filt
+```
+
+---
+
+```{r id-target}
+unique(shallow_filt$ID)
+
+unique(shallow_filt$Target)
+```
+
+--
+
+`ID` and `Target` are crossed, i.e. each subject has seen all the targets and each target has been seen by each subject.
+
+We talk about **crossed random effects**.
+
+---
+
+```{r shal-lm}
+shal_lm <- lmer(
+  RT ~
+    Relation_type * Group +
+    (1 | ID) + (1 | Target),
+  data = shallow_filt
+)
+
+summary(shal_lm)
+```
+
+---
+
+```{r shal-lm-p}
+shal_lm_p <- ggpredict(shal_lm, terms = c("Group", "Relation_type")) %>% plot()
+shal_lm_p
+```
+
+---
+
+```{r shal-lm-r}
+shal_lm_r <- ranef(shal_lm) %>% as_tibble()
+shal_lm_r
+```
+
+---
+
+```{r shal-lm-r-p}
+shal_lm_r %>%
+  filter(grpvar == "ID") %>%
+  ggplot(aes(condval, reorder(grp, condval))) +
+  geom_vline(xintercept = 0, colour = "#7fc97f") +
+  geom_pointrange(
+    aes(xmin = condval + 1.96 * condsd, xmax = condval - 1.96 * condsd),
+    alpha = 0.7
+  )
+```
+
+---
+
+```{r shal-lm-r-p-2}
+shal_lm_r %>%
+  filter(grpvar == "Target") %>%
+  ggplot(aes(condval, reorder(grp, condval))) +
+  geom_vline(xintercept = 0, colour = "#7fc97f") +
+  geom_pointrange(
+    aes(xmin = condval + 1.96 * condsd, xmax = condval - 1.96 * condsd),
+    alpha = 0.7
+  )
+```
+
+---
+
+```{r shal-lm-pred-r-id}
+ggpredict(shal_lm, terms = c("ID [sample=6]", "Relation_type"), type = "re") %>% plot()
+```
+
+---
+
+```{r shal-lm-pred-r-target}
+ggpredict(shal_lm, terms = c("Target [sample=6]", "Relation_type"), type = "re") %>% plot()
+```
+
+---
+
+```{r shal-lm-2}
+shal_lm_2 <- lmer(
+  RT ~
+    Relation_type * Group +
+    (Relation_type | ID) + (Relation_type | Target),
+  data = shallow_filt
+)
+
+summary(shal_lm_2)
+```
+
+---
+
+```{r shal-lm-2-p}
+shal_lm_2_p <- ggpredict(shal_lm_2, terms = c("Group", "Relation_type")) %>% plot()
+shal_lm_2_p
+```
+
+
+---
+
+```{r shal-lm-2-pred-r-id}
+ggpredict(shal_lm_2, terms = c("ID [sample=10]", "Relation_type"), type = "re") %>% plot()
+```
+
+---
+
+```{r shal-lm-2-pred-r-target}
+ggpredict(shal_lm_2, terms = c("Target [sample=6]", "Relation_type"), type = "re") %>% plot()
+```
+
