@@ -366,7 +366,7 @@ The probability of f0 being between 120 and 210 Hz is `r round(pnorm(210, 200, 5
 
 ---
 
-But how do we describe probability distributions in a succint way?
+But how do we describe probability distributions in a succinct way?
 
 We can't make a list of all values and probabilities, especially for continuous probabilities.
 
