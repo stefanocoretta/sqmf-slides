@@ -1,0 +1,161 @@
+---
+title: "Statistics and Quantitative Methods (S1)"
+subtitle: "Week 8"
+author: "Dr Stefano Coretta"
+institute: "University of Edinburgh"
+date: "2022/11/08"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css:
+      - xaringan-themer.css
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: "16:9"
+      beforeInit: "../../assets/macros.js"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, dpi = 300, out.height = "400px", fig.align = "center")
+knitr::opts_knit$set(root.dir = here::here())
+options(htmltools.dir.version = FALSE)
+library(tidyverse)
+theme_set(theme_light())
+library(magrittr)
+library(xaringanExtra)
+use_xaringan_extra(c("panelset", "tachyons", "freezeframe"))
+library(ggeffects)
+library(marginaleffects)
+options(show.signif.stars = FALSE)
+library(broom.mixed)
+library(sqmf)
+data("mald_1_1")
+data("shallow")
+data("polite")
+data("gestures")
+data("dur_ita_pol")
+dur_ita_pol %<>% drop_na(f1, v1_duration)
+library(lme4)
+library(patchwork)
+```
+
+```{r xaringan-themer, include=FALSE, warning=FALSE}
+library(xaringanthemer)
+style_mono_light(
+  base_color = "#23395b",
+  text_font_google = google_font("Lato", "400", "700", "400i", "700i"),
+  header_font_google = google_font("Montserrat", "400", "700", "400i", "700i"),
+  code_font_google = google_font("Source Code Pro", "400", "700")
+)
+```
+
+class: center middle
+
+.f1.link.dim.br3.ph3.pv2.mb2.dib.white.bg-purple[
+[.white[Linear models illustrated]](https://stefanocoretta.shinyapps.io/lines/)
+]
+
+---
+
+
+```{r }
+mald_1_1
+```
+
+---
+
+```{r}
+mald_lm <- glm(ACC ~ IsWord * PhonLev, data = mald_1_1, family = binomial())
+
+tidy(mald_lm)
+```
+
+---
+
+```{r}
+mald_lm_p <- ggpredict(mald_lm, terms = c("PhonLev [all]", "IsWord")) %>% plot(limits = c(0.75, 1))
+mald_lm_p
+```
+
+---
+
+```{r}
+mald_1_1 %>%
+  mutate(ACC_num = ifelse(ACC == "correct", 1, 0)) %>%
+  ggplot(aes(PhonLev, ACC_num, colour = IsWord)) +
+  geom_point() +
+  geom_smooth(method = "glm", method.args = list(family = "binomial"))
+```
+
+---
+
+```{r}
+subjs <- sample(mald_1_1$Subject, 9)
+mald_1_1 %>%
+  filter(Subject %in% subjs) %>%
+  ggplot(aes(Subject, fill = ACC)) +
+  geom_bar(position = "fill")
+```
+
+---
+
+```{r}
+library(lme4)
+```
+
+---
+
+```{r}
+mald_lm_2 <- glmer(ACC ~ IsWord * PhonLev + (1 | Subject), data = mald_1_1, family = binomial())
+
+summary(mald_lm_2)
+```
+
+---
+
+```{r}
+mald_lm_2_p <- ggpredict(mald_lm_2, terms = c("PhonLev [all]", "IsWord")) %>% plot(limits = c(0.75, 1))
+mald_lm_2_p
+```
+
+---
+
+```{r}
+# library(patchwork)
+mald_lm_p + mald_lm_2_p + plot_layout(nrow = 2, guides = "collect")
+```
+
+---
+
+```{r warning=FALSE}
+mald_1_1 %>%
+  filter(Subject %in% sample(mald_1_1$Subject, 9)) %>%
+  mutate(ACC_num = ifelse(ACC == "correct", 1, 0)) %>%
+  ggplot(aes(PhonLev, ACC_num, colour = IsWord)) +
+  geom_point() +
+  geom_smooth(method = "glm", method.args = list(family = "binomial")) +
+  facet_wrap(~ Subject)
+```
+
+---
+
+```{r}
+mald_lm_3 <- glmer(ACC ~ IsWord * PhonLev + (IsWord | Subject), data = mald_1_1, family = binomial())
+
+summary(mald_lm_3)
+```
+
+---
+
+```{r}
+mald_lm_3_p <- ggpredict(mald_lm_3, terms = c("PhonLev [all]", "IsWord")) %>% plot(limits = c(0.75, 1))
+mald_lm_3_p
+```
+
+---
+
+```{r}
+mald_lm_p + mald_lm_3_p + plot_layout(nrow = 2, guides = "collect")
+```
