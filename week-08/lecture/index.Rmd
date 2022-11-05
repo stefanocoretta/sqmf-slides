@@ -39,6 +39,7 @@ data("dur_ita_pol")
 dur_ita_pol %<>% drop_na(f1, v1_duration)
 library(lme4)
 library(patchwork)
+library(sjPlot)
 ```
 
 ```{r xaringan-themer, include=FALSE, warning=FALSE}
@@ -59,29 +60,19 @@ class: center middle
 
 ---
 
+layout: true
 
-```{r }
+## Repeated measures: Multiple subjects
+
+---
+
+```{r mald}
 mald_1_1
 ```
 
 ---
 
-```{r}
-mald_lm <- glm(ACC ~ IsWord * PhonLev, data = mald_1_1, family = binomial())
-
-tidy(mald_lm)
-```
-
----
-
-```{r}
-mald_lm_p <- ggpredict(mald_lm, terms = c("PhonLev [all]", "IsWord")) %>% plot(limits = c(0.75, 1))
-mald_lm_p
-```
-
----
-
-```{r}
+```{r mald-acc}
 mald_1_1 %>%
   mutate(ACC_num = ifelse(ACC == "correct", 1, 0)) %>%
   ggplot(aes(PhonLev, ACC_num, colour = IsWord)) +
@@ -91,7 +82,29 @@ mald_1_1 %>%
 
 ---
 
-```{r}
+layout: false
+layout: true
+
+# Random effects: varying intercept
+
+---
+
+```{r mald-lm}
+mald_lm <- glm(ACC ~ IsWord * PhonLev, data = mald_1_1, family = binomial())
+
+tidy(mald_lm)
+```
+
+---
+
+```{r mald-lm-p}
+mald_lm_p <- ggpredict(mald_lm, terms = c("PhonLev [all]", "IsWord")) %>% plot(limits = c(0.75, 1))
+mald_lm_p
+```
+
+---
+
+```{r mald-subj}
 subjs <- sample(mald_1_1$Subject, 9)
 mald_1_1 %>%
   filter(Subject %in% subjs) %>%
@@ -101,13 +114,8 @@ mald_1_1 %>%
 
 ---
 
-```{r}
+```{r mald-lm-2}
 library(lme4)
-```
-
----
-
-```{r}
 mald_lm_2 <- glmer(ACC ~ IsWord * PhonLev + (1 | Subject), data = mald_1_1, family = binomial())
 
 summary(mald_lm_2)
@@ -115,17 +123,36 @@ summary(mald_lm_2)
 
 ---
 
-```{r}
+```{r mald-lm-2-p}
 mald_lm_2_p <- ggpredict(mald_lm_2, terms = c("PhonLev [all]", "IsWord")) %>% plot(limits = c(0.75, 1))
 mald_lm_2_p
 ```
 
 ---
 
-```{r}
+```{r mald-lm-lm-p}
 # library(patchwork)
 mald_lm_p + mald_lm_2_p + plot_layout(nrow = 2, guides = "collect")
 ```
+
+---
+
+Let's check the **conditional means**
+
+```{r}
+ranef(mald_lm_2)
+```
+
+---
+
+
+
+---
+
+layout: false
+layout: true
+
+## Random effects: varying slopes
 
 ---
 
