@@ -126,13 +126,14 @@ mald_1_1 %>%
 library(lme4)
 mald_lm_2 <- glmer(ACC ~ IsWord * PhonLev + (1 | Subject), data = mald_1_1, family = binomial())
 
-summary(mald_lm_2)
+cat(capture.output(summary(mald_lm_2))[13:23], sep = "\n")
 ```
 
 ---
 
 ```{r mald-lm-2-p}
-mald_lm_2_p <- ggpredict(mald_lm_2, terms = c("PhonLev [all]", "IsWord")) %>% plot(limits = c(0.75, 1))
+mald_lm_2_p <- ggpredict(mald_lm_2, terms = c("PhonLev [all]", "IsWord")) %>%
+  plot(limits = c(0.75, 1))
 mald_lm_2_p
 ```
 
@@ -154,7 +155,7 @@ mald_lm_2_r
 
 ---
 
-```{r mald-lm-2-r-p}
+```{r mald-lm-2-r-p, fig.show="hide"}
 mald_lm_2_r %>%
   ggplot(aes(condval, grp)) +
   geom_vline(xintercept = 0, colour = "#7fc97f") +
@@ -163,6 +164,12 @@ mald_lm_2_r %>%
     alpha = 0.7
   )
 ```
+
+---
+
+.center[
+![:scale 50%](`r knitr::fig_chunk('mald-lm-2-r-p', 'png')`)
+]
 
 ---
 
@@ -189,7 +196,7 @@ layout: true
 
 ---
 
-```{r mald-subj-2, warning=FALSE}
+```{r mald-subj-2, warning=FALSE, fig.show="hide"}
 mald_1_1 %>%
   filter(Subject %in% sample(mald_1_1$Subject, 9)) %>%
   mutate(ACC_num = ifelse(ACC == "correct", 1, 0)) %>%
@@ -201,16 +208,23 @@ mald_1_1 %>%
 
 ---
 
+.center[
+![:scale 50%](`r knitr::fig_chunk('mald-subj-2', 'png')`)
+]
+
+---
+
 ```{r mald-lm-3}
 mald_lm_3 <- glmer(ACC ~ IsWord * PhonLev + (IsWord | Subject), data = mald_1_1, family = binomial())
 
-summary(mald_lm_3)
+cat(capture.output(summary(mald_lm_3))[13:24], sep = "\n")
 ```
 
 ---
 
 ```{r mald-lm-3-p}
-mald_lm_3_p <- ggpredict(mald_lm_3, terms = c("PhonLev [all]", "IsWord")) %>% plot(limits = c(0.75, 1))
+mald_lm_3_p <- ggpredict(mald_lm_3, terms = c("PhonLev [all]", "IsWord")) %>%
+  plot(limits = c(0.75, 1))
 mald_lm_3_p
 ```
 
@@ -231,7 +245,7 @@ mald_lm_3_r
 
 ---
 
-```{r mald-lm-3-r-p}
+```{r mald-lm-3-r-p, fig.show="hide"}
 mald_lm_3_r %>%
   filter(term == "IsWordFALSE") %>%
   ggplot(aes(condval, reorder(grp, condval))) +
@@ -241,6 +255,12 @@ mald_lm_3_r %>%
     alpha = 0.7
   )
 ```
+
+---
+
+.center[
+![:scale 50%](`r knitr::fig_chunk('mald-lm-3-r-p', 'png')`)
+]
 
 ---
 
@@ -282,13 +302,11 @@ We talk about **crossed random effects**.
 
 ```{r shal-lm}
 shal_lm <- lmer(
-  RT ~
-    Relation_type * Group +
-    (1 | ID) + (1 | Target),
+  RT ~ Relation_type * Group + (1 | ID) + (1 | Target),
   data = shallow_filt
 )
 
-summary(shal_lm)
+cat(capture.output(summary(shal_lm))[11:25], sep = "\n")
 ```
 
 ---
@@ -307,7 +325,7 @@ shal_lm_r
 
 ---
 
-```{r shal-lm-r-p}
+```{r shal-lm-r-p, fig.show='hide'}
 shal_lm_r %>%
   filter(grpvar == "ID") %>%
   ggplot(aes(condval, reorder(grp, condval))) +
@@ -320,7 +338,13 @@ shal_lm_r %>%
 
 ---
 
-```{r shal-lm-r-p-2}
+.center[
+![:scale 40%](`r knitr::fig_chunk('shal-lm-r-p', 'png')`)
+]
+
+---
+
+```{r shal-lm-r-p-2, fig.show='hide'}
 shal_lm_r %>%
   filter(grpvar == "Target") %>%
   ggplot(aes(condval, reorder(grp, condval))) +
@@ -330,6 +354,12 @@ shal_lm_r %>%
     alpha = 0.7
   )
 ```
+
+---
+
+.center[
+![:scale 40%](`r knitr::fig_chunk('shal-lm-r-p-2', 'png')`)
+]
 
 ---
 
@@ -346,15 +376,17 @@ ggpredict(shal_lm, terms = c("Target [sample=6]", "Relation_type"), type = "re")
 ---
 
 ```{r shal-lm-2}
-shal_lm_2 <- lmer(
-  RT ~
-    Relation_type * Group +
-    (Relation_type | ID) + (Relation_type | Target),
-  data = shallow_filt
-)
-
-summary(shal_lm_2)
+shal_lm_2 <- lmer(RT ~ Relation_type * Group + (Relation_type | ID) + (Relation_type | Target),
+  data = shallow_filt)
+cat(capture.output(summary(shal_lm_2))[11:20], sep = "\n")
 ```
+
+---
+
+```{r shal-lm-2-2}
+cat(capture.output(summary(shal_lm_2))[22:29], sep = "\n")
+```
+
 
 ---
 
