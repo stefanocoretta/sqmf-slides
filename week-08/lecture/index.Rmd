@@ -177,6 +177,13 @@ mald_lm_2_r %>%
 ggpredict(mald_lm_2, terms = c("PhonLev [all]", "IsWord", "Subject [sample=8]"), type = "re") %>% plot()
 ```
 
+---
+
+### Reporting
+
+Easy! Same as before but in the model specification blurb add the following:
+
+> We also included a by-subject varying (or random) intercept.
 
 ---
 
@@ -267,6 +274,15 @@ mald_lm_3_r %>%
 ```{r mald-lm-3-pred-r}
 ggpredict(mald_lm_3, terms = c("PhonLev [all]", "IsWord", "Subject [sample=9]"), type = "re") %>% plot()
 ```
+
+---
+
+### Reporting
+
+Easy! Same as before but in the model specification blurb add the following:
+
+> We also included a by-subject varying intercept plus a by-subject varying slope for IsWord.
+
 
 ---
 
@@ -408,3 +424,10 @@ ggpredict(shal_lm_2, terms = c("ID [sample=10]", "Relation_type"), type = "re") 
 ggpredict(shal_lm_2, terms = c("Target [sample=6]", "Relation_type"), type = "re") %>% plot()
 ```
 
+---
+
+### Reporting
+
+Easy! Same as before but in the model specification blurb add the following:
+
+> We also included by-subject and by-target varying intercepts, plus by-subject and by-target varying slopes for relation type.

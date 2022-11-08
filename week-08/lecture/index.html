@@ -247,6 +247,13 @@ ggpredict(mald_lm_2, terms = c("PhonLev [all]", "IsWord", "Subject [sample=8]"),
 
 &lt;img src="index_files/figure-html/mald-lm-2-pred-r-1.png" height="400px" style="display: block; margin: auto;" /&gt;
 
+---
+
+### Reporting
+
+Easy! Same as before but in the model specification blurb add the following:
+
+&gt; We also included a by-subject varying (or random) intercept.
 
 ---
 
@@ -382,6 +389,15 @@ ggpredict(mald_lm_3, terms = c("PhonLev [all]", "IsWord", "Subject [sample=9]"),
 ```
 
 &lt;img src="index_files/figure-html/mald-lm-3-pred-r-1.png" height="400px" style="display: block; margin: auto;" /&gt;
+
+---
+
+### Reporting
+
+Easy! Same as before but in the model specification blurb add the following:
+
+&gt; We also included a by-subject varying intercept plus a by-subject varying slope for IsWord.
+
 
 ---
 
@@ -646,6 +662,13 @@ ggpredict(shal_lm_2, terms = c("Target [sample=6]", "Relation_type"), type = "re
 
 &lt;img src="index_files/figure-html/shal-lm-2-pred-r-target-1.png" height="400px" style="display: block; margin: auto;" /&gt;
 
+---
+
+### Reporting
+
+Easy! Same as before but in the model specification blurb add the following:
+
+&gt; We also included by-subject and by-target varying intercepts, plus by-subject and by-target varying slopes for relation type.
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
