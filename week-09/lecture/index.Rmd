@@ -1,0 +1,159 @@
+---
+title: "Statistics and Quantitative Methods (S1)"
+subtitle: "Week 9"
+author: "Dr Stefano Coretta"
+institute: "University of Edinburgh"
+date: "2022/11/08"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css:
+      - xaringan-themer.css
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: "16:9"
+      beforeInit: "../../assets/macros.js"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, dpi = 300, out.height = "400px", fig.align = "center")
+knitr::opts_knit$set(root.dir = here::here())
+options(htmltools.dir.version = FALSE)
+library(tidyverse)
+theme_set(theme_light())
+library(magrittr)
+library(xaringanExtra)
+use_xaringan_extra(c("panelset", "tachyons", "freezeframe"))
+library(ggeffects)
+library(marginaleffects)
+options(show.signif.stars = FALSE)
+library(broom.mixed)
+library(sqmf)
+data("mald_1_1")
+data("shallow")
+data("polite")
+data("gestures")
+data("dur_ita_pol")
+dur_ita_pol %<>% drop_na(f1, v1_duration)
+library(lme4)
+library(patchwork)
+```
+
+```{r xaringan-themer, include=FALSE, warning=FALSE}
+library(xaringanthemer)
+style_mono_light(
+  base_color = "#23395b",
+  text_font_google = google_font("Lato", "400", "700", "400i", "700i"),
+  header_font_google = google_font("Montserrat", "400", "700", "400i", "700i"),
+  code_font_google = google_font("Source Code Pro", "400", "700")
+)
+```
+
+class: center middle
+
+```{r null-probs, fig.width=13, fig.height=7, dpi=600, fig.retina=TRUE}
+x <- seq(-4, 4, by = 0.01)
+y <- dnorm(x)
+labels <- tibble(
+  x = c(0,  -2.5, 2),
+  y = c(-0.025, 0.36, 0.1),
+  labs = c("0", "high probability", "low probability")
+)
+arrows <- tibble(
+  x1 = c(-1.5, 2.5),
+  y1 = c(0.4 - 0.025, 0.1 - 0.025),
+  x2 = c(-0.4, 3),
+  y2 = c(0.4 - 0.015, 0.025)
+)
+ggplot() +
+  aes(x, y) +
+  geom_ribbon(aes(ymin = 0, ymax = y), fill = "#7570b3", alpha = 0.4) +
+  geom_segment(aes(x = 0, y = 0, xend = 0, yend = max(y)), colour = "#1b9e77", linewidth = 3) +
+  geom_text(data = labels, aes(x, y, label = labs), size = 15, family = "Atkinson Hyperlegible") +
+  geom_curve(
+    data = arrows, aes(x = x1, y = y1, xend = x2, yend = y2),
+    arrow = arrow(length = unit(0.3, "inch"), type = "closed"), size = 1,
+    color = "gray20", curvature = -0.3
+  ) +
+  theme_void()
+```
+
+---
+
+class: center middle
+
+```{r rare-events, fig.width=13, fig.height=7, dpi=600, fig.retina=TRUE}
+x <- seq(-4, 4, by = 0.01)
+y <- dnorm(x)
+labels <- tibble(
+  x = c(0, 2, -2.5, 3),
+  y = c(-0.025, -0.025, 0.36, 0.15),
+  labs = c("0", "<- smaller diff     -     bigger diff ->", "high probability", "RARE\nEVENT")
+)
+arrows <- tibble(
+  x1 = c(-1.5, 3),
+  y1 = c(0.4 - 0.025, 0.1 - 0.025),
+  x2 = c(-0.4, 3),
+  y2 = c(0.4 - 0.015, 0.025)
+)
+ggplot() +
+  aes(x, y) +
+  geom_ribbon(aes(ymin = 0, ymax = y), fill = "#7570b3", alpha = 0.4) +
+  geom_segment(aes(x = 0, y = 0, xend = 0, yend = max(y)), colour = "#1b9e77", size = 3) +
+  geom_text(data = labels, aes(x, y, label = labs), size = c(15, 11, 15, 16), family = "Atkinson Hyperlegible", colour = c("black", "#d95f02", "black", "#d95f02")) +
+  geom_curve(
+    data = arrows, aes(x = x1, y = y1, xend = x2, yend = y2),
+    arrow = arrow(length = unit(0.3, "inch"), type = "closed"), size = 1,
+    color = c("gray20", "#d95f02"), curvature = -0.3
+  ) +
+  theme_void()
+```
+
+---
+
+```{r}
+mono <- rnorm(n = 100, mean = 620, sd = 200)
+mono
+```
+
+---
+
+```{r}
+bi <- rnorm(100, 680, 200)
+
+exp <- tibble(
+  rt = c(mono, bi),
+  group = rep(c("mono", "bi"), each = 100)
+)
+
+exp
+```
+
+---
+
+```{r}
+exp %>%
+  ggplot(aes(rt, fill = group)) +
+  geom_density(alpha = 0.5)
+```
+
+---
+
+# Test for the difference between two means
+
+---
+
+$$H_0: \mu_b - \mu_a = 0$$
+$$H_1: \mu_b - \mu_a \neq 0$$
+
+---
+
+```{r}
+ggplot(data = tibble(x = -4:4), aes(x)) +
+  geom_vline(xintercept = 0, colour = "gray", linewidth = 1) +
+  stat_function(fun = dt, n = 201, args = list(198)) +
+  labs(title = "Student's t-distribution")
+```
+

@@ -1,0 +1,65 @@
+---
+title: "Statistics and Quantitative Methods (S1)"
+subtitle: "Week 8 — Workshop"
+author: "Dr Stefano Coretta"
+institute: "University of Edinburgh"
+date: "2022/11/01"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css:
+      - xaringan-themer.css
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: "16:9"
+      beforeInit: "../../assets/macros.js"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, dpi = 300, fig.width = 7, fig.height = 5, out.height = "500px", fig.align = "center")
+knitr::opts_knit$set(root.dir = here::here())
+options(htmltools.dir.version = FALSE)
+
+library(xaringanExtra)
+use_xaringan_extra(c("panelset", "tachyons", "freezeframe"))
+```
+
+```{r xaringan-themer, include=FALSE, warning=FALSE}
+library(xaringanthemer)
+style_mono_light(
+  base_color = "#23395b",
+  text_font_google = google_font("Lato", "400", "700", "400i", "700i"),
+  header_font_google = google_font("Montserrat", "400", "700", "400i", "700i"),
+  code_font_google = google_font("Source Code Pro", "400", "700"),
+  link_color = "#d95f02"
+)
+```
+
+
+# SQMF workshop attendance
+
+.center[
+<https://forms.office.com/r/p5MH2QzcwL>
+
+![:scale 40%](../../img/QR-SQM-attendance.png)
+]
+
+---
+
+class: center middle inverse
+
+# R MARKDOWN TUTORIAL
+
+---
+
+# Instructions
+
+1. Download an unzip the `week-8-tutorial-files.zip` archive from [here](https://drive.google.com/drive/folders/1h5YAoabIk0vhBGpcU8cQdUmNZYNPuh3z?usp=sharing).
+
+3. Move `08_random_effs.Rmd` into the `code` folder in your RStudio Project.
+
+4. Move `english-durations.csv` and `stimuli.csv` to the `data` folder in your RStudio project.
+
+5. Open `08_random_effs.Rmd` in RStudio and go through the tutorial.
