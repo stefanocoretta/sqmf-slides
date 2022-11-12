@@ -44,6 +44,8 @@ class_rate <- class_rate %>%
       timestamp == "2022-10-07 08:29:10" ~ 3,
       timestamp == "2022-10-07 10:47:46" ~ 3,
       timestamp == "2022-10-10 14:58:45" ~ 3,
+      timestamp == "2022-11-07 14:49:55" ~ 7,
+      timestamp == "2022-11-07 18:14:05" ~ 7,
       TRUE ~ week
     ),
     rating_2 = case_when(
@@ -51,7 +53,9 @@ class_rate <- class_rate %>%
       week == 2 ~ rating + median(rating[week == 1]),
       week == 3 ~ rating + median(rating[week == 1]) + median(rating[week == 2]),
       week == 4 ~ rating + median(rating[week == 1]) + median(rating[week == 2]) + median(rating[week == 3]),
-      week == 5 ~ rating + median(rating[week == 1]) + median(rating[week == 2]) + median(rating[week == 3]) + median(rating[week == 4])
+      week == 5 ~ rating + median(rating[week == 1]) + median(rating[week == 2]) + median(rating[week == 3]) + median(rating[week == 4]),
+      week == 7 ~ rating + median(rating[week == 1]) + median(rating[week == 2]) + median(rating[week == 3]) + median(rating[week == 4]) + median(rating[week == 5]),
+      week == 8 ~ rating + median(rating[week == 1]) + median(rating[week == 2]) + median(rating[week == 3]) + median(rating[week == 4]) + median(rating[week == 5]) + median(rating[week == 7]),
     )
   )
 
@@ -88,20 +92,20 @@ class_counts %>%
 ```{r}
 class_counts_2 %>%
   ggplot(aes(as.character(week), -rating_2)) +
-  geom_vline(xintercept = c("1", "2", "3", "4"), size = 1.5, colour = "gray") +
+  geom_vline(xintercept = c("1", "2", "3", "4", "5", "7", "8"), linewidth = 1.5, colour = "gray") +
   geom_point(aes(size = prop, fill = prop), shape = 21, colour = "black") +
   scale_size_continuous(range = c(0, 15), guide = "none") +
   scale_fill_distiller(palette = "Purples", direction = 1) +
   annotate(
     "line",
-    x = seq(1, 5, by = 0.5),
-    y = c(-1, -1, 0, 0, 1, 1, 1, 1, 2),
+    x = seq(1, 7, by = 0.5),
+    y = c(-1, -1, 0, 0, 1, 1, 1, 1, 2, 2, 2.5, 2.5, 4),
     size = 2, colour = "#31a354"
   ) +
   annotate("text", x = 0.6, y = -1, label = "easy", fontface = "italic") +
   annotate("text", x = 0.6, y = -2, label = "very\neasy", fontface = "italic") +
   labs(y = "Difficulty", x = "Week", fill = "Percentage") +
-  ylim(-2.5, 3.5) +
+  ylim(-2.5, 5) +
   theme(axis.text.y = element_blank())
 
 ggsave(here("img/class-ratings.png"), width = 7, height = 4)
