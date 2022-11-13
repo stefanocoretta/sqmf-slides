@@ -145,21 +145,21 @@ mono
 ```
 
 ```
-##   [1]  653.1958  428.1120  661.5520  626.2522  561.7407  700.9917  237.2106
-##   [8]  272.2832  776.5510  388.3691  999.9972  585.9777  544.6352  436.6305
-##  [15]  289.0619  312.5002  872.1010  912.4233  721.6950  478.3745  832.8117
-##  [22]  599.4328  542.8807  436.2375  657.8610  727.2985  829.2155  803.1556
-##  [29]  792.3066  444.3765  533.9373  567.2014  791.7699 1044.4952  761.9289
-##  [36]  767.7473  318.7852  665.6078  421.6045  532.2171  655.9947  721.9424
-##  [43]  772.5958  841.0580  517.4577  945.1095  592.8043  591.0317  669.5112
-##  [50]  336.8335  600.0792  518.4344  756.7260  579.5868  412.7875  593.0724
-##  [57]  415.1677  522.3784  215.9743  454.2246  304.4160  709.8490  697.6694
-##  [64]  583.2983  546.7687  364.4700  437.2206  500.6755  778.1231  654.0396
-##  [71]  660.7635  127.5405  951.6064  390.8529  820.9120  763.9739  796.2159
-##  [78]  398.3025  702.7251  511.7848  729.6338  609.0026  202.4812  850.3373
-##  [85]  405.8148  504.3608  627.7290  574.2729  854.2965  521.0785  287.5051
-##  [92]  866.5624  744.6760  747.5896  489.1505  550.0273  956.3585  543.9839
-##  [99]  915.4324  717.6276
+##   [1]  782.7863  594.5380  331.3308  690.1606  587.0662  152.3983  566.6122
+##   [8]  646.7990  421.0200  605.0525  527.2084  581.4962  522.7705  714.0367
+##  [15]  456.2537  644.0142  424.7014  344.5979  646.3823  131.1847  851.8579
+##  [22]  853.2064  814.0872  579.4642  287.5405  652.4241  630.2085  259.8391
+##  [29]  811.7393  824.3785  815.1898  749.4650  754.4665  479.0733  527.2267
+##  [36]  721.0532  634.5602  490.3055  573.9326  779.4114  636.6143  288.7646
+##  [43]  703.9961  452.0114  565.1970  601.8104  555.7956  870.4983  520.8429
+##  [50]  447.5087  636.9357  475.9463  545.8315  757.6294  646.6812  690.7879
+##  [57]  494.7698  397.1102  563.2586  474.9933  847.4624  473.8758  389.7533
+##  [64]  724.9766  762.2886  715.2040  744.0446  481.3429  767.7197  634.6028
+##  [71]  362.6352  648.6124  794.6107 1062.9451  242.4781  689.4526  901.3179
+##  [78]  786.2928  462.7034  637.9000  728.1348  440.5764  724.3921  445.0018
+##  [85]  785.1993  531.0625  528.4703  805.1253  443.9963  555.9331  163.7223
+##  [92]  455.7101  773.5291  672.6318  605.0487  374.5917  774.0295  463.2201
+##  [99]  437.6174  994.0720
 ```
 
 ---
@@ -180,16 +180,16 @@ exp
 ## # A tibble: 200 × 2
 ##       rt group
 ##    &lt;dbl&gt; &lt;chr&gt;
-##  1  405. mono 
-##  2  630. mono 
-##  3  667. mono 
-##  4  292. mono 
-##  5  525. mono 
-##  6  699. mono 
-##  7  507. mono 
-##  8  954. mono 
-##  9  199. mono 
-## 10  671. mono 
+##  1  628. mono 
+##  2  291. mono 
+##  3  666. mono 
+##  4  668. mono 
+##  5  208. mono 
+##  6  167. mono 
+##  7  651. mono 
+##  8  897. mono 
+##  9  994. mono 
+## 10  783. mono 
 ## # … with 190 more rows
 ```
 
@@ -260,7 +260,95 @@ layout: false
 
 --
 
+&lt;br/&gt;
+
 **There is a 0.0352% probability that we would find a difference that is 60 ms or more, assuming that the null hypothesis (`\(H_0: \mu_a-\mu_b = 0\)`) is true.** 
+
+--
+
+&lt;br/&gt;
+
+.f3[If *p* is small enough, we can reject the null hypothesis (that there is no difference).]
+
+--
+
+.f3[But **how small** is small enough?]
+
+---
+
+## The `\(\alpha\)`-level
+
+We need to **set a threshold**, i.e. a value of *p* below which we decide to **reject the null hypothesis**.
+
+--
+
+&lt;br/&gt;
+
+This threshold is known as the **α-level** and for most purposes:
+
+.f1[
+`$$\alpha = 0.05$$`
+]
+
+--
+
+&lt;br/&gt;
+
+In other words:
+
+- If *p* &lt; 0.05: we reject the null hypothesis.
+
+- If *p* ≥ 0.05: we cannot reject the null hypothesis.
+
+---
+
+layout: true
+
+## Null Hypothesis Significance Testing
+
+---
+
+This method of statistical inference is called **Null Hypothesis Significance Testing**, or NHST, or frequentist approach.
+
+--
+
+- The difference between two means is **significant** if the *p*-value is smaller than 0.05 (the α-level).
+
+--
+
+- The difference between two means is **not significant** if the *p*-value is equal to or greater than 0.05 (the α-level).
+
+--
+
+- If the difference between two means is significant, then we can reject the null hypothesis. If it is not significant, we canno reject the null hypothesis.
+
+---
+
+**IMPORTANT**:
+
+- We can **only either reject or not reject the &lt;u&gt;null hypothesis&lt;/u&gt;**!
+
+--
+
+- **NHST does not allow us** to make statements about the alternative hypothesis.
+
+  - A significant result (i.e. difference or effect) does not mean that the alternative hypothesis is correct.
+  
+  - It only indicates that the result is compatible with the alternative hypothesis, but does not provide evidence for it.
+
+--
+
+- **NHST also does not allow us to accept** the null hypothesis, only reject it.
+
+--
+
+- ***p*-values are sensitive to sample size**: they decrease with increasing sample size.
+
+  - In other words, a non-significant *p*-value will become significant with greater a sample size.
+
+--
+
+- NHST is somewhat **perverse**, or at least very **counterintuitive**.
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

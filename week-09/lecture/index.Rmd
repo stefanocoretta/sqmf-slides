@@ -364,3 +364,89 @@ layout: false
 <br/>
 
 **There is a 0.0352% probability that we would find a difference that is 60 ms or more, assuming that the null hypothesis (`\(H_0: \mu_a-\mu_b = 0\)`) is true.** 
+
+--
+
+<br/>
+
+.f3[If *p* is small enough, we can reject the null hypothesis (that there is no difference).]
+
+--
+
+.f3[But **how small** is small enough?]
+
+---
+
+## The $\alpha$-level
+
+We need to **set a threshold**, i.e. a value of *p* below which we decide to **reject the null hypothesis**.
+
+--
+
+<br/>
+
+This threshold is known as the **α-level** and for most purposes:
+
+.f1[
+$$\alpha = 0.05$$
+]
+
+--
+
+<br/>
+
+In other words:
+
+- If *p* < 0.05: we reject the null hypothesis.
+
+- If *p* ≥ 0.05: we cannot reject the null hypothesis.
+
+---
+
+layout: true
+
+## Null Hypothesis Significance Testing
+
+---
+
+This method of statistical inference is called **Null Hypothesis Significance Testing**, or NHST, or frequentist approach.
+
+--
+
+- The difference between two means is **significant** if the *p*-value is smaller than 0.05 (the α-level).
+
+--
+
+- The difference between two means is **not significant** if the *p*-value is equal to or greater than 0.05 (the α-level).
+
+--
+
+- If the difference between two means is significant, then we can reject the null hypothesis. If it is not significant, we canno reject the null hypothesis.
+
+---
+
+**IMPORTANT**:
+
+- We can **only either reject or not reject the <u>null hypothesis</u>**!
+
+--
+
+- **NHST does not allow us** to make statements about the alternative hypothesis.
+
+  - A significant result (i.e. difference or effect) does not mean that the alternative hypothesis is correct.
+  
+  - It only indicates that the result is compatible with the alternative hypothesis, but does not provide evidence for it.
+
+--
+
+- **NHST also does not allow us to accept** the null hypothesis, only reject it.
+
+--
+
+- ***p*-values are sensitive to sample size**: they decrease with increasing sample size.
+
+  - In other words, a non-significant *p*-value will become significant with greater a sample size.
+
+--
+
+- NHST is somewhat **perverse**, or at least very **counterintuitive**.
