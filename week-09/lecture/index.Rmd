@@ -18,7 +18,7 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, message = FALSE, dpi = 300, out.height = "400px", fig.align = "center")
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, dpi = 300, out.height = "500px", fig.align = "center")
 knitr::opts_knit$set(root.dir = here::here())
 options(htmltools.dir.version = FALSE)
 library(tidyverse)
@@ -53,13 +53,75 @@ style_mono_light(
 
 class: center middle
 
+![:scale 70%](../../img/p-value-1.png)
+
+---
+
+class: center middle
+
+![:scale 70%](../../img/p-value-2.png)
+
+---
+
+class: center middle
+
+![:scale 70%](../../img/p-value-3.png)
+
+---
+
+class: center middle
+
+![:scale 70%](../../img/p-value-4.png)
+
+---
+
+class: center middle
+
+![:scale 70%](../../img/p-value-5.png)
+
+---
+
+class: center middle
+
+![:scale 70%](../../img/p-value-6.png)
+
+---
+
+## Difference between two groups
+
+We have two hypotheses:
+
+- **Null Hypothesis**: the difference between the means of Group A and B *is 0* (i.e. there is no difference).
+
+- **Alternative Hypothesis**: the difference between the means of Group A and B *is not 0*.
+
+--
+
+<br/>
+
+$$H_0: \mu_a - \mu_b = 0$$
+
+$$H_1: \mu_a - \mu_b \neq 0$$
+
+
+---
+
+class: center middle
+
+![:scale 70%](../../img/p-value-7.png)
+
+
+---
+
+class: center middle
+
 ```{r null-probs, fig.width=13, fig.height=7, dpi=600, fig.retina=TRUE}
 x <- seq(-4, 4, by = 0.01)
 y <- dnorm(x)
 labels <- tibble(
-  x = c(0,  -2.5, 2),
-  y = c(-0.025, 0.36, 0.1),
-  labs = c("0", "high probability", "low probability")
+  x = c(0, 2, -2, -2.5, 2),
+  y = c(-0.025, -0.025, -0.025, 0.36, 0.1),
+  labs = c("0", "positive diff", "negative diff", "high probability", "low probability")
 )
 arrows <- tibble(
   x1 = c(-1.5, 2.5),
@@ -71,13 +133,13 @@ ggplot() +
   aes(x, y) +
   geom_ribbon(aes(ymin = 0, ymax = y), fill = "#7570b3", alpha = 0.4) +
   geom_segment(aes(x = 0, y = 0, xend = 0, yend = max(y)), colour = "#1b9e77", linewidth = 3) +
-  geom_text(data = labels, aes(x, y, label = labs), size = 15, family = "Atkinson Hyperlegible") +
+  geom_text(data = labels, aes(x, y, label = labs), size = 10, family = "Atkinson Hyperlegible") +
   geom_curve(
     data = arrows, aes(x = x1, y = y1, xend = x2, yend = y2),
-    arrow = arrow(length = unit(0.3, "inch"), type = "closed"), size = 1,
+    arrow = arrow(length = unit(0.3, "inch"), type = "closed"), linewidth = 1,
     color = "gray20", curvature = -0.3
   ) +
-  theme_void()
+  theme_void() + labs(x = "Difference between groups") + theme(axis.title.x = element_text(size = 18))
 ```
 
 ---
@@ -88,9 +150,9 @@ class: center middle
 x <- seq(-4, 4, by = 0.01)
 y <- dnorm(x)
 labels <- tibble(
-  x = c(0, 2, -2.5, 3),
-  y = c(-0.025, -0.025, 0.36, 0.15),
-  labs = c("0", "<- smaller diff     -     bigger diff ->", "high probability", "RARE\nEVENT")
+  x = c(0, 2, -2, -2.5, 3),
+  y = c(-0.025, -0.025, -0.025, 0.36, 0.15),
+  labs = c("0", "<- smaller diff     -     bigger diff ->", "<- bigger diff     -     smaller diff ->", "high probability", "RARE\nEVENT")
 )
 arrows <- tibble(
   x1 = c(-1.5, 3),
@@ -101,39 +163,63 @@ arrows <- tibble(
 ggplot() +
   aes(x, y) +
   geom_ribbon(aes(ymin = 0, ymax = y), fill = "#7570b3", alpha = 0.4) +
-  geom_segment(aes(x = 0, y = 0, xend = 0, yend = max(y)), colour = "#1b9e77", size = 3) +
-  geom_text(data = labels, aes(x, y, label = labs), size = c(15, 11, 15, 16), family = "Atkinson Hyperlegible", colour = c("black", "#d95f02", "black", "#d95f02")) +
+  geom_segment(aes(x = 0, y = 0, xend = 0, yend = max(y)), colour = "#1b9e77", linewidth = 3) +
+  geom_text(data = labels, aes(x, y, label = labs), size = c(10, 8, 8, 10, 10), family = "Atkinson Hyperlegible", colour = c("black", "#d95f02", "#d95f02", "black", "#d95f02")) +
   geom_curve(
     data = arrows, aes(x = x1, y = y1, xend = x2, yend = y2),
-    arrow = arrow(length = unit(0.3, "inch"), type = "closed"), size = 1,
+    arrow = arrow(length = unit(0.3, "inch"), type = "closed"), linewidth = 1,
     color = c("gray20", "#d95f02"), curvature = -0.3
   ) +
-  theme_void()
+  theme_void() + labs(x = "Difference between groups") + theme(axis.title.x = element_text(size = 18))
 ```
 
 ---
 
-```{r}
+layout: true
+
+## Student's *t*-statistic
+
+---
+
+- We need a standardised measure of difference.
+
+--
+
+- One such measure is the **Student's *t*-statistic**.
+
+$$t = \frac{\mu_b - \mu_a}{\sqrt{\frac{\sigma^2_a}{n_a} + \frac{\sigma^2_b}{n_b}}}$$
+
+where:
+
+- $\mu_a$ and $\mu_b$ are the means of group A and B.
+
+- $\sigma^2_a$ and $\sigma^2_b$ are the squared standard deviations (i.e. variances) of group A and B.
+
+- $n_a$ and $n_b$ are the sample sizes of group A and B.
+
+---
+
+```{r mono, echo=TRUE}
 mono <- rnorm(n = 100, mean = 620, sd = 200)
 mono
 ```
 
 ---
 
-```{r}
+```{r exp, echo=TRUE}
+mono <- rnorm(n = 100, mean = 620, sd = 200)
 bi <- rnorm(100, 680, 200)
 
 exp <- tibble(
   rt = c(mono, bi),
   group = rep(c("mono", "bi"), each = 100)
 )
-
 exp
 ```
 
 ---
 
-```{r}
+```{r exp-plot}
 exp %>%
   ggplot(aes(rt, fill = group)) +
   geom_density(alpha = 0.5)
@@ -141,19 +227,140 @@ exp %>%
 
 ---
 
-# Test for the difference between two means
+$$t = \frac{\mu_b - \mu_a}{\sqrt{\frac{\sigma^2_a}{n_a} + \frac{\sigma^2_b}{n_b}}}$$
+
+--
+
+<br/>
+
+$$t = \frac{680 - 620}{\sqrt{\frac{200^2}{100} + \frac{200^2}{100}}}$$
+
+<br/>
+
+$$t = 2.12132$$
 
 ---
 
-$$H_0: \mu_b - \mu_a = 0$$
-$$H_1: \mu_b - \mu_a \neq 0$$
+```{r tplot}
+x <- seq(-4, 4, by = 0.005)
+y <- dt(x, 198)
 
----
-
-```{r}
-ggplot(data = tibble(x = -4:4), aes(x)) +
+tplot <- ggplot() +
+  aes(x, y) +
   geom_vline(xintercept = 0, colour = "gray", linewidth = 1) +
-  stat_function(fun = dt, n = 201, args = list(198)) +
+  geom_hline(yintercept = 0, colour = "gray", linewidth = 1) +
+  geom_path() +
   labs(title = "Student's t-distribution")
+
+tplot
 ```
 
+---
+
+```{r tplot-1}
+tplot + annotate("point", x = 2.12132, y = 0, colour = "#d95f02", size = 3) +
+  geom_vline(xintercept = 2.12132, colour = "#d95f02") +
+  annotate("text", x = 2.5, y = -0.025, colour = "#d95f02", label = "2.12")
+```
+
+---
+
+layout: false
+layout: true
+
+## *p*-value
+
+---
+
+```{r tplot-2}
+tplot + annotate("point", x = 2.12132, y = 0, colour = "#d95f02", size = 3) +
+  geom_vline(xintercept = 2.12132, colour = "#d95f02") +
+  annotate("text", x = 2.5, y = -0.025, colour = "#d95f02", label = "2.12") +
+  annotate("text", x = 3, y = 0.05, label = "p = 0.0176") +
+  geom_ribbon(
+    aes(x = ifelse(x >= 2.12132, x, NA), ymin = 0, ymax = y),
+    fill = "#E84646",
+    alpha = 0.4
+  )
+```
+
+---
+
+```{r tplot-3}
+tplot + annotate("point", x = 2.12132, y = 0, colour = "#d95f02", size = 3) +
+  annotate("text", x = 2.5, y = -0.025, colour = "#d95f02", label = "2.12") +
+  annotate("text", x = 3, y = 0.05, label = "p = 0.0176") +
+  geom_ribbon(
+    aes(x = ifelse(x >= 2.12132, x, NA), ymin = 0, ymax = y),
+    fill = "#E84646",
+    alpha = 0.4
+  ) +
+  annotate("label", x = 0, y = 0.35, label = "p-value = The probability of finding a certain difference,\nor a bigger difference,\nassuming that there is no difference", size = 5)
+```
+
+???
+
+`r pt(2.12, 198, lower.tail = FALSE)`
+
+---
+
+```{r tplot-4}
+tplot + annotate("point", x = 2.12132, y = 0, colour = "#d95f02", size = 3) +
+  annotate("text", x = 2.5, y = -0.025, colour = "#d95f02", label = "2.12") +
+  annotate("point", x = -2.12132, y = 0, colour = "#d95f02", size = 3) +
+  annotate("text", x = -2.5, y = -0.025, colour = "#d95f02", label = "-2.12") +
+  annotate("text", x = 3, y = 0.05, label = "p = 0.0176") +
+  annotate("text", x = -3, y = 0.05, label = "p = 0.0176") +
+  geom_ribbon(
+    aes(x = ifelse(x >= 2.12132, x, NA), ymin = 0, ymax = y),
+    fill = "#E84646",
+    alpha = 0.4
+  ) +
+  geom_ribbon(
+    aes(x = ifelse(x <= -2.12132, x, NA), ymin = 0, ymax = y),
+    fill = "#E84646",
+    alpha = 0.4
+  ) +
+  annotate("label", x = 0, y = 0.35, label = "p-value = The probability of finding a certain difference,\nor a bigger difference,\nassuming that there is no difference", size = 5)
+```
+
+---
+
+```{r tplot-6}
+tplot + annotate("point", x = 2.12132, y = 0, colour = "#d95f02", size = 3) +
+  annotate("text", x = 2.5, y = -0.025, colour = "#d95f02", label = "2.12") +
+  annotate("point", x = -2.12132, y = 0, colour = "#d95f02", size = 3) +
+  annotate("text", x = -2.5, y = -0.025, colour = "#d95f02", label = "-2.12") +
+  annotate("text", x = 3, y = 0.05, label = "p = 0.0176", colour = "gray") +
+  annotate("text", x = -3, y = 0.05, label = "p = 0.0176", colour = "gray") +
+  annotate("text", x = -3, y = 0.2, label = "p = 0.0176 * 2 =\n0.0352", size = 5) +
+  geom_ribbon(
+    aes(x = ifelse(x >= 2.12132, x, NA), ymin = 0, ymax = y),
+    fill = "#E84646",
+    alpha = 0.4
+  ) +
+  geom_ribbon(
+    aes(x = ifelse(x <= -2.12132, x, NA), ymin = 0, ymax = y),
+    fill = "#E84646",
+    alpha = 0.4
+  ) +
+  annotate("label", x = 0, y = 0.35, label = "p-value = The probability of finding a certain difference,\nor a bigger difference,\nassuming that there is no difference", size = 5)
+```
+
+---
+
+layout: false
+
+## Two-tailed *t*-test and *p*-value
+
+- Difference between means: 60 ms.
+
+- *t*-statistic: 2.12.
+
+- *p*-value: 0.0352
+
+--
+
+<br/>
+
+**There is a 0.0352% probability that we would find a difference that is 60 ms or more, assuming that the null hypothesis (`\(H_0: \mu_a-\mu_b = 0\)`) is true.** 

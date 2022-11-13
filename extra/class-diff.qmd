@@ -100,7 +100,7 @@ class_counts_2 %>%
     "line",
     x = seq(1, 7, by = 0.5),
     y = c(-1, -1, 0, 0, 1, 1, 1, 1, 2, 2, 2.5, 2.5, 4),
-    size = 2, colour = "#31a354"
+    linewidth = 2, colour = "#31a354"
   ) +
   annotate("text", x = 0.6, y = -1, label = "easy", fontface = "italic") +
   annotate("text", x = 0.6, y = -2, label = "very\neasy", fontface = "italic") +
