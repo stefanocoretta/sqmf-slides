@@ -145,21 +145,21 @@ mono
 ```
 
 ```
-##   [1]  782.7863  594.5380  331.3308  690.1606  587.0662  152.3983  566.6122
-##   [8]  646.7990  421.0200  605.0525  527.2084  581.4962  522.7705  714.0367
-##  [15]  456.2537  644.0142  424.7014  344.5979  646.3823  131.1847  851.8579
-##  [22]  853.2064  814.0872  579.4642  287.5405  652.4241  630.2085  259.8391
-##  [29]  811.7393  824.3785  815.1898  749.4650  754.4665  479.0733  527.2267
-##  [36]  721.0532  634.5602  490.3055  573.9326  779.4114  636.6143  288.7646
-##  [43]  703.9961  452.0114  565.1970  601.8104  555.7956  870.4983  520.8429
-##  [50]  447.5087  636.9357  475.9463  545.8315  757.6294  646.6812  690.7879
-##  [57]  494.7698  397.1102  563.2586  474.9933  847.4624  473.8758  389.7533
-##  [64]  724.9766  762.2886  715.2040  744.0446  481.3429  767.7197  634.6028
-##  [71]  362.6352  648.6124  794.6107 1062.9451  242.4781  689.4526  901.3179
-##  [78]  786.2928  462.7034  637.9000  728.1348  440.5764  724.3921  445.0018
-##  [85]  785.1993  531.0625  528.4703  805.1253  443.9963  555.9331  163.7223
-##  [92]  455.7101  773.5291  672.6318  605.0487  374.5917  774.0295  463.2201
-##  [99]  437.6174  994.0720
+##   [1]  504.4596  849.0776  467.6306  668.5424  618.1899  633.7876  875.6083
+##   [8]  771.3068  365.8703  827.9002  522.5835 1045.2812  476.6281  509.3002
+##  [15]  396.5407  822.9505  788.9539  630.2270  666.1959  844.3135  729.6411
+##  [22]  724.0085 1011.6488  633.0380  629.1065  820.4190  375.5972  565.4441
+##  [29]  331.2333  778.8254  637.1742  797.4125  470.5711 1023.1338  536.9001
+##  [36]  641.3465 1028.7908  913.6037  650.5338  427.1552  875.2592  507.2317
+##  [43]  423.2769  320.9607  550.2172  681.6744  652.2343  378.2771  465.4349
+##  [50]  539.9735  318.4551  446.2794  837.9238  334.7489  561.1098  315.2802
+##  [57]  831.5263  557.1128  515.2431  635.9477  708.7541  452.7080  392.9191
+##  [64]  415.6093  416.8583  670.6882  525.8792  735.3976  778.4342  230.6519
+##  [71]  290.5727  411.2230  627.3716  760.9354  534.2602  732.2072  639.4728
+##  [78]  591.0294  578.5499  223.5474  462.9177  878.2610  761.8712  213.5690
+##  [85]  705.4804  186.5911 1007.4943  911.5638  563.5445  471.3288  758.3744
+##  [92]  461.0685  728.9707  338.1982  803.6573  414.8222  365.0826  678.3071
+##  [99]  409.8483  505.6989
 ```
 
 ---
@@ -180,16 +180,16 @@ exp
 ## # A tibble: 200 × 2
 ##       rt group
 ##    &lt;dbl&gt; &lt;chr&gt;
-##  1  628. mono 
-##  2  291. mono 
-##  3  666. mono 
-##  4  668. mono 
-##  5  208. mono 
-##  6  167. mono 
-##  7  651. mono 
-##  8  897. mono 
-##  9  994. mono 
-## 10  783. mono 
+##  1  620. mono 
+##  2  923. mono 
+##  3  465. mono 
+##  4 1122. mono 
+##  5  376. mono 
+##  6  580. mono 
+##  7  665. mono 
+##  8  524. mono 
+##  9  601. mono 
+## 10  746. mono 
 ## # … with 190 more rows
 ```
 
@@ -349,6 +349,142 @@ This method of statistical inference is called **Null Hypothesis Significance Te
 --
 
 - NHST is somewhat **perverse**, or at least very **counterintuitive**.
+
+---
+
+layout: false
+layout: true
+
+## *p*-values and linear models
+
+---
+
+- `g/lm()` report *p*-values by default.
+
+- `g/lmer()` report *p*-values when the lmerTest package is attached.
+
+---
+
+
+```r
+mald_lm_1 &lt;- lm(RT ~ IsWord * PhonLev, data = mald_1_1)
+
+summary(mald_lm_1)
+```
+
+```
+## 
+## Call:
+## lm(formula = RT ~ IsWord * PhonLev, data = mald_1_1)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -938.58 -193.05  -73.39  100.74 1987.42 
+## 
+## Coefficients:
+##                     Estimate Std. Error t value Pr(&gt;|t|)
+## (Intercept)          664.191     34.044  19.510  &lt; 2e-16
+## IsWordFALSE          230.167     48.895   4.707 2.58e-06
+## PhonLev               40.903      4.741   8.627  &lt; 2e-16
+## IsWordFALSE:PhonLev  -16.290      6.788  -2.400   0.0164
+## 
+## Residual standard error: 309.5 on 4996 degrees of freedom
+## Multiple R-squared:  0.05244,	Adjusted R-squared:  0.05187 
+## F-statistic: 92.17 on 3 and 4996 DF,  p-value: &lt; 2.2e-16
+```
+
+---
+
+
+```r
+library(lmerTest)
+mald_lm_2 &lt;- lmer(RT ~ IsWord * PhonLev + (IsWord | Subject), data = mald_1_1)
+
+tidy(mald_lm_2)
+```
+
+```
+## # A tibble: 8 × 8
+##   effect   group    term                 estim…¹ std.e…² stati…³    df   p.value
+##   &lt;chr&gt;    &lt;chr&gt;    &lt;chr&gt;                  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;
+## 1 fixed    &lt;NA&gt;     (Intercept)          661.      34.2    19.4  1269.  2.42e-73
+## 2 fixed    &lt;NA&gt;     IsWordFALSE          195.      46.7     4.18 3024.  2.97e- 5
+## 3 fixed    &lt;NA&gt;     PhonLev               41.6      4.39    9.46 4934.  4.45e-21
+## 4 fixed    &lt;NA&gt;     IsWordFALSE:PhonLev  -12.1      6.30   -1.93 4934.  5.42e- 2
+## 5 ran_pars Subject  sd__(Intercept)       93.4     NA      NA      NA  NA       
+## 6 ran_pars Subject  cor__(Intercept).Is…   0.383   NA      NA      NA  NA       
+## 7 ran_pars Subject  sd__IsWordFALSE       77.9     NA      NA      NA  NA       
+## 8 ran_pars Residual sd__Observation      285.      NA      NA      NA  NA       
+## # … with abbreviated variable names ¹​estimate, ²​std.error, ³​statistic
+```
+
+---
+
+### Reporting
+
+We fitted a linear model with a Gaussian distribution to reaction times in milliseconds. As predictors we have included whether the word is a real or a nonce word (`IsWord`), phonemic Levinshtein distance (`PhonLev`) and the interaction between the two.
+A by-subject varying intercept was also included together with a by-subject varying slope for `IsWord`. Including a varying slope for PhonLev led to non-convergence, so it was dropped.
+*P*-values were obtained with the lmerTest package (Kuznetsova et al. 2017) using the Satterthwaite's approximation of degrees of freedom.
+
+According to the model, the mean reaction time with real words and Levenshtein distance equal 0 is about 661 ms (SE = 34, *t* = 19.356, df = 1269.461, *p* &lt; 0.001).
+When the word is a nonce word, reaction times increase by 195 ms (SE = 47, *t* = 4.182, df = 3024.393, *p* &lt; 0.001).
+The effect of Levenshtein distance is an increase of about 42 ms in reaction time for every unit increase (SE = 4.4, *t* = 9.464, df = 4933.716, *p* &lt; 0.001).
+The interaction between IsWord and PhonLev indicates an effect decrease of 12 ms, although it is not significant (`\(\beta\)` = -12, SE = 6.3, *t* = -1.926, df = 4934.293, *p* = 0.0542).
+
+---
+
+
+```r
+ggpredict(mald_lm_2, terms = c("PhonLev [all]", "IsWord")) %&gt;% plot()
+```
+
+&lt;img src="index_files/figure-html/mald-lm-2-plot-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+```r
+mald_lm_3 &lt;- glmer(ACC ~ IsWord * PhonLev + (IsWord | Subject), data = mald_1_1, family = binomial())
+
+tidy(mald_lm_3)
+```
+
+```
+## # A tibble: 7 × 7
+##   effect   group   term                         estim…¹ std.e…² stati…³  p.value
+##   &lt;chr&gt;    &lt;chr&gt;   &lt;chr&gt;                          &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;
+## 1 fixed    &lt;NA&gt;    (Intercept)                   1.67    0.386     4.32  1.56e-5
+## 2 fixed    &lt;NA&gt;    IsWordFALSE                  -2.83    0.630    -4.49  7.01e-6
+## 3 fixed    &lt;NA&gt;    PhonLev                       0.0774  0.0534    1.45  1.47e-1
+## 4 fixed    &lt;NA&gt;    IsWordFALSE:PhonLev           0.405   0.0885    4.57  4.82e-6
+## 5 ran_pars Subject sd__(Intercept)               0.558  NA        NA    NA      
+## 6 ran_pars Subject cor__(Intercept).IsWordFALSE -0.892  NA        NA    NA      
+## 7 ran_pars Subject sd__IsWordFALSE               1.18   NA        NA    NA      
+## # … with abbreviated variable names ¹​estimate, ²​std.error, ³​statistic
+```
+
+---
+
+### Reporting
+
+We fitted a linear model with a Bernoulli distribution (aka binomial or logistic regression) to accuracy. As predictors we have included whether the word is a real or a nonce word (`IsWord`), phonemic Levinshtein distance (`PhonLev`) and the interaction between the two.
+A by-subject varying intercept was also included together with a by-subject varying slope for `IsWord`. Including a varying slope for PhonLev led to non-convergence, so it was dropped.
+*P*-values were obtained with the lmerTest package (Kuznetsova et al. 2017) using the Satterthwaite's approximation of degrees of freedom.
+
+According to the model, the mean accuracy with real words and Levenshtein distance equal 0 is about 84% (`\(\beta\)` = 1.67, SE = 0.386, *z* = 4.321, *p* &lt; 0.001).
+When the word is a nonce word (and Levenshtein distance is 0), accuracy decreases to 57% (`\(\beta\)` = -2.83, SE = 0.63, *z* = -4.493, *p* &lt; 0.001).
+The effect of Levenshtein distance on accuracy in real words correponds to an increase of 0.077 log-odds although it is not significant (SE = 0.053, *z* = 1.451, *p* = 0.147).
+The interaction between IsWord and PhonLev indicates there is an effect increase of 0.4 log-odds with nonce words (SE = 0.088, *z* = 4.572, *p* &lt; 0.001).
+
+---
+
+
+```r
+ggpredict(mald_lm_3, terms = c("PhonLev [all]", "IsWord")) %&gt;% plot()
+```
+
+&lt;img src="index_files/figure-html/mald-lm-3-plot-1.png" height="500px" style="display: block; margin: auto;" /&gt;
+
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

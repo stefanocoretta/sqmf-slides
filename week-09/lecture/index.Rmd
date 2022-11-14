@@ -450,3 +450,80 @@ This method of statistical inference is called **Null Hypothesis Significance Te
 --
 
 - NHST is somewhat **perverse**, or at least very **counterintuitive**.
+
+---
+
+layout: false
+layout: true
+
+## *p*-values and linear models
+
+---
+
+- `g/lm()` report *p*-values by default.
+
+- `g/lmer()` report *p*-values when the lmerTest package is attached.
+
+---
+
+```{r mald-lm-1, echo=TRUE}
+mald_lm_1 <- lm(RT ~ IsWord * PhonLev, data = mald_1_1)
+
+summary(mald_lm_1)
+```
+
+---
+
+```{r mald-lm-2, echo=TRUE}
+library(lmerTest)
+mald_lm_2 <- lmer(RT ~ IsWord * PhonLev + (IsWord | Subject), data = mald_1_1)
+
+tidy(mald_lm_2)
+```
+
+---
+
+### Reporting
+
+We fitted a linear model with a Gaussian distribution to reaction times in milliseconds. As predictors we have included whether the word is a real or a nonce word (`IsWord`), phonemic Levinshtein distance (`PhonLev`) and the interaction between the two.
+A by-subject varying intercept was also included together with a by-subject varying slope for `IsWord`. Including a varying slope for PhonLev led to non-convergence, so it was dropped.
+*P*-values were obtained with the lmerTest package (Kuznetsova et al. 2017) using the Satterthwaite's approximation of degrees of freedom.
+
+According to the model, the mean reaction time with real words and Levenshtein distance equal 0 is about 661 ms (SE = 34, *t* = 19.356, df = 1269.461, *p* < 0.001).
+When the word is a nonce word, reaction times increase by 195 ms (SE = 47, *t* = 4.182, df = 3024.393, *p* < 0.001).
+The effect of Levenshtein distance is an increase of about 42 ms in reaction time for every unit increase (SE = 4.4, *t* = 9.464, df = 4933.716, *p* < 0.001).
+The interaction between IsWord and PhonLev indicates an effect decrease of 12 ms, although it is not significant (`\(\beta\)` = -12, SE = 6.3, *t* = -1.926, df = 4934.293, *p* = 0.0542).
+
+---
+
+```{r mald-lm-2-plot, echo=TRUE}
+ggpredict(mald_lm_2, terms = c("PhonLev [all]", "IsWord")) %>% plot()
+```
+
+---
+
+```{r mald-lm-3, echo=TRUE}
+mald_lm_3 <- glmer(ACC ~ IsWord * PhonLev + (IsWord | Subject), data = mald_1_1, family = binomial())
+
+tidy(mald_lm_3)
+```
+
+---
+
+### Reporting
+
+We fitted a linear model with a Bernoulli distribution (aka binomial or logistic regression) to accuracy. As predictors we have included whether the word is a real or a nonce word (`IsWord`), phonemic Levinshtein distance (`PhonLev`) and the interaction between the two.
+A by-subject varying intercept was also included together with a by-subject varying slope for `IsWord`. Including a varying slope for PhonLev led to non-convergence, so it was dropped.
+*P*-values were obtained with the lmerTest package (Kuznetsova et al. 2017) using the Satterthwaite's approximation of degrees of freedom.
+
+According to the model, the mean accuracy with real words and Levenshtein distance equal 0 is about 84% (`\(\beta\)` = 1.67, SE = 0.386, *z* = 4.321, *p* < 0.001).
+When the word is a nonce word (and Levenshtein distance is 0), accuracy decreases to 57% (`\(\beta\)` = -2.83, SE = 0.63, *z* = -4.493, *p* < 0.001).
+The effect of Levenshtein distance on accuracy in real words correponds to an increase of 0.077 log-odds although it is not significant (SE = 0.053, *z* = 1.451, *p* = 0.147).
+The interaction between IsWord and PhonLev indicates there is an effect increase of 0.4 log-odds with nonce words (SE = 0.088, *z* = 4.572, *p* < 0.001).
+
+---
+
+```{r mald-lm-3-plot, echo=TRUE}
+ggpredict(mald_lm_3, terms = c("PhonLev [all]", "IsWord")) %>% plot()
+```
+
