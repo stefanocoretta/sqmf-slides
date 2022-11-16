@@ -1,9 +1,9 @@
 ---
 title: "Statistics and Quantitative Methods (S1)"
-subtitle: "Week 8 — Workshop"
+subtitle: "Week 9 — Workshop"
 author: "Dr Stefano Coretta"
 institute: "University of Edinburgh"
-date: "2022/11/01"
+date: "2022/11/15"
 output:
   xaringan::moon_reader:
     lib_dir: libs
@@ -40,26 +40,18 @@ style_mono_light(
 
 # SQMF workshop attendance
 
-.center[
-<https://forms.office.com/r/p5MH2QzcwL>
+**THERE IS A NEW SYSTEM IN PLACE**
 
-![:scale 40%](../../img/QR-SQM-attendance.png)
-]
+You need to record your attendance by scanning the QR code outside of the room.
 
 ---
-
-class: center middle inverse
 
 # R MARKDOWN TUTORIAL
 
----
+- There is no new tutorial file for this week.
 
-# Instructions
+- You can keep working on previous tutorials if you haven't completed them.
 
-1. Download an unzip the `week-8-tutorial-files.zip` archive from [here](https://drive.google.com/drive/folders/1h5YAoabIk0vhBGpcU8cQdUmNZYNPuh3z?usp=sharing).
+- If you have completed the previous tutorials, you can take a look at the *p*-values of the linear models you fitted so far.
 
-3. Move `08_random_effs.Rmd` into the `code` folder in your RStudio Project.
-
-4. Move `english-durations.csv` and `stimuli.csv` to the `data` folder in your RStudio project.
-
-5. Open `08_random_effs.Rmd` in RStudio and go through the tutorial.
+  - Remember to attach the lmerTest package to get *p*-values for `g/lmer()` models.
