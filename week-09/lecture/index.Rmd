@@ -363,7 +363,7 @@ layout: false
 
 <br/>
 
-**There is a 0.0352% probability that we would find a difference that is 60 ms or more, assuming that the null hypothesis (`\(H_0: \mu_a-\mu_b = 0\)`) is true.** 
+**There is a 3.5% probability that we would find a difference that is 60 ms or more, assuming that the null hypothesis (`\(H_0: \mu_a-\mu_b = 0\)`) is true.** 
 
 --
 
