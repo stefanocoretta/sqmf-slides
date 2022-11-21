@@ -1,0 +1,300 @@
+---
+title: "Statistics and Quantitative Methods (S1)"
+subtitle: "Week 10"
+author: "Dr Stefano Coretta"
+institute: "University of Edinburgh"
+date: "2022/11/23"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css:
+      - xaringan-themer.css
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: "16:9"
+      beforeInit: "../../assets/macros.js"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, dpi = 300, out.height = "500px", fig.align = "center")
+knitr::opts_knit$set(root.dir = here::here())
+options(htmltools.dir.version = FALSE)
+library(tidyverse)
+theme_set(theme_light())
+library(magrittr)
+library(xaringanExtra)
+use_xaringan_extra(c("panelset", "tachyons", "freezeframe"))
+library(ggeffects)
+library(marginaleffects)
+options(show.signif.stars = FALSE)
+library(broom.mixed)
+library(sqmf)
+data("mald_1_1")
+data("shallow")
+data("polite")
+data("gestures")
+data("dur_ita_pol")
+dur_ita_pol %<>% drop_na(f1, v1_duration)
+library(lme4)
+library(patchwork)
+options(ggplot2.discrete.fill = RColorBrewer::brewer.pal(12, "Dark2"))
+options(ggplot2.discrete.colour = RColorBrewer::brewer.pal(12, "Dark2"))
+```
+
+
+```{r xaringan-themer, include=FALSE, warning=FALSE}
+library(xaringanthemer)
+style_mono_light(
+  base_color = "#23395b",
+  text_font_google = google_font("Lato", "400", "700", "400i", "700i"),
+  header_font_google = google_font("Montserrat", "400", "700", "400i", "700i"),
+  code_font_google = google_font("Source Code Pro", "400", "700"),
+  base_font_size = "18px"
+)
+```
+
+layout: true
+
+## Example of plotting
+
+---
+
+.pull-left[
+One continuous variable: density
+
+```{r cont-dens, fig.show='hide'}
+dur_ita_pol %>%
+  ggplot(aes(v1_duration)) +
+  geom_density(fill = "gray")
+```
+]
+
+.pull-right[
+![:scale 90%](`r knitr::fig_chunk('cont-dens', 'png')`)
+]
+
+---
+
+.pull-left[
+One continuous variable: density (with categorical variable)
+
+```{r cont-dens-1, fig.show='hide'}
+dur_ita_pol %>%
+  ggplot(
+    aes(v1_duration, fill = c2_phonation)
+  ) +
+  geom_density(alpha = 0.5)
+```
+]
+
+.pull-right[
+![:scale 90%](`r knitr::fig_chunk('cont-dens-1', 'png')`)
+]
+
+---
+
+.pull-left[
+Two continuous variables
+
+```{r cont-cont, fig.show='hide'}
+dur_ita_pol %>%
+  ggplot(aes(speech_rate_c, v1_duration)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "glm")
+```
+]
+
+.pull-right[
+![:scale 90%](`r knitr::fig_chunk('cont-cont', 'png')`)
+]
+
+---
+
+.pull-left[
+Two continuous variables and one categorical variable
+
+```{r cont-cont-cat, fig.show='hide'}
+dur_ita_pol %>%
+  ggplot(
+    aes(speech_rate_c, v1_duration, colour = vowel)
+  ) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "glm")
+```
+]
+
+.pull-right[
+![:scale 90%](`r knitr::fig_chunk('cont-cont-cat', 'png')`)
+]
+
+---
+
+.pull-left[
+Two continuous variables and one categorical variable
+
+```{r cont-cont-cat-1, fig.show='hide'}
+dur_ita_pol %>%
+  ggplot(aes(speech_rate_c, v1_duration)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "glm",
+              aes(colour = vowel)) +
+  facet_grid(~ vowel)
+```
+]
+
+.pull-right[
+![:scale 90%](`r knitr::fig_chunk('cont-cont-cat-1', 'png')`)
+]
+
+---
+
+.pull-left[
+One continuous variable and one categorical variable
+
+```{r cont-cat, fig.show='hide'}
+polite %>%
+  ggplot(aes(attitude, f0mn)) +
+  geom_jitter(width = 0.2)
+```
+]
+
+.pull-right[
+![:scale 90%](`r knitr::fig_chunk('cont-cat', 'png')`)
+]
+
+---
+
+.pull-left[
+One continuous variable and two categorical variables
+
+```{r cont-cat-cat, fig.show='hide'}
+polite %>%
+  ggplot(aes(attitude, f0mn,
+             colour = musicstudent)) +
+  geom_point(
+    position = position_jitterdodge(
+      jitter.width = 0.2,
+      dodge.width = 0.8
+    )
+  )
+```
+]
+
+.pull-right[
+![:scale 90%](`r knitr::fig_chunk('cont-cat-cat', 'png')`)
+]
+
+---
+
+.pull-left[
+One continuous variable and three categorical variables
+
+```{r cont-cat-cat-cat, fig.show='hide'}
+polite %>%
+  ggplot(aes(attitude, f0mn,
+             colour = musicstudent)) +
+  geom_point(
+    position = position_jitterdodge(
+      jitter.width = 0.2,
+      dodge.width = 0.8)
+  ) +
+  facet_grid(~ gender)
+```
+]
+
+.pull-right[
+![:scale 90%](`r knitr::fig_chunk('cont-cat-cat-cat', 'png')`)
+]
+
+---
+
+
+.pull-left[
+One continuous variable and three categorical variables
+
+```{r cont-cat-cat-cat-1, fig.show='hide'}
+polite %>%
+  ggplot(aes(attitude, f0mn,
+             fill = musicstudent)) +
+  geom_violin() +
+  geom_point(
+    position = position_jitterdodge(
+      jitter.width = 0.05,
+      dodge.width = 0.85
+    ),
+    alpha = 0.5
+  ) +
+  facet_grid(~ gender)
+```
+]
+
+.pull-right[
+![:scale 90%](`r knitr::fig_chunk('cont-cat-cat-cat-1', 'png')`)
+]
+
+---
+
+.pull-left[
+One continuous variable and four categorical variables
+
+```{r cont-cat-4, fig.show='hide'}
+dur_ita_pol %>%
+  ggplot(aes(c2_place, c2_clos_duration,
+             fill = c2_phonation)) +
+  geom_violin() +
+  geom_point(
+    position = position_jitterdodge(
+      jitter.width = 0.05,
+      dodge.width = 0.9
+    ),
+    alpha = 0.25
+  ) +
+  facet_grid(language ~ vowel)
+```
+]
+
+.pull-right[
+![:scale 90%](`r knitr::fig_chunk('cont-cat-4', 'png')`)
+]
+
+---
+
+.pull-left[
+One categorical variable
+
+```{r cat, fig.show='hide'}
+shallow %>%
+  ggplot(aes(accuracy)) +
+  geom_bar()
+```
+]
+
+.pull-right[
+![:scale 90%](`r knitr::fig_chunk('cat', 'png')`)
+]
+
+---
+
+.pull-left[
+Two categorical variables
+
+```{r cat-cat, fig.show='hide'}
+shallow %>%
+  ggplot(aes(Relation_type,
+             fill = accuracy)) +
+  geom_bar(position = "fill")
+```
+]
+
+.pull-right[
+![:scale 90%](`r knitr::fig_chunk('cat-cat', 'png')`)
+]
+
+---
+
+layout: false
+layout: true
+
+## Random effects
