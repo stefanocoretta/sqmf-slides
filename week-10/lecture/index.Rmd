@@ -39,8 +39,8 @@ data("dur_ita_pol")
 dur_ita_pol %<>% drop_na(f1, v1_duration)
 library(lme4)
 library(patchwork)
-options(ggplot2.discrete.fill = RColorBrewer::brewer.pal(12, "Dark2"))
-options(ggplot2.discrete.colour = RColorBrewer::brewer.pal(12, "Dark2"))
+options(ggplot2.discrete.fill = RColorBrewer::brewer.pal(8, "Dark2"))
+options(ggplot2.discrete.colour = RColorBrewer::brewer.pal(8, "Dark2"))
 ```
 
 
@@ -298,3 +298,50 @@ layout: false
 layout: true
 
 ## Random effects
+
+---
+
+```{r vdur}
+vdur_lm <- lmer(
+  v1_duration ~ c2_phonation * language * vowel +
+    (c2_phonation + vowel | speaker),
+  data = dur_ita_pol
+)
+```
+
+---
+
+```{r vdur-summ}
+summary(vdur_lm)
+```
+
+---
+
+```{r shal, cache=TRUE}
+shal <- shallow %>% filter(Branching == "Left") %>%
+  mutate(accuracy = factor(accuracy, levels = c("incorrect", "correct")))
+
+shal_lm <- glmer(
+  accuracy ~ Group * Relation_type + (Relation_type | ID) + (Relation_type + Group| Target),
+  data = shal, family = binomial(),
+  # Using optimx optimiser. optimx package must be installed
+  control = glmerControl(
+    optimizer = "optimx", calc.derivs = FALSE, optCtrl = list(method = "bobyqa")
+  )
+)
+```
+
+---
+
+```{r shal-summ}
+# Doing this because the full summary does not fit on the slide
+out <- summary(shal_lm) %>% capture.output()
+cat(out[18:27], sep = "\n")
+```
+
+---
+
+layout: false
+class: center middle reverse
+
+# QUESTIONS?

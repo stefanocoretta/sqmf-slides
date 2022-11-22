@@ -289,6 +289,188 @@ shallow %&gt;%
 .pull-right[
 ![:scale 90%](index_files/figure-html/cat-cat-1.png)
 ]
+
+---
+
+layout: false
+layout: true
+
+## Random effects
+
+---
+
+
+```r
+vdur_lm &lt;- lmer(
+  v1_duration ~ c2_phonation * language * vowel +
+    (c2_phonation + vowel | speaker),
+  data = dur_ita_pol
+)
+```
+
+---
+
+
+```r
+summary(vdur_lm)
+```
+
+```
+## Linear mixed model fit by REML ['lmerMod']
+## Formula: v1_duration ~ c2_phonation * language * vowel + (c2_phonation +  
+##     vowel | speaker)
+##    Data: dur_ita_pol
+## 
+## REML criterion at convergence: 10933
+## 
+## Scaled residuals: 
+##     Min      1Q  Median      3Q     Max 
+## -3.6527 -0.6561 -0.0263  0.6067  6.1645 
+## 
+## Random effects:
+##  Groups   Name                  Variance Std.Dev. Corr             
+##  speaker  (Intercept)           732.08   27.057                    
+##           c2_phonationvoiceless  39.61    6.293   -0.70            
+##           vowelo                 13.07    3.615   -0.71  0.42      
+##           vowelu                130.92   11.442   -0.85  0.69  0.89
+##  Residual                       200.35   14.154                    
+## Number of obs: 1334, groups:  speaker, 17
+## 
+## Fixed effects:
+##                                             Estimate Std. Error t value
+## (Intercept)                                 133.6327     8.2426  16.212
+## c2_phonationvoiceless                       -18.1114     2.5143  -7.203
+## languagePolish                              -36.8572    13.8792  -2.656
+## vowelo                                       -6.0062     1.9754  -3.041
+## vowelu                                      -38.4740     3.8691  -9.944
+## c2_phonationvoiceless:languagePolish          7.8240     4.2711   1.832
+## c2_phonationvoiceless:vowelo                  0.7617     2.3139   0.329
+## c2_phonationvoiceless:vowelu                 15.6596     2.3682   6.612
+## languagePolish:vowelo                        -6.6717     3.3753  -1.977
+## languagePolish:vowelu                        10.3132     6.4897   1.589
+## c2_phonationvoiceless:languagePolish:vowelo   1.7298     3.9918   0.433
+## c2_phonationvoiceless:languagePolish:vowelu -10.8941     4.0236  -2.708
+## 
+## Correlation of Fixed Effects:
+##                                             (Intr) c2_phn lnggPl vowelo vowelu
+## c2_phntnvcl                                 -0.587                            
+## languagPlsh                                 -0.594  0.349                     
+## vowelo                                      -0.474  0.446  0.281              
+## vowelu                                      -0.790  0.606  0.469  0.618       
+## c2_phntnv:P                                  0.346 -0.589 -0.585 -0.263 -0.357
+## c2_phonationvoiceless:vowelo                 0.071 -0.461 -0.042 -0.589 -0.151
+## c2_phonationvoiceless:vowelu                 0.069 -0.448 -0.041 -0.287 -0.302
+## languagePolish:vowelo                        0.277 -0.261 -0.470 -0.585 -0.361
+## languagePolish:vowelu                        0.471 -0.362 -0.794 -0.368 -0.596
+## c2_phonationvoiceless:languagePolish:vowelo -0.041  0.267  0.072  0.341  0.087
+## c2_phonationvoiceless:languagePolish:vowelu -0.040  0.264  0.072  0.169  0.178
+##                                             c2_p:P c2_phonationvoiceless:vowelo
+## c2_phntnvcl                                                                    
+## languagPlsh                                                                    
+## vowelo                                                                         
+## vowelu                                                                         
+## c2_phntnv:P                                                                    
+## c2_phonationvoiceless:vowelo                 0.271                             
+## c2_phonationvoiceless:vowelu                 0.264  0.489                      
+## languagePolish:vowelo                        0.450  0.345                      
+## languagePolish:vowelu                        0.610  0.090                      
+## c2_phonationvoiceless:languagePolish:vowelo -0.469 -0.580                      
+## c2_phonationvoiceless:languagePolish:vowelu -0.464 -0.288                      
+##                                             c2_phonationvoiceless:vowelu
+## c2_phntnvcl                                                             
+## languagPlsh                                                             
+## vowelo                                                                  
+## vowelu                                                                  
+## c2_phntnv:P                                                             
+## c2_phonationvoiceless:vowelo                                            
+## c2_phonationvoiceless:vowelu                                            
+## languagePolish:vowelo                        0.168                      
+## languagePolish:vowelu                        0.180                      
+## c2_phonationvoiceless:languagePolish:vowelo -0.283                      
+## c2_phonationvoiceless:languagePolish:vowelu -0.589                      
+##                                             languagePolish:vowelo
+## c2_phntnvcl                                                      
+## languagPlsh                                                      
+## vowelo                                                           
+## vowelu                                                           
+## c2_phntnv:P                                                      
+## c2_phonationvoiceless:vowelo                                     
+## c2_phonationvoiceless:vowelu                                     
+## languagePolish:vowelo                                            
+## languagePolish:vowelu                        0.617               
+## c2_phonationvoiceless:languagePolish:vowelo -0.594               
+## c2_phonationvoiceless:languagePolish:vowelu -0.296               
+##                                             languagePolish:vowelu
+## c2_phntnvcl                                                      
+## languagPlsh                                                      
+## vowelo                                                           
+## vowelu                                                           
+## c2_phntnv:P                                                      
+## c2_phonationvoiceless:vowelo                                     
+## c2_phonationvoiceless:vowelu                                     
+## languagePolish:vowelo                                            
+## languagePolish:vowelu                                            
+## c2_phonationvoiceless:languagePolish:vowelo -0.155               
+## c2_phonationvoiceless:languagePolish:vowelu -0.309               
+##                                             c2_phonationvoiceless:languagePolish:vowelo
+## c2_phntnvcl                                                                            
+## languagPlsh                                                                            
+## vowelo                                                                                 
+## vowelu                                                                                 
+## c2_phntnv:P                                                                            
+## c2_phonationvoiceless:vowelo                                                           
+## c2_phonationvoiceless:vowelu                                                           
+## languagePolish:vowelo                                                                  
+## languagePolish:vowelu                                                                  
+## c2_phonationvoiceless:languagePolish:vowelo                                            
+## c2_phonationvoiceless:languagePolish:vowelu  0.497
+```
+
+---
+
+
+```r
+shal &lt;- shallow %&gt;% filter(Branching == "Left") %&gt;%
+  mutate(accuracy = factor(accuracy, levels = c("incorrect", "correct")))
+
+shal_lm &lt;- glmer(
+  accuracy ~ Group * Relation_type + (Relation_type | ID) + (Relation_type + Group| Target),
+  data = shal, family = binomial(),
+  # Using optimx optimiser. optimx package must be installed
+  control = glmerControl(
+    optimizer = "optimx", calc.derivs = FALSE, optCtrl = list(method = "bobyqa")
+  )
+)
+```
+
+---
+
+
+```r
+# Doing this because the full summary does not fit on the slide
+out &lt;- summary(shal_lm) %&gt;% capture.output()
+cat(out[18:27], sep = "\n")
+```
+
+```
+## Random effects:
+##  Groups Name                        Variance Std.Dev. Corr             
+##  ID     (Intercept)                 0.58150  0.7626                    
+##         Relation_typeConstituent    0.13742  0.3707   1.00             
+##         Relation_typeNonConstituent 0.10094  0.3177   1.00  1.00       
+##  Target (Intercept)                 1.58226  1.2579                    
+##         Relation_typeConstituent    0.02427  0.1558   -0.67            
+##         Relation_typeNonConstituent 0.19840  0.4454   -0.72  1.00      
+##         GroupL2                     0.34159  0.5845   -0.14 -0.45 -0.40
+## Number of obs: 1170, groups:  ID, 65; Target, 18
+```
+
+---
+
+layout: false
+class: center middle reverse
+
+# QUESTIONS?
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
