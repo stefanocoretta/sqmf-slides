@@ -104,17 +104,6 @@
       "Hash": "543776ae6848fde2f48ff3816d0628bc",
       "Requirements": []
     },
-    "bayestestR": {
-      "Package": "bayestestR",
-      "Version": "0.13.0",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "caecf6cf095962f3d6645ddab4c691e8",
-      "Requirements": [
-        "datawizard",
-        "insight"
-      ]
-    },
     "bit": {
       "Package": "bit",
       "Version": "4.0.4",
@@ -353,16 +342,6 @@
       "Hash": "b9b912b41064aaa79270f24d123c887d",
       "Requirements": []
     },
-    "datawizard": {
-      "Package": "datawizard",
-      "Version": "0.6.3",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "2970cca4f4b00f5b392d871e18e3194c",
-      "Requirements": [
-        "insight"
-      ]
-    },
     "dbplyr": {
       "Package": "dbplyr",
       "Version": "2.2.1",
@@ -456,20 +435,6 @@
         "vctrs"
       ]
     },
-    "effectsize": {
-      "Package": "effectsize",
-      "Version": "0.8.2",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "3f27c6bc7db33c00d954188d8eb8fe06",
-      "Requirements": [
-        "bayestestR",
-        "datawizard",
-        "insight",
-        "parameters",
-        "performance"
-      ]
-    },
     "ellipsis": {
       "Package": "ellipsis",
       "Version": "0.3.2",
@@ -479,27 +444,6 @@
       "Requirements": [
         "rlang"
       ]
-    },
-    "emmeans": {
-      "Package": "emmeans",
-      "Version": "1.8.2",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "3a14b5ca2d720bae9e10a6c572378208",
-      "Requirements": [
-        "estimability",
-        "mvtnorm",
-        "numDeriv",
-        "xtable"
-      ]
-    },
-    "estimability": {
-      "Package": "estimability",
-      "Version": "1.4.1",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "1a78288c1188772070240b89ffe33579",
-      "Requirements": []
     },
     "evaluate": {
       "Package": "evaluate",
@@ -1043,6 +987,19 @@
         "nloptr"
       ]
     },
+    "lmerTest": {
+      "Package": "lmerTest",
+      "Version": "3.1-3",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "f04948de84602afc23bfa9f5427e954d",
+      "Requirements": [
+        "MASS",
+        "ggplot2",
+        "lme4",
+        "numDeriv"
+      ]
+    },
     "lubridate": {
       "Package": "lubridate",
       "Version": "1.8.0",
@@ -1154,14 +1111,6 @@
         "colorspace"
       ]
     },
-    "mvtnorm": {
-      "Package": "mvtnorm",
-      "Version": "1.1-3",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "7a7541cc284cb2ba3ba7eae645892af5",
-      "Requirements": []
-    },
     "nlme": {
       "Package": "nlme",
       "Version": "3.1-160",
@@ -1208,18 +1157,6 @@
       "Hash": "9e3d8d65cb9c5ca5966340a6bfec60b2",
       "Requirements": []
     },
-    "parameters": {
-      "Package": "parameters",
-      "Version": "0.19.0",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "f541e3b038faeec3e40527cc7ca80557",
-      "Requirements": [
-        "bayestestR",
-        "datawizard",
-        "insight"
-      ]
-    },
     "patchwork": {
       "Package": "patchwork",
       "Version": "1.1.2",
@@ -1229,18 +1166,6 @@
       "Requirements": [
         "ggplot2",
         "gtable"
-      ]
-    },
-    "performance": {
-      "Package": "performance",
-      "Version": "0.10.0",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "e56d92c33a727d4232409735f9e7dd33",
-      "Requirements": [
-        "bayestestR",
-        "datawizard",
-        "insight"
       ]
     },
     "pillar": {
@@ -1639,86 +1564,6 @@
         "sourcetools",
         "withr",
         "xtable"
-      ]
-    },
-    "sjPlot": {
-      "Package": "sjPlot",
-      "Version": "2.8.11",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "3e3c3da1bb25506fe379b9564a5b2ae7",
-      "Requirements": [
-        "MASS",
-        "bayestestR",
-        "datawizard",
-        "dplyr",
-        "effectsize",
-        "ggeffects",
-        "ggplot2",
-        "insight",
-        "knitr",
-        "parameters",
-        "performance",
-        "purrr",
-        "rlang",
-        "scales",
-        "sjlabelled",
-        "sjmisc",
-        "sjstats",
-        "tidyr"
-      ]
-    },
-    "sjlabelled": {
-      "Package": "sjlabelled",
-      "Version": "1.2.0",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "4bd18166ef8ca74aeec74ad295dfe77f",
-      "Requirements": [
-        "datawizard",
-        "insight"
-      ]
-    },
-    "sjmisc": {
-      "Package": "sjmisc",
-      "Version": "2.8.9",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "86176cb3be04b2930649dce2bf56d3cb",
-      "Requirements": [
-        "dplyr",
-        "insight",
-        "magrittr",
-        "purrr",
-        "rlang",
-        "sjlabelled",
-        "tidyselect"
-      ]
-    },
-    "sjstats": {
-      "Package": "sjstats",
-      "Version": "0.18.1",
-      "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "30c55099bbe117030d8649b4ba8fc01b",
-      "Requirements": [
-        "MASS",
-        "bayestestR",
-        "broom",
-        "dplyr",
-        "effectsize",
-        "emmeans",
-        "insight",
-        "lme4",
-        "magrittr",
-        "modelr",
-        "parameters",
-        "performance",
-        "purrr",
-        "rlang",
-        "sjlabelled",
-        "sjmisc",
-        "tidyr"
       ]
     },
     "sourcetools": {

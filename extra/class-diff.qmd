@@ -56,6 +56,7 @@ class_rate <- class_rate %>%
       week == 5 ~ rating + median(rating[week == 1]) + median(rating[week == 2]) + median(rating[week == 3]) + median(rating[week == 4]),
       week == 7 ~ rating + median(rating[week == 1]) + median(rating[week == 2]) + median(rating[week == 3]) + median(rating[week == 4]) + median(rating[week == 5]),
       week == 8 ~ rating + median(rating[week == 1]) + median(rating[week == 2]) + median(rating[week == 3]) + median(rating[week == 4]) + median(rating[week == 5]) + median(rating[week == 7]),
+      week == 9 ~ rating + median(rating[week == 1]) + median(rating[week == 2]) + median(rating[week == 3]) + median(rating[week == 4]) + median(rating[week == 5]) + median(rating[week == 7]) + median(rating[week == 8])
     )
   )
 
@@ -92,14 +93,14 @@ class_counts %>%
 ```{r}
 class_counts_2 %>%
   ggplot(aes(as.character(week), -rating_2)) +
-  geom_vline(xintercept = c("1", "2", "3", "4", "5", "7", "8"), linewidth = 1.5, colour = "gray") +
+  geom_vline(xintercept = c("1", "2", "3", "4", "5", "7", "8", "9"), linewidth = 1.5, colour = "gray") +
   geom_point(aes(size = prop, fill = prop), shape = 21, colour = "black") +
   scale_size_continuous(range = c(0, 15), guide = "none") +
   scale_fill_distiller(palette = "Purples", direction = 1) +
   annotate(
     "line",
-    x = seq(1, 7, by = 0.5),
-    y = c(-1, -1, 0, 0, 1, 1, 1, 1, 2, 2, 2.5, 2.5, 4),
+    x = seq(1, 8, by = 0.5),
+    y = c(-1, -1, 0, 0, 1, 1, 1, 1, 2, 2, 2.5, 2.5, 4, 4, 4),
     linewidth = 2, colour = "#31a354"
   ) +
   annotate("text", x = 0.6, y = -1, label = "easy", fontface = "italic") +
